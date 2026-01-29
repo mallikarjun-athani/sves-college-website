@@ -1,0 +1,139 @@
+<?php
+session_start();
+if (!isset($_SESSION['admin_id'])) {
+    header("Location: login.php");
+    exit();
+}
+include '../includes/db.php';
+?>
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Dashboard | Admin Panel</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link rel="stylesheet" href="../assets/css/style.css">
+    <style>
+        :root {
+            --sidebar-width: 260px;
+        }
+        body {
+            background: #f4f7f6;
+            display: flex;
+        }
+        .sidebar {
+            width: var(--sidebar-width);
+            background: var(--primary);
+            color: white;
+            height: 100vh;
+            position: fixed;
+            padding-top: 30px;
+        }
+        .main-content {
+            margin-left: var(--sidebar-width);
+            flex: 1;
+            padding: 40px;
+            min-height: 100vh;
+        }
+        .sidebar-brand {
+            padding: 0 30px 40px;
+            border-bottom: 1px solid rgba(255,255,255,0.1);
+            margin-bottom: 30px;
+        }
+        .sidebar-menu a {
+            display: flex;
+            align-items: center;
+            padding: 15px 30px;
+            color: rgba(255,255,255,0.7);
+            font-weight: 500;
+            transition: var(--transition);
+        }
+        .sidebar-menu a i {
+            margin-right: 15px;
+            width: 20px;
+        }
+        .sidebar-menu a:hover, .sidebar-menu a.active {
+            background: rgba(255,255,255,0.05);
+            color: var(--secondary);
+            border-left: 4px solid var(--secondary);
+        }
+        .stat-card {
+            background: white;
+            padding: 30px;
+            border-radius: var(--radius-md);
+            box-shadow: var(--shadow-sm);
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+        .stat-val {
+            font-size: 2rem;
+            font-weight: 700;
+            color: var(--primary);
+        }
+        .header-bar {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 40px;
+        }
+    </style>
+</head>
+<body>
+    <div class="sidebar">
+        <div class="sidebar-brand">
+            <h2>SVES Admin</h2>
+        </div>
+        <div class="sidebar-menu">
+            <a href="dashboard.php" class="active"><i class="fas fa-home"></i> Dashboard</a>
+            <a href="manage-notes.php"><i class="fas fa-file-alt"></i> Manage Notes</a>
+            <a href="manage-gallery.php"><i class="fas fa-images"></i> Manage Gallery</a>
+            <a href="manage-announcements.php"><i class="fas fa-bullhorn"></i> Announcements</a>
+            <a href="manage-faculty.php"><i class="fas fa-user-tie"></i> Faculty</a>
+            <a href="logout.php" style="margin-top: 50px; color: #ff6b6b;"><i class="fas fa-sign-out-alt"></i> Logout</a>
+        </div>
+    </div>
+
+    <div class="main-content">
+        <div class="header-bar">
+            <h1>Dashboard Overview</h1>
+            <div class="admin-profile flex align-center">
+                <span>Welcome, <strong>Admin</strong></span>
+            </div>
+        </div>
+
+        <div class="card-grid">
+            <div class="stat-card">
+                <div>
+                    <h3>Direct Notes</h3>
+                    <p class="stat-val">12</p>
+                </div>
+                <i class="fas fa-file-pdf" style="font-size: 2.5rem; color: #eee;"></i>
+            </div>
+            <div class="stat-card">
+                <div>
+                    <h3>Gallery Photos</h3>
+                    <p class="stat-val">45</p>
+                </div>
+                <i class="fas fa-camera" style="font-size: 2.5rem; color: #eee;"></i>
+            </div>
+            <div class="stat-card">
+                <div>
+                    <h3>Announcements</h3>
+                    <p class="stat-val">8</p>
+                </div>
+                <i class="fas fa-comment-dots" style="font-size: 2.5rem; color: #eee;"></i>
+            </div>
+        </div>
+
+        <div style="margin-top: 50px; background: white; padding: 30px; border-radius: var(--radius-md); box-shadow: var(--shadow-sm);">
+            <h2>Quick Actions</h2>
+            <div class="flex" style="gap: 20px; margin-top: 20px;">
+                <a href="manage-notes.php?action=add" class="btn btn-primary"><i class="fas fa-plus"></i> Upload New Note</a>
+                <a href="manage-gallery.php?action=add" class="btn btn-secondary"><i class="fas fa-plus"></i> Add Gallery Image</a>
+            </div>
+        </div>
+    </div>
+</body>
+</html>
