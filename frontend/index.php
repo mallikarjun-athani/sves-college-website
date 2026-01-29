@@ -14,14 +14,14 @@ if ($banner_result && $banner_result->num_rows > 0) {
 ?>
 
 <!-- Hero Section -->
-<section class="hero" style="background: linear-gradient(rgba(0, 35, 71, 0.8), rgba(0, 35, 71, 0.6)), url('<?php echo $hero_bg; ?>'); background-size: cover; background-position: center;">
+<section class="hero" style="background-image: url('<?php echo ($hero_bg == "../frontend/assets/images/hero-bg.jpg") ? "../Home page/photes/collage ground.png" : $hero_bg; ?>');">
     <div class="container" data-aos="fade-up">
         <div class="hero-content">
             <h1>Excellence in Education</h1>
             <p>Empowering Minds, Shaping Futures at SVES College Harugeri. A legacy of academic excellence since 1983.</p>
             <div class="hero-btns">
                 <a href="admissions.php" class="btn btn-secondary">Apply Now</a>
-                <a href="login.php" class="btn btn-outline" style="color: white; border-color: white; margin-left: 20px;">Student Login</a>
+                <a href="login.php" class="btn btn-outline" style="color: white; border-color: white;">Student Login</a>
             </div>
         </div>
     </div>
