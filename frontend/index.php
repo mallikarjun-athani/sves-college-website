@@ -21,7 +21,7 @@ if ($banner_result && $banner_result->num_rows > 0) {
             <p>Empowering Minds, Shaping Futures at SVES College Harugeri. A legacy of academic excellence since 1983.</p>
             <div class="hero-btns">
                 <a href="admissions.php" class="btn btn-secondary">Apply Now</a>
-                <a href="student-corner.php" class="btn btn-outline" style="color: white; border-color: white; margin-left: 20px;">Student Login</a>
+                <a href="login.php" class="btn btn-outline" style="color: white; border-color: white; margin-left: 20px;">Student Login</a>
             </div>
         </div>
     </div>

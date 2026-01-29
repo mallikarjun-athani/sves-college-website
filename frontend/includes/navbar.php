@@ -22,14 +22,34 @@
                 </div>
                 <a href="student-corner.php">Student Corner</a>
                 <a href="notes.php">Notes & Resources</a>
-                <a href="gallery.php">Gallery</a>
-                <a href="placements.php">Placements</a>
-                <a href="contact.php" class="btn btn-secondary" style="padding: 8px 20px; color: var(--primary) !important;">Apply Now</a>
+                <a href="login.php">Student Login</a>
+                <a href="admissions.php" class="btn btn-secondary" style="padding: 8px 20px; color: var(--primary) !important;">Apply Now</a>
             </nav>
 
-            <div class="mobile-menu-toggle" style="display: none; color: var(--white); font-size: 1.5rem; cursor: pointer;">
+            <div class="mobile-menu-toggle" id="mobile-toggle">
                 <i class="fas fa-bars"></i>
             </div>
+        </div>
+    </div>
+
+    <!-- Mobile Navigation Drawer -->
+    <div class="mobile-nav" id="mobile-nav">
+        <div class="mobile-nav-header">
+            <img src="../Home page/photes/icon.png" alt="SVES Logo">
+            <i class="fas fa-times" id="mobile-close"></i>
+        </div>
+        <div class="mobile-nav-links">
+            <a href="index.php">Home</a>
+            <a href="about.php">About Us</a>
+            <a href="departments.php">Departments</a>
+            <a href="courses.php">Courses</a>
+            <a href="faculty.php">Faculty</a>
+            <a href="student-corner.php">Student Corner</a>
+            <a href="notes.php">Notes & Resources</a>
+            <a href="gallery.php">Gallery</a>
+            <a href="placements.php">Placements</a>
+            <a href="login.php">Student Login</a>
+            <a href="admissions.php" class="btn btn-secondary" style="margin-top: 20px; text-align: center;">Apply Now</a>
         </div>
     </div>
 </header>
@@ -67,6 +87,69 @@
 
 header.scrolled .logo-text h2 { color: var(--primary); }
 header.scrolled .mobile-menu-toggle { color: var(--primary); }
+
+.mobile-menu-toggle {
+    display: none;
+    color: var(--white);
+    font-size: 1.5rem;
+    cursor: pointer;
+    transition: var(--transition);
+}
+
+.mobile-nav {
+    position: fixed;
+    top: 0;
+    right: -100%;
+    width: 80%;
+    max-width: 300px;
+    height: 100vh;
+    background: var(--white);
+    z-index: 2000;
+    padding: 30px;
+    box-shadow: -10px 0 30px rgba(0,0,0,0.1);
+    transition: var(--transition);
+    display: flex;
+    flex-direction: column;
+}
+
+.mobile-nav.active {
+    right: 0;
+}
+
+.mobile-nav-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 40px;
+}
+
+.mobile-nav-header img {
+    height: 40px;
+}
+
+#mobile-close {
+    font-size: 1.5rem;
+    color: var(--primary);
+    cursor: pointer;
+}
+
+.mobile-nav-links {
+    display: flex;
+    flex-direction: column;
+    gap: 15px;
+}
+
+.mobile-nav-links a {
+    font-size: 1.1rem;
+    font-weight: 500;
+    color: var(--primary);
+    padding: 10px 0;
+    border-bottom: 1px solid #eee;
+}
+
+.mobile-nav-links a:last-child {
+    border-bottom: none;
+}
 
 @media (max-width: 1024px) {
     .nav-links { display: none; }
