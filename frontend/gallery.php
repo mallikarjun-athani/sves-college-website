@@ -1,7 +1,7 @@
 <?php 
 $page_title = "Gallery";
 include 'includes/header.php'; 
-include 'includes/db.php';
+include '../backend/db.php';
 
 $category = isset($_GET['cat']) ? clean_input($_GET['cat']) : 'All';
 
@@ -15,7 +15,7 @@ $result = $conn->query($query);
 
 <style>
 .gallery-header {
-    background: linear-gradient(rgba(0,35,71,0.8), rgba(0,35,71,0.8)), url('Home page/photes/collage ground.png');
+    background: linear-gradient(rgba(0,35,71,0.8), rgba(0,35,71,0.8)), url('../Home page/photes/collage ground.png');
     background-size: cover;
     padding: 120px 0 60px;
     color: var(--white);
@@ -151,8 +151,8 @@ $result = $conn->query($query);
     <div class="gallery-grid">
         <?php if ($result && $result->num_rows > 0): ?>
             <?php while($row = $result->fetch_assoc()): ?>
-                <div class="gallery-item" data-aos="zoom-in" onclick="openLightbox('<?php echo $row['image_path']; ?>')">
-                    <img src="<?php echo $row['image_path']; ?>" alt="<?php echo $row['caption']; ?>">
+                <div class="gallery-item" data-aos="zoom-in" onclick="openLightbox('../<?php echo $row['image_path']; ?>')">
+                    <img src="../<?php echo $row['image_path']; ?>" alt="<?php echo $row['caption']; ?>">
                     <div class="gallery-overlay">
                         <i class="fas fa-search-plus"></i>
                     </div>

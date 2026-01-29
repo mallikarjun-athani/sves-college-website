@@ -28,7 +28,7 @@ CREATE TABLE IF NOT EXISTS notes (
 CREATE TABLE IF NOT EXISTS gallery (
     id INT AUTO_INCREMENT PRIMARY KEY,
     image_path VARCHAR(255) NOT NULL,
-    category ENUM('Campus', 'Events', 'Cultural', 'Sports') DEFAULT 'Campus',
+    category ENUM('Campus', 'Events', 'Cultural', 'Sports', 'Banner') DEFAULT 'Campus',
     caption VARCHAR(255)
 );
 

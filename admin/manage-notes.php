@@ -4,7 +4,7 @@ if (!isset($_SESSION['admin_id'])) {
     header("Location: login.php");
     exit();
 }
-include '../includes/db.php';
+include '../backend/db.php';
 
 $message = "";
 
@@ -59,7 +59,7 @@ $notes = $conn->query("SELECT * FROM notes ORDER BY upload_date DESC");
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Manage Notes | Admin Panel</title>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
-    <link rel="stylesheet" href="../assets/css/style.css">
+    <link rel="stylesheet" href="../frontend/assets/css/style.css">
     <style>
         :root { --sidebar-width: 260px; }
         body { background: #f4f7f6; display: flex; }

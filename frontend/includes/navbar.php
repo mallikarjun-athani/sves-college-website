@@ -2,7 +2,7 @@
     <div class="container">
         <div class="header-inner flex align-center justify-between">
             <a href="index.php" class="logo flex align-center">
-                <img src="Home page/photes/icon.png" alt="SVES Logo">
+                <img src="../Home page/photes/icon.png" alt="SVES Logo">
                 <div class="logo-text" style="margin-left: 15px;">
                     <h2 style="color: var(--white); font-size: 1.5rem; line-height: 1;">SVES College</h2>
                     <span style="color: var(--secondary); font-size: 0.7rem; text-transform: uppercase; letter-spacing: 2px;">Harugeri</span>

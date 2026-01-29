@@ -5,7 +5,7 @@ include 'includes/header.php';
 
 <style>
 .contact-header {
-    background: linear-gradient(rgba(0,35,71,0.8), rgba(0,35,71,0.8)), url('Home page/photes/collage ground.png');
+    background: linear-gradient(rgba(0,35,71,0.8), rgba(0,35,71,0.8)), url('../Home page/photes/collage ground.png');
     background-size: cover;
     padding: 150px 0 80px;
     color: var(--white);

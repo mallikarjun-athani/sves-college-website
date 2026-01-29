@@ -5,7 +5,7 @@ include 'includes/header.php';
 
 <style>
 .faculty-header {
-    background: linear-gradient(rgba(0,35,71,0.8), rgba(0,35,71,0.8)), url('Home page/photes/collage ground.png');
+    background: linear-gradient(rgba(0,35,71,0.8), rgba(0,35,71,0.8)), url('../Home page/photes/collage ground.png');
     background-size: cover;
     padding: 120px 0 60px;
     color: var(--white);
@@ -93,7 +93,7 @@ include 'includes/header.php';
     <div class="faculty-grid">
         <div class="faculty-card" data-aos="fade-up">
             <div class="faculty-img">
-                <img src="Home page/photes/br darur.png" alt="Shri. B R Darur">
+                <img src="../Home page/photes/br darur.png" alt="Shri. B R Darur">
             </div>
             <div class="faculty-info">
                 <h3>Shri. B. R. Darur</h3>
@@ -104,7 +104,7 @@ include 'includes/header.php';
         
         <div class="faculty-card" data-aos="fade-up" data-aos-delay="100">
             <div class="faculty-img">
-                <img src="Home page/photes/chairman_pre.jpg" alt="Shri. Girish Darur">
+                <img src="../Home page/photes/chairman_pre.jpg" alt="Shri. Girish Darur">
             </div>
             <div class="faculty-info">
                 <h3>Shri. Girish Darur</h3>
@@ -115,7 +115,7 @@ include 'includes/header.php';
         
         <div class="faculty-card" data-aos="fade-up" data-aos-delay="200">
             <div class="faculty-img">
-                <img src="Home page/photes/mali sir.png" alt="Dr. V S Mali">
+                <img src="../Home page/photes/mali sir.png" alt="Dr. V S Mali">
             </div>
             <div class="faculty-info">
                 <h3>Dr. V. S. Mali</h3>
@@ -126,7 +126,7 @@ include 'includes/header.php';
         
         <div class="faculty-card" data-aos="fade-up" data-aos-delay="300">
             <div class="faculty-img">
-                <img src="Home page/photes/VINOD.jpg" alt="Dr. Vinod Kambale">
+                <img src="../Home page/photes/VINOD.jpg" alt="Dr. Vinod Kambale">
             </div>
             <div class="faculty-info">
                 <h3>Dr. Vinod Kambale</h3>
@@ -142,7 +142,7 @@ include 'includes/header.php';
     <div class="faculty-grid">
         <div class="faculty-card" data-aos="fade-up">
             <div class="faculty-img">
-                <img src="Home page/photes/RAMESH.jpg" alt="Dr. Ramesh Kamathigi">
+                <img src="../Home page/photes/RAMESH.jpg" alt="Dr. Ramesh Kamathigi">
             </div>
             <div class="faculty-info">
                 <h3>Dr. Ramesh Kamathigi</h3>
@@ -153,7 +153,7 @@ include 'includes/header.php';
         
         <div class="faculty-card" data-aos="fade-up" data-aos-delay="100">
             <div class="faculty-img">
-                <img src="Home page/photes/HONAKAMBLE.jpg" alt="Prof. A D Honakamble">
+                <img src="../Home page/photes/HONAKAMBLE.jpg" alt="Prof. A D Honakamble">
             </div>
             <div class="faculty-info">
                 <h3>Prof. A. D. Honakamble</h3>

@@ -43,7 +43,7 @@
         </div>
         
         <div class="footer-bottom text-center">
-            <p>&copy; <?php echo date('Y'); ?> SVES College, Harugeri. All Rights Reserved. | <a href="admin/login.php" style="color: var(--secondary);">Admin Login</a></p>
+            <p>&copy; <?php echo date('Y'); ?> SVES College, Harugeri. All Rights Reserved. | <a href="../admin/login.php" style="color: var(--secondary);">Admin Login</a></p>
         </div>
     </div>
 </footer>
