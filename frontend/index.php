@@ -3,10 +3,11 @@ $page_title = "Home";
 include 'includes/header.php'; 
 include '../backend/db.php';
 
-// Fetch the latest banner image
+// Fetch the latest banner image from the gallery
+$hero_bg = "../Home page/photes/collage ground.png"; // Default High-Quality Campus Image
 $banner_query = "SELECT image_path FROM gallery WHERE category = 'Banner' ORDER BY id DESC LIMIT 1";
 $banner_result = $conn->query($banner_query);
-$hero_bg = "../frontend/assets/images/hero-bg.jpg"; // Default
+
 if ($banner_result && $banner_result->num_rows > 0) {
     $banner_row = $banner_result->fetch_assoc();
     $hero_bg = "../" . $banner_row['image_path'];
@@ -14,7 +15,7 @@ if ($banner_result && $banner_result->num_rows > 0) {
 ?>
 
 <!-- Hero Section -->
-<section class="hero" style="background-image: url('<?php echo ($hero_bg == "../frontend/assets/images/hero-bg.jpg") ? "../Home page/photes/collage ground.png" : $hero_bg; ?>');">
+<section class="hero" style="background-image: url('<?php echo $hero_bg; ?>');">
     <div class="container" data-aos="fade-up">
         <div class="hero-content">
             <h1>Excellence in Education</h1>
