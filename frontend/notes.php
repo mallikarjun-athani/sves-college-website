@@ -1,7 +1,7 @@
 <?php 
 $page_title = "Notes & Resources";
 include 'includes/header.php'; 
-include 'includes/db.php';
+include '../backend/db.php';
 
 // Fetch filters from URL
 $course = isset($_GET['course']) ? clean_input($_GET['course']) : '';

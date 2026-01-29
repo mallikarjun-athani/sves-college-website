@@ -1,6 +1,6 @@
 <?php
 session_start();
-include '../includes/db.php';
+include '../backend/db.php';
 
 $error = "";
 
@@ -34,7 +34,7 @@ if (isset($_POST['login'])) {
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Admin Login | SVES College</title>
-    <link rel="stylesheet" href="../assets/css/style.css">
+    <link rel="stylesheet" href="../frontend/assets/css/style.css">
     <style>
         body {
             background: var(--bg-dark);
