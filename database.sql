@@ -1,5 +1,4 @@
-CREATE DATABASE IF NOT EXISTS sves_website;
-USE sves_website;
+-- Removed CREATE DATABASE for shared hosting compatibility
 
 CREATE TABLE IF NOT EXISTS announcements (
     id INT AUTO_INCREMENT PRIMARY KEY,
