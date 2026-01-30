@@ -9,10 +9,10 @@ if ($_SERVER['HTTP_HOST'] == 'localhost' || $_SERVER['HTTP_HOST'] == '127.0.0.1'
 } else {
     // Online Hosting Settings (InfinityFree)
     // Replace these with details from your InfinityFree Control Panel
-    $host = 'sql202.infinityfree.com'; 
-    $user = 'if0_41019619';
-    $pass = '2W8w4UE95Je';
-    $dbname = 'if0_41019619_if0_41019619_sves_db';
+    $host = 'sql201.infinityfree.com'; 
+    $user = 'if0_41031211';
+    $pass = 'vzyXtdd2TJ8o';
+    $dbname = 'if0_41031211_svesdb';
 }
 
 $conn = new mysqli($host, $user, $pass, $dbname);
