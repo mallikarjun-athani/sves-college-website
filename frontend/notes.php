@@ -162,7 +162,7 @@ $result = $conn->query($query);
                             <span><i class="fas fa-clock"></i> Uploaded: <?php echo date('d M, Y', strtotime($row['upload_date'])); ?></span>
                         </div>
                         <div class="flex">
-                            <a href="<?php echo $row['file_path']; ?>" class="btn btn-outline" style="padding: 8px 15px; font-size: 0.9rem; flex: 1; margin-right: 10px;" target="_blank">View</a>
+                            <a href="../<?php echo $row['file_path']; ?>" class="btn btn-outline" style="padding: 8px 15px; font-size: 0.9rem; flex: 1; margin-right: 10px;" target="_blank">View</a>
                             <a href="<?php echo $row['file_path']; ?>" class="btn btn-primary" style="padding: 8px 15px; font-size: 0.9rem; flex: 1;" download>Download</a>
                         </div>
                     </div>
