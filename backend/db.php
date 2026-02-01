@@ -1,6 +1,13 @@
 <?php
 // Database Configuration
-if ($_SERVER['HTTP_HOST'] == 'localhost' || $_SERVER['HTTP_HOST'] == '127.0.0.1') {
+$host_name = $_SERVER['HTTP_HOST'] ?? '';
+$is_local = (
+    strpos($host_name, 'localhost') !== false || 
+    strpos($host_name, '127.0.0.1') !== false || 
+    empty($host_name)
+);
+
+if ($is_local) {
     // Local XAMPP Settings
     $host = 'localhost';
     $user = 'root';
