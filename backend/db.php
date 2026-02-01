@@ -1,28 +1,22 @@
 <?php
 // Database Configuration
-$host_name = $_SERVER['HTTP_HOST'] ?? '';
-$is_local = (
-    strpos($host_name, 'localhost') !== false || 
-    strpos($host_name, '127.0.0.1') !== false || 
-    empty($host_name)
-);
-
-if ($is_local) {
+if ($_SERVER['HTTP_HOST'] == 'localhost' || $_SERVER['HTTP_HOST'] == '127.0.0.1') {
     // Local XAMPP Settings
     $host = 'localhost';
     $user = 'root';
     $pass = '';
     $dbname = 'sves_website';
 } else {
-    // Online Hosting Settings (InfinityFree)
-    // Replace these with details from your InfinityFree Control Panel
-    $host = 'sql202.infinityfree.com'; 
-    $user = 'if0_41019619';
-    $pass = '2W8w4UE95Je';
-    $dbname = 'if0_41019619_if0_41019619_sves_db';
+    // Online Hosting Settings (Injected via GitHub Actions during deployment)
+    $host = '__DB_HOST__'; 
+    $user = '__DB_USER__';
+    $pass = '__DB_PASS__';
+    $dbname = '__DB_NAME__';
 }
 
-$conn = new mysqli($host, $user, $pass, $dbname);
+// Suppress warnings for a cleaner error message if connection fails
+mysqli_report(MYSQLI_REPORT_OFF);
+$conn = @new mysqli($host, $user, $pass, $dbname);
 
 if ($conn->connect_error) {
     // If database doesn't exist, we might want to handle it or just error out

@@ -13,6 +13,13 @@ jobs:
     - name: 🚚 Get latest code
       uses: actions/checkout@v3
 
+    - name: 🔐 Replace DB Placeholders
+      run: |
+        sed -i "s/__DB_HOST__/${{ secrets.DB_HOST }}/g" backend/db.php
+        sed -i "s/__DB_USER__/${{ secrets.DB_USER }}/g" backend/db.php
+        sed -i "s/__DB_PASS__/${{ secrets.DB_PASS }}/g" backend/db.php
+        sed -i "s/__DB_NAME__/${{ secrets.DB_NAME }}/g" backend/db.php
+
     - name: 📂 Sync files
       uses: SamKirkland/FTP-Deploy-Action@v4.3.4
       with:
