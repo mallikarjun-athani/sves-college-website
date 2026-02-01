@@ -19,9 +19,9 @@ if ($banner_result && $banner_result->num_rows > 0) {
     <div class="container" data-aos="fade-up">
         <div class="hero-content">
             <h1>Excellence in Education</h1>
-            <p>Empowering Minds, Shaping Futures at SVES College Harugeri. A legacy of academic excellence since 1983.</p>
+            <p>Empowering Minds, Shaping Futures at SVES B R Darur First Grade College Harugeri. A legacy of academic excellence since 1983.</p>
             <div class="hero-btns">
-                <a href="admissions.php" class="btn btn-secondary">Apply Now</a>
+                <a href="admissions.php" class="btn btn-secondary">Join Now</a>
                 <a href="login.php" class="btn btn-outline" style="color: white; border-color: white;">Student Login</a>
             </div>
         </div>
@@ -29,16 +29,16 @@ if ($banner_result && $banner_result->num_rows > 0) {
 </section>
 
 <!-- Announcements Ticker -->
-<div class="ticker-wrap">
-    <div class="container">
-        <div class="flex align-center">
-            <span style="background: var(--secondary); color: var(--primary); padding: 5px 15px; font-weight: 700; margin-right: 20px; border-radius: 4px;">LATEST</span>
-            <div class="ticker-content">
-                <span>🔔 Admissions Open for Academic Year 2024-25 | </span>
-                <span>📅 Semester Exams start from 15th June 2024 | </span>
-                <span>🏆 SVES College wins Zonal Sports Championship | </span>
-                <span>📢 Guest Lecture on AI scheduled for next Friday | </span>
-            </div>
+<div class="ticker-wrap" style="background: var(--primary); color: var(--white); padding: 0; overflow: hidden; position: relative; height: 45px; display: flex; align-items: stretch; border-bottom: 3px solid var(--secondary);">
+    <div style="background: var(--secondary); color: var(--primary); padding: 0 25px; display: flex; align-items: center; font-weight: 800; z-index: 101; flex-shrink: 0; box-shadow: 10px 0 20px rgba(0,0,0,0.2); border-radius: 0 5px 5px 0;">
+        LATEST
+    </div>
+    <div style="flex: 1; display: flex; align-items: center; overflow: hidden;">
+        <div class="ticker-content" style="padding-left: 20px; font-weight: 500; font-size: 0.95rem;">
+            <span>🔔 Admissions Open for Academic Year 2026-27 | </span>
+            <span>📅 Semester Exams start from 15th June 2026 | </span>
+            <span>🏆 SVES College wins Zonal Sports Championship | </span>
+            <span>📢 Guest Lecture on AI scheduled for next Friday | </span>
         </div>
     </div>
 </div>
@@ -47,23 +47,35 @@ if ($banner_result && $banner_result->num_rows > 0) {
 <section class="section-padding bg-light">
     <div class="container">
         <div class="card-grid">
-            <div class="card" data-aos="fade-up" data-aos-delay="100">
+            <div class="card" data-aos="fade-up" data-aos-delay="100" onclick="window.location.href='about.php'" style="cursor: pointer;">
                 <i class="fas fa-university card-icon"></i>
                 <h3>Our Institution</h3>
-                <p>Learn about our rich history, mission, and the visionary leadership behind SVES.</p>
-                <a href="about.php" class="btn-link" style="color: var(--primary); font-weight: 600; margin-top: 15px; display: inline-block;">Learn More <i class="fas fa-arrow-right"></i></a>
+                <p>A legacy of academic excellence since 1983. Committed to quality education and holistic development.</p>
+                <div style="margin-top: 15px; display: flex; gap: 10px; flex-wrap: wrap;">
+                    <span style="background: var(--bg-light); padding: 4px 10px; border-radius: 4px; font-size: 0.8rem; font-weight: 600; color: var(--primary);">Est. 1983</span>
+                    <span style="background: var(--bg-light); padding: 4px 10px; border-radius: 4px; font-size: 0.8rem; font-weight: 600; color: var(--primary);">NAAC 'A'</span>
+                </div>
+                <a href="about.php" class="btn-link" style="color: var(--primary); font-weight: 600; margin-top: 20px; display: inline-block;">Learn More <i class="fas fa-arrow-right"></i></a>
             </div>
-            <div class="card" data-aos="fade-up" data-aos-delay="200">
+            <div class="card" data-aos="fade-up" data-aos-delay="200" onclick="window.location.href='courses.php'" style="cursor: pointer;">
                 <i class="fas fa-graduation-cap card-icon"></i>
                 <h3>Academics</h3>
                 <p>Explore our diverse range of undergraduate programs in Arts, Commerce, Science, and BCA.</p>
-                <a href="courses.php" class="btn-link" style="color: var(--primary); font-weight: 600; margin-top: 15px; display: inline-block;">View Courses <i class="fas fa-arrow-right"></i></a>
+                <div style="margin-top: 15px; display: flex; gap: 10px; flex-wrap: wrap;">
+                    <span style="background: var(--bg-light); padding: 4px 10px; border-radius: 4px; font-size: 0.8rem; font-weight: 600; color: var(--primary);">4 Courses</span>
+                    <span style="background: var(--bg-light); padding: 4px 10px; border-radius: 4px; font-size: 0.8rem; font-weight: 600; color: var(--primary);">Expert Faculty</span>
+                </div>
+                <a href="courses.php" class="btn-link" style="color: var(--primary); font-weight: 600; margin-top: 20px; display: inline-block;">View Courses <i class="fas fa-arrow-right"></i></a>
             </div>
-            <div class="card" data-aos="fade-up" data-aos-delay="300">
+            <div class="card" data-aos="fade-up" data-aos-delay="300" onclick="window.location.href='placements.php'" style="cursor: pointer;">
                 <i class="fas fa-users card-icon"></i>
                 <h3>Placement Cell</h3>
                 <p>Our dedicated placement cell ensures that our students are well-prepared for their professional careers.</p>
-                <a href="placements.php" class="btn-link" style="color: var(--primary); font-weight: 600; margin-top: 15px; display: inline-block;">Career Support <i class="fas fa-arrow-right"></i></a>
+                <div style="margin-top: 15px; display: flex; gap: 10px; flex-wrap: wrap;">
+                    <span style="background: var(--bg-light); padding: 4px 10px; border-radius: 4px; font-size: 0.8rem; font-weight: 600; color: var(--primary);">Career Support</span>
+                    <span style="background: var(--bg-light); padding: 4px 10px; border-radius: 4px; font-size: 0.8rem; font-weight: 600; color: var(--primary);">Skill Training</span>
+                </div>
+                <a href="placements.php" class="btn-link" style="color: var(--primary); font-weight: 600; margin-top: 20px; display: inline-block;">Career Support <i class="fas fa-arrow-right"></i></a>
             </div>
         </div>
     </div>
@@ -105,7 +117,7 @@ if ($banner_result && $banner_result->num_rows > 0) {
             </div>
             <div class="why-image" style="flex: 1; min-width: 300px; margin-left: 50px;" data-aos="fade-left">
                 <div style="position: relative; border-radius: var(--radius-lg); overflow: hidden; box-shadow: var(--shadow-lg);">
-                    <img src="../Home page/photes/collage ground.png" alt="College Campus" style="width: 100%; display: block;">
+                   <video src="../Home page/photes/sves harugeri video.mp4" style="width: 100%; display: block;" autoplay muted loop controls></video> 
                     <div style="position: absolute; bottom: 30px; left: 30px; background: var(--secondary); padding: 20px; border-radius: var(--radius-md); box-shadow: var(--shadow-md);">
                         <h2 style="color: var(--primary); font-size: 2.5rem; line-height: 1;">40+</h2>
                         <p style="color: var(--primary); font-weight: 600;">Years of Excellence</p>
