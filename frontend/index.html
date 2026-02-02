@@ -1,0 +1,419 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="description"
+        content="SVES College Harugeri - Excellence in Education. Providing quality education in BCA, BA, B.Com, and B.Sc.">
+    <title>SVES College Harugeri - Excellence in Education</title>
+
+    <!-- Google Fonts -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+
+    <!-- CSS Dependencies -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link href="https://unpkg.com/aos@2.3.1/dist/aos.css" rel="stylesheet">
+    <link rel="stylesheet" href="assets/css/style.css">
+
+    <!-- Favicon -->
+    <link rel="icon" type="image/png" href="assets/images/favicon.png">
+</head>
+
+<body>
+    <header id="main-header">
+        <div class="container">
+            <div class="header-inner flex align-center justify-between">
+                <a href="index.html" class="logo flex align-center">
+                    <img src="assets/images/logo.png" alt="SVES Logo">
+                    <div class="logo-text" style="margin-left: 15px;">
+                        <h2 style="color: var(--white); font-size: 1.5rem; line-height: 1;">SVES College</h2>
+                        <span
+                            style="color: var(--secondary); font-size: 0.7rem; text-transform: uppercase; letter-spacing: 2px;">Harugeri</span>
+                    </div>
+                </a>
+
+                <nav class="nav-links">
+                    <a href="index.html">Home</a>
+                    <a href="about.html">About Us</a>
+                    <div class="dropdown" style="display: inline-block; position: relative;">
+                        <a href="javascript:void(0)">Academics <i class="fas fa-chevron-down"
+                                style="font-size: 0.7rem;"></i></a>
+                        <div class="dropdown-content">
+                            <a href="departments.html">Departments</a>
+                            <a href="courses.html">Courses</a>
+                            <a href="faculty.html">Faculty</a>
+                        </div>
+                    </div>
+                    <a href="student-corner.html">Student Corner</a>
+                    <a href="notes.html">Notes & Resources</a>
+                    <a href="admin/login.html">Admin Login</a>
+                    <a href="admissions.html" class="btn btn-secondary"
+                        style="padding: 8px 20px; color: var(--primary) !important;">Apply Now</a>
+                </nav>
+
+                <div class="mobile-menu-toggle" id="mobile-toggle">
+                    <i class="fas fa-bars"></i>
+                </div>
+            </div>
+        </div>
+
+        <!-- Mobile Navigation Drawer -->
+        <div class="mobile-nav" id="mobile-nav">
+            <div class="mobile-nav-header">
+                <img src="assets/images/logo.png" alt="SVES Logo">
+                <i class="fas fa-times" id="mobile-close"></i>
+            </div>
+            <div class="mobile-nav-links">
+                <a href="index.html">Home</a>
+                <a href="about.html">About Us</a>
+                <a href="departments.html">Departments</a>
+                <a href="courses.html">Courses</a>
+                <a href="faculty.html">Faculty</a>
+                <a href="student-corner.html">Student Corner</a>
+                <a href="notes.html">Notes & Resources</a>
+                <a href="gallery.html">Gallery</a>
+                <a href="placements.html">Placements</a>
+                <a href="admin/login.html">Admin Login</a>
+                <a href="admissions.html" class="btn btn-secondary" style="margin-top: 20px; text-align: center;">Apply
+                    Now</a>
+            </div>
+        </div>
+    </header>
+
+    <style>
+        /* Header Dropdown Styling */
+        .dropdown-content {
+            display: none;
+            position: absolute;
+            top: 100%;
+            left: 0;
+            background: var(--white);
+            min-width: 200px;
+            box-shadow: var(--shadow-lg);
+            border-radius: var(--radius-sm);
+            padding: 10px 0;
+            z-index: 100;
+        }
+
+        .dropdown-content a {
+            color: var(--primary) !important;
+            padding: 10px 20px;
+            display: block;
+            font-size: 0.9rem;
+        }
+
+        .dropdown-content a:hover {
+            background: var(--bg-light);
+            color: var(--secondary) !important;
+        }
+
+        .dropdown:hover .dropdown-content {
+            display: block;
+        }
+
+        header.scrolled .logo-text h2 {
+            color: var(--primary);
+        }
+
+        header.scrolled .mobile-menu-toggle {
+            color: var(--primary);
+        }
+
+        .mobile-menu-toggle {
+            display: none;
+            color: var(--white);
+            font-size: 1.5rem;
+            cursor: pointer;
+            transition: var(--transition);
+        }
+
+        .mobile-nav {
+            position: fixed;
+            top: 0;
+            right: -100%;
+            width: 80%;
+            max-width: 300px;
+            height: 100vh;
+            background: var(--white);
+            z-index: 2000;
+            padding: 30px;
+            box-shadow: -10px 0 30px rgba(0, 0, 0, 0.1);
+            transition: var(--transition);
+            display: flex;
+            flex-direction: column;
+        }
+
+        .mobile-nav.active {
+            right: 0;
+        }
+
+        .mobile-nav-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 40px;
+        }
+
+        .mobile-nav-header img {
+            height: 40px;
+        }
+
+        #mobile-close {
+            font-size: 1.5rem;
+            color: var(--primary);
+            cursor: pointer;
+        }
+
+        .mobile-nav-links {
+            display: flex;
+            flex-direction: column;
+            gap: 15px;
+        }
+
+        .mobile-nav-links a {
+            font-size: 1.1rem;
+            font-weight: 500;
+            color: var(--primary);
+            padding: 10px 0;
+            border-bottom: 1px solid #eee;
+        }
+
+        .mobile-nav-links a:last-child {
+            border-bottom: none;
+        }
+
+        @media (max-width: 1024px) {
+            .nav-links {
+                display: none;
+            }
+
+            .mobile-menu-toggle {
+                display: block !important;
+            }
+        }
+    </style>
+
+    <!-- Hero Section -->
+    <section class="hero" id="hero-section" style="background-image: url('assets/images/campus-hero.jpg');">
+        <div class="container" data-aos="fade-up">
+            <div class="hero-content">
+                <h1>Excellence in Education</h1>
+                <p>Empowering Minds, Shaping Futures at SVES College Harugeri. A legacy of academic excellence since
+                    1983.</p>
+                <div class="hero-btns">
+                    <a href="admissions.html" class="btn btn-secondary">Apply Now</a>
+                    <a href="admin/login.html" class="btn btn-outline" style="color: white; border-color: white;">Admin
+                        Login</a>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Announcements Ticker -->
+    <div class="ticker-wrap">
+        <div class="container">
+            <div class="flex align-center">
+                <span
+                    style="background: var(--secondary); color: var(--primary); padding: 5px 15px; font-weight: 700; margin-right: 20px; border-radius: 4px;">LATEST</span>
+                <div class="ticker-content" id="announcements-ticker">
+                    <span>Loading announcements...</span>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Quick Info Cards -->
+    <section class="section-padding bg-light">
+        <div class="container">
+            <div class="card-grid">
+                <div class="card" data-aos="fade-up" data-aos-delay="100">
+                    <i class="fas fa-university card-icon"></i>
+                    <h3>Our Institution</h3>
+                    <p>Learn about our rich history, mission, and the visionary leadership behind SVES.</p>
+                    <a href="about.html" class="btn-link"
+                        style="color: var(--primary); font-weight: 600; margin-top: 15px; display: inline-block;">Learn
+                        More <i class="fas fa-arrow-right"></i></a>
+                </div>
+                <div class="card" data-aos="fade-up" data-aos-delay="200">
+                    <i class="fas fa-graduation-cap card-icon"></i>
+                    <h3>Academics</h3>
+                    <p>Explore our diverse range of undergraduate programs in Arts, Commerce, Science, and BCA.</p>
+                    <a href="courses.html" class="btn-link"
+                        style="color: var(--primary); font-weight: 600; margin-top: 15px; display: inline-block;">View
+                        Courses <i class="fas fa-arrow-right"></i></a>
+                </div>
+                <div class="card" data-aos="fade-up" data-aos-delay="300">
+                    <i class="fas fa-users card-icon"></i>
+                    <h3>Placement Cell</h3>
+                    <p>Our dedicated placement cell ensures that our students are well-prepared for their professional
+                        careers.</p>
+                    <a href="placements.html" class="btn-link"
+                        style="color: var(--primary); font-weight: 600; margin-top: 15px; display: inline-block;">Career
+                        Support <i class="fas fa-arrow-right"></i></a>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Why Choose Us -->
+    <section class="section-padding">
+        <div class="container">
+            <div class="flex align-center justify-between" style="flex-wrap: wrap;">
+                <div class="why-content" style="flex: 1; min-width: 300px;" data-aos="fade-right">
+                    <div class="section-title" style="text-align: left;">
+                        <h2 style="left: 0; transform: none;">Why Choose SVES?</h2>
+                    </div>
+                    <p style="margin-bottom: 30px; font-size: 1.1rem; color: var(--text-light);">We provide a holistic
+                        environment that foster physical, intellectual, and spiritual growth.</p>
+
+                    <ul class="why-list">
+                        <li style="margin-bottom: 20px; display: flex; align-items: flex-start;">
+                            <i class="fas fa-check-circle"
+                                style="color: var(--secondary); margin-right: 15px; font-size: 1.5rem;"></i>
+                            <div>
+                                <h4 style="color: var(--primary);">NAAC 'A' Accredited</h4>
+                                <p>Proven excellence in quality of education and infrastructure.</p>
+                            </div>
+                        </li>
+                        <li style="margin-bottom: 20px; display: flex; align-items: flex-start;">
+                            <i class="fas fa-check-circle"
+                                style="color: var(--secondary); margin-right: 15px; font-size: 1.5rem;"></i>
+                            <div>
+                                <h4 style="color: var(--primary);">Experienced Faculty</h4>
+                                <p>Dedicated staff with M.Phil and Ph.D degrees for expert guidance.</p>
+                            </div>
+                        </li>
+                        <li style="margin-bottom: 20px; display: flex; align-items: flex-start;">
+                            <i class="fas fa-check-circle"
+                                style="color: var(--secondary); margin-right: 15px; font-size: 1.5rem;"></i>
+                            <div>
+                                <h4 style="color: var(--primary);">Modern Facilities</h4>
+                                <p>Well-equipped labs, digital library, and sports complex.</p>
+                            </div>
+                        </li>
+                    </ul>
+                </div>
+                <div class="why-image" style="flex: 1; min-width: 300px; margin-left: 50px;" data-aos="fade-left">
+                    <div
+                        style="position: relative; border-radius: var(--radius-lg); overflow: hidden; box-shadow: var(--shadow-lg);">
+                        <img src="assets/images/campus.jpg" alt="College Campus" style="width: 100%; display: block;">
+                        <div
+                            style="position: absolute; bottom: 30px; left: 30px; background: var(--secondary); padding: 20px; border-radius: var(--radius-md); box-shadow: var(--shadow-md);">
+                            <h2 style="color: var(--primary); font-size: 2.5rem; line-height: 1;">40+</h2>
+                            <p style="color: var(--primary); font-weight: 600;">Years of Excellence</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Call to Action -->
+    <section class="section-padding" style="background: var(--primary); color: var(--white); text-align: center;">
+        <div class="container" data-aos="zoom-in">
+            <h2 style="font-size: 3rem; margin-bottom: 20px;">Ready to Start Your Journey?</h2>
+            <p style="font-size: 1.2rem; margin-bottom: 40px; opacity: 0.8;">Join SVES College and be part of a vibrant
+                academic community.</p>
+            <a href="contact.html" class="btn btn-secondary">Get in Touch</a>
+        </div>
+    </section>
+
+    <footer>
+        <div class="container">
+            <div class="footer-grid">
+                <div class="footer-about">
+                    <h3>SVES College</h3>
+                    <p>Establishing excellence in higher education since 1983. Reaccredited with 'A' Grade by NAAC.</p>
+                    <div class="social-icons" style="margin-top: 20px;">
+                        <a href="#" style="margin-right: 15px; font-size: 1.2rem;"><i class="fab fa-facebook"></i></a>
+                        <a href="#" style="margin-right: 15px; font-size: 1.2rem;"><i class="fab fa-twitter"></i></a>
+                        <a href="#" style="margin-right: 15px; font-size: 1.2rem;"><i class="fab fa-instagram"></i></a>
+                        <a href="#" style="margin-right: 15px; font-size: 1.2rem;"><i class="fab fa-linkedin"></i></a>
+                    </div>
+                </div>
+
+                <div class="footer-links">
+                    <h3>Quick Links</h3>
+                    <ul>
+                        <li><a href="index.html">Home</a></li>
+                        <li><a href="about.html">About Us</a></li>
+                        <li><a href="admissions.html">Admissions</a></li>
+                        <li><a href="student-corner.html">Student Corner</a></li>
+                        <li><a href="gallery.html">Gallery</a></li>
+                    </ul>
+                </div>
+
+                <div class="footer-links">
+                    <h3>Academics</h3>
+                    <ul>
+                        <li><a href="courses.html">Courses Offered</a></li>
+                        <li><a href="departments.html">Departments</a></li>
+                        <li><a href="faculty.html">Our Faculty</a></li>
+                        <li><a href="notes.html">Notes & Resources</a></li>
+                        <li><a href="placements.html">Placements</a></li>
+                    </ul>
+                </div>
+
+                <div class="footer-contact">
+                    <h3>Contact Us</h3>
+                    <p><i class="fas fa-map-marker-alt" style="color: var(--secondary); margin-right: 10px;"></i>
+                        Harugeri, Karnataka 591220</p>
+                    <p><i class="fas fa-phone"
+                            style="color: var(--secondary); margin-right: 10px; margin-top: 15px;"></i> +91 80507 86198
+                    </p>
+                    <p><i class="fas fa-envelope"
+                            style="color: var(--secondary); margin-right: 10px; margin-top: 15px;"></i>
+                        info@svescollege.in</p>
+                </div>
+            </div>
+
+            <div class="footer-bottom text-center">
+                <p>&copy; 2026 SVES College, Harugeri. All Rights Reserved. | <a href="admin/login.html"
+                        style="color: var(--secondary);">Admin Login</a></p>
+            </div>
+        </div>
+    </footer>
+
+    <!-- JS Dependencies -->
+    <script src="https://unpkg.com/aos@2.3.1/dist/aos.js"></script>
+    <script>
+        AOS.init({
+            duration: 800,
+            once: true
+        });
+    </script>
+    <script src="assets/js/main.js"></script>
+    <script src="assets/js/api.js"></script>
+    <script>
+        // Load announcements from API
+        document.addEventListener('DOMContentLoaded', async () => {
+            try {
+                const response = await fetch(API_BASE_URL + '/announcements');
+                const announcements = await response.json();
+
+                const ticker = document.getElementById('announcements-ticker');
+                if (announcements.length > 0) {
+                    ticker.innerHTML = announcements.map(a =>
+                        `<span>📢 ${a.title}${a.link ? ` <a href="${a.link}" target="_blank">[View]</a>` : ''} | </span>`
+                    ).join('');
+                } else {
+                    ticker.innerHTML = '<span>🔔 Welcome to SVES College Harugeri!</span>';
+                }
+
+                // Load banner from gallery
+                const bannerRes = await fetch(API_BASE_URL + '/gallery/banners');
+                const banners = await bannerRes.json();
+                if (banners.length > 0) {
+                    document.getElementById('hero-section').style.backgroundImage =
+                        `url('../${banners[0].image_path}')`;
+                }
+            } catch (error) {
+                console.error('Failed to load data:', error);
+            }
+        });
+    </script>
+</body>
+
+</html>
