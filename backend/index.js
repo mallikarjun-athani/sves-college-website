@@ -41,6 +41,9 @@ app.use(express.urlencoded({ extended: true }));
 // Serve static files from uploads directory
 app.use('/uploads', express.static(path.join(__dirname, '../uploads')));
 
+// Serve static files from frontend directory
+app.use(express.static(path.join(__dirname, '../frontend')));
+
 // ============================================
 // API ROUTES
 // ============================================
@@ -102,24 +105,20 @@ app.use((req, res) => {
 // ============================================
 
 app.listen(PORT, () => {
+    const localUrl = `http://localhost:${PORT}`;
     console.log(`
-╔════════════════════════════════════════════╗
-║     SVES College Backend API Server        ║
-╠════════════════════════════════════════════╣
-║  Status:  Running                          ║
-║  Port:    ${PORT}                              ║
-║  Mode:    ${process.env.NODE_ENV || 'development'}                      ║
-╚════════════════════════════════════════════╝
+    \x1b[36m╔══════════════════════════════════════════════════════════╗\x1b[0m
+    \x1b[36m║\x1b[0m \x1b[1m\x1b[35m         🚀 SVES COLLEGE - BACKEND RUNNING           \x1b[0m \x1b[36m║\x1b[0m
+    \x1b[36m╠══════════════════════════════════════════════════════════╣\x1b[0m
+    \x1b[36m║\x1b[0m  \x1b[32m✔\x1b[0m  Frontend & API:  \x1b[1m\x1b[34m${localUrl}\x1b[0m              \x1b[36m║\x1b[0m
+    \x1b[36m║\x1b[0m  \x1b[32m✔\x1b[0m  Environment:     \x1b[33m${process.env.NODE_ENV || 'development'}\x1b[0m                        \x1b[36m║\x1b[0m
+    \x1b[36m║\x1b[0m  \x1b[32m✔\x1b[0m  Port:            \x1b[33m${PORT}\x1b[0m                               \x1b[36m║\x1b[0m
+    \x1b[36m╚══════════════════════════════════════════════════════════╝\x1b[0m
 
-API Endpoints:
-  Auth:          POST /api/auth/login, /logout, /verify
-  Announcements: GET/POST/PUT/DELETE /api/announcements
-  Notes:         GET/POST/DELETE /api/notes
-  Gallery:       GET/POST/DELETE /api/gallery
-  Faculty:       GET/POST/PUT/DELETE /api/faculty
-  Dashboard:     GET /api/dashboard/stats
-  Courses:       GET /api/courses
-  Health:        GET /api/health
+    \x1b[1mQuick Access:\x1b[0m
+    \x1b[32m➜\x1b[0m  \x1b[1mHome:\x1b[0m       \x1b[34m${localUrl}/\x1b[0m
+    \x1b[32m➜\x1b[0m  \x1b[1mAdmin:\x1b[0m      \x1b[34m${localUrl}/admin/login.html\x1b[0m
+    \x1b[32m➜\x1b[0m  \x1b[1mHealth:\x1b[0m     \x1b[34m${localUrl}/api/health\x1b[0m
     `);
 });
 

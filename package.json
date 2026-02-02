@@ -4,10 +4,15 @@
   "description": "SVES College Website Backend API - Node.js + Supabase",
   "main": "index.js",
   "scripts": {
-    "start": "node index.js",
-    "dev": "nodemon index.js"
+    "start": "node backend/index.js",
+    "dev": "nodemon backend/index.js"
   },
-  "keywords": ["college", "nodejs", "supabase", "api"],
+  "keywords": [
+    "college",
+    "nodejs",
+    "supabase",
+    "api"
+  ],
   "author": "SVES",
   "license": "MIT",
   "dependencies": {
