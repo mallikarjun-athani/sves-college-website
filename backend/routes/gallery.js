@@ -7,20 +7,8 @@ const { body, validationResult } = require('express-validator');
 const { supabaseAdmin, supabasePublic } = require('../config/supabase');
 const authMiddleware = require('../middleware/auth');
 
-// Configure multer for image uploads
-const storage = multer.diskStorage({
-    destination: (req, file, cb) => {
-        const uploadDir = path.join(__dirname, '../../uploads/gallery');
-        if (!fs.existsSync(uploadDir)) {
-            fs.mkdirSync(uploadDir, { recursive: true });
-        }
-        cb(null, uploadDir);
-    },
-    filename: (req, file, cb) => {
-        const uniqueName = Date.now() + '_' + file.originalname.replace(/\s+/g, '_');
-        cb(null, uniqueName);
-    }
-});
+// Configure multer for RAM storage (to upload to Supabase)
+const storage = multer.memoryStorage();
 
 const upload = multer({
     storage,
@@ -107,7 +95,7 @@ router.get('/:id', async (req, res) => {
 });
 
 // @route   POST /api/gallery
-// @desc    Upload new gallery image
+// @desc    Upload new gallery image to Supabase Storage
 // @access  Private (Admin)
 router.post('/', authMiddleware, upload.single('image_file'), async (req, res) => {
     try {
@@ -118,22 +106,38 @@ router.post('/', authMiddleware, upload.single('image_file'), async (req, res) =
         }
 
         if (!caption) {
-            fs.unlinkSync(req.file.path);
             return res.status(400).json({ error: 'Caption is required' });
         }
 
         const validCategories = ['Campus', 'Events', 'Cultural', 'Sports', 'Banner'];
         if (category && !validCategories.includes(category)) {
-            fs.unlinkSync(req.file.path);
             return res.status(400).json({ error: 'Invalid category' });
         }
 
-        const imagePath = 'uploads/gallery/' + req.file.filename;
+        // Upload to Supabase Storage
+        const filename = Date.now() + '_' + req.file.originalname.replace(/\s+/g, '_');
+        const filePath = `gallery/${filename}`;
+
+        const { data: uploadData, error: uploadError } = await supabaseAdmin
+            .storage
+            .from('uploads')
+            .upload(filePath, req.file.buffer, {
+                contentType: req.file.mimetype,
+                upsert: false
+            });
+
+        if (uploadError) throw uploadError;
+
+        // Get Public URL
+        const { data: { publicUrl } } = supabaseAdmin
+            .storage
+            .from('uploads')
+            .getPublicUrl(filePath);
 
         const { data, error } = await supabaseAdmin
             .from('gallery')
             .insert([{
-                image_path: imagePath,
+                image_path: publicUrl,
                 caption,
                 category: category || 'Campus'
             }])
@@ -141,7 +145,8 @@ router.post('/', authMiddleware, upload.single('image_file'), async (req, res) =
             .single();
 
         if (error) {
-            fs.unlinkSync(req.file.path);
+            // Cleanup: Delete uploaded file if DB insert fails
+            await supabaseAdmin.storage.from('uploads').remove([filePath]);
             throw error;
         }
 
@@ -156,7 +161,7 @@ router.post('/', authMiddleware, upload.single('image_file'), async (req, res) =
 });
 
 // @route   DELETE /api/gallery/:id
-// @desc    Delete gallery image
+// @desc    Delete gallery image from Storage and DB
 // @access  Private (Admin)
 router.delete('/:id', authMiddleware, async (req, res) => {
     try {
@@ -170,10 +175,18 @@ router.delete('/:id', authMiddleware, async (req, res) => {
         if (fetchError) throw fetchError;
 
         if (image && image.image_path) {
-            // Delete the physical file
-            const filePath = path.join(__dirname, '../../', image.image_path);
-            if (fs.existsSync(filePath)) {
-                fs.unlinkSync(filePath);
+            // Extract the relative path from the public URL
+            const parts = image.image_path.split('/uploads/');
+            if (parts.length > 1) {
+                const storagePath = parts[1];
+
+                // Delete from Storage
+                const { error: storageError } = await supabaseAdmin
+                    .storage
+                    .from('uploads')
+                    .remove([storagePath]);
+
+                if (storageError) console.error('Error deleting file from storage:', storageError);
             }
         }
 
