@@ -7,20 +7,8 @@ const { body, validationResult } = require('express-validator');
 const { supabaseAdmin, supabasePublic } = require('../config/supabase');
 const authMiddleware = require('../middleware/auth');
 
-// Configure multer for faculty image uploads
-const storage = multer.diskStorage({
-    destination: (req, file, cb) => {
-        const uploadDir = path.join(__dirname, '../../uploads/faculty');
-        if (!fs.existsSync(uploadDir)) {
-            fs.mkdirSync(uploadDir, { recursive: true });
-        }
-        cb(null, uploadDir);
-    },
-    filename: (req, file, cb) => {
-        const uniqueName = Date.now() + '_' + file.originalname.replace(/\s+/g, '_');
-        cb(null, uniqueName);
-    }
-});
+// Configure multer for RAM storage
+const storage = multer.memoryStorage();
 
 const upload = multer({
     storage,
@@ -86,7 +74,7 @@ router.get('/:id', async (req, res) => {
 });
 
 // @route   POST /api/faculty
-// @desc    Add new faculty member
+// @desc    Add new faculty member with image to Supabase Storage
 // @access  Private (Admin)
 router.post('/', authMiddleware, upload.single('image'), async (req, res) => {
     try {
@@ -94,15 +82,32 @@ router.post('/', authMiddleware, upload.single('image'), async (req, res) => {
 
         // Validate required fields
         if (!name || !designation || !department) {
-            if (req.file) {
-                fs.unlinkSync(req.file.path);
-            }
             return res.status(400).json({ error: 'Name, designation, and department are required' });
         }
 
-        let imagePath = null;
+        let publicUrl = null;
         if (req.file) {
-            imagePath = 'uploads/faculty/' + req.file.filename;
+            // Upload to Supabase Storage
+            const filename = Date.now() + '_' + req.file.originalname.replace(/\s+/g, '_');
+            const filePath = `faculty/${filename}`;
+
+            const { data: uploadData, error: uploadError } = await supabaseAdmin
+                .storage
+                .from('uploads')
+                .upload(filePath, req.file.buffer, {
+                    contentType: req.file.mimetype,
+                    upsert: false
+                });
+
+            if (uploadError) throw uploadError;
+
+            // Get Public URL
+            const { data: urlData } = supabaseAdmin
+                .storage
+                .from('uploads')
+                .getPublicUrl(filePath);
+
+            publicUrl = urlData.publicUrl;
         }
 
         const { data, error } = await supabaseAdmin
@@ -111,14 +116,18 @@ router.post('/', authMiddleware, upload.single('image'), async (req, res) => {
                 name,
                 designation,
                 department,
-                image_path: imagePath
+                image_path: publicUrl
             }])
             .select()
             .single();
 
         if (error) {
-            if (req.file) {
-                fs.unlinkSync(req.file.path);
+            // Cleanup: Delete uploaded file if DB insert fails
+            if (publicUrl) {
+                const parts = publicUrl.split('/uploads/');
+                if (parts.length > 1) {
+                    await supabaseAdmin.storage.from('uploads').remove([parts[1]]);
+                }
             }
             throw error;
         }
@@ -134,7 +143,7 @@ router.post('/', authMiddleware, upload.single('image'), async (req, res) => {
 });
 
 // @route   PUT /api/faculty/:id
-// @desc    Update faculty member
+// @desc    Update faculty member and optionally replace image
 // @access  Private (Admin)
 router.put('/:id', authMiddleware, upload.single('image'), async (req, res) => {
     try {
@@ -147,20 +156,39 @@ router.put('/:id', authMiddleware, upload.single('image'), async (req, res) => {
 
         // Handle new image upload
         if (req.file) {
-            // Get old image path to delete later
+            // 1. Get old image path to delete later
             const { data: oldFaculty } = await supabaseAdmin
                 .from('faculty')
                 .select('image_path')
                 .eq('id', req.params.id)
                 .single();
 
-            updateData.image_path = 'uploads/faculty/' + req.file.filename;
+            // 2. Upload new image
+            const filename = Date.now() + '_' + req.file.originalname.replace(/\s+/g, '_');
+            const filePath = `faculty/${filename}`;
 
-            // Delete old image if it exists
+            const { error: uploadError } = await supabaseAdmin
+                .storage
+                .from('uploads')
+                .upload(filePath, req.file.buffer, {
+                    contentType: req.file.mimetype,
+                    upsert: false
+                });
+
+            if (uploadError) throw uploadError;
+
+            const { data: urlData } = supabaseAdmin
+                .storage
+                .from('uploads')
+                .getPublicUrl(filePath);
+
+            updateData.image_path = urlData.publicUrl;
+
+            // 3. Delete old image if it exists
             if (oldFaculty && oldFaculty.image_path) {
-                const oldPath = path.join(__dirname, '../../', oldFaculty.image_path);
-                if (fs.existsSync(oldPath)) {
-                    fs.unlinkSync(oldPath);
+                const parts = oldFaculty.image_path.split('/uploads/');
+                if (parts.length > 1) {
+                    await supabaseAdmin.storage.from('uploads').remove([parts[1]]);
                 }
             }
         }
@@ -188,7 +216,7 @@ router.put('/:id', authMiddleware, upload.single('image'), async (req, res) => {
 });
 
 // @route   DELETE /api/faculty/:id
-// @desc    Delete faculty member
+// @desc    Delete faculty member and their image
 // @access  Private (Admin)
 router.delete('/:id', authMiddleware, async (req, res) => {
     try {
@@ -202,10 +230,16 @@ router.delete('/:id', authMiddleware, async (req, res) => {
         if (fetchError) throw fetchError;
 
         if (faculty && faculty.image_path) {
-            // Delete the physical file
-            const filePath = path.join(__dirname, '../../', faculty.image_path);
-            if (fs.existsSync(filePath)) {
-                fs.unlinkSync(filePath);
+            // Delete the file from Storage
+            const parts = faculty.image_path.split('/uploads/');
+            if (parts.length > 1) {
+                const storagePath = parts[1];
+                const { error: storageError } = await supabaseAdmin
+                    .storage
+                    .from('uploads')
+                    .remove([storagePath]);
+
+                if (storageError) console.error('Error deleting file from storage:', storageError);
             }
         }
 

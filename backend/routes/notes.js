@@ -7,20 +7,8 @@ const { body, validationResult } = require('express-validator');
 const { supabaseAdmin, supabasePublic } = require('../config/supabase');
 const authMiddleware = require('../middleware/auth');
 
-// Configure multer for PDF uploads
-const storage = multer.diskStorage({
-    destination: (req, file, cb) => {
-        const uploadDir = path.join(__dirname, '../../uploads/notes');
-        if (!fs.existsSync(uploadDir)) {
-            fs.mkdirSync(uploadDir, { recursive: true });
-        }
-        cb(null, uploadDir);
-    },
-    filename: (req, file, cb) => {
-        const uniqueName = Date.now() + '_' + file.originalname.replace(/\s+/g, '_');
-        cb(null, uniqueName);
-    }
-});
+// Configure multer for RAM storage (to upload to Supabase)
+const storage = multer.memoryStorage();
 
 const upload = multer({
     storage,
@@ -91,7 +79,7 @@ router.get('/:id', async (req, res) => {
 });
 
 // @route   POST /api/notes
-// @desc    Upload new note with PDF
+// @desc    Upload new note with PDF to Supabase Storage
 // @access  Private (Admin)
 router.post('/', authMiddleware, upload.single('pdf_file'), async (req, res) => {
     try {
@@ -99,10 +87,6 @@ router.post('/', authMiddleware, upload.single('pdf_file'), async (req, res) => 
 
         // Validate required fields
         if (!title || !course || !semester || !subject || !unit) {
-            // Delete uploaded file if validation fails
-            if (req.file) {
-                fs.unlinkSync(req.file.path);
-            }
             return res.status(400).json({ error: 'All fields are required' });
         }
 
@@ -110,8 +94,27 @@ router.post('/', authMiddleware, upload.single('pdf_file'), async (req, res) => 
             return res.status(400).json({ error: 'PDF file is required' });
         }
 
-        const filePath = 'uploads/notes/' + req.file.filename;
+        // Upload to Supabase Storage
+        const filename = Date.now() + '_' + req.file.originalname.replace(/\s+/g, '_');
+        const filePath = `notes/${filename}`;
 
+        const { data: uploadData, error: uploadError } = await supabaseAdmin
+            .storage
+            .from('uploads')
+            .upload(filePath, req.file.buffer, {
+                contentType: 'application/pdf',
+                upsert: false
+            });
+
+        if (uploadError) throw uploadError;
+
+        // Get Public URL
+        const { data: { publicUrl } } = supabaseAdmin
+            .storage
+            .from('uploads')
+            .getPublicUrl(filePath);
+
+        // Save metadata to Database
         const { data, error } = await supabaseAdmin
             .from('notes')
             .insert([{
@@ -120,14 +123,14 @@ router.post('/', authMiddleware, upload.single('pdf_file'), async (req, res) => 
                 semester: parseInt(semester),
                 subject,
                 unit,
-                file_path: filePath
+                file_path: publicUrl // Store the full public URL
             }])
             .select()
             .single();
 
         if (error) {
-            // Delete uploaded file if database insert fails
-            fs.unlinkSync(req.file.path);
+            // Cleanup: Delete uploaded file if DB insert fails
+            await supabaseAdmin.storage.from('uploads').remove([filePath]);
             throw error;
         }
 
@@ -142,7 +145,7 @@ router.post('/', authMiddleware, upload.single('pdf_file'), async (req, res) => 
 });
 
 // @route   DELETE /api/notes/:id
-// @desc    Delete note and its PDF file
+// @desc    Delete note and its PDF file from Storage
 // @access  Private (Admin)
 router.delete('/:id', authMiddleware, async (req, res) => {
     try {
@@ -156,10 +159,20 @@ router.delete('/:id', authMiddleware, async (req, res) => {
         if (fetchError) throw fetchError;
 
         if (note && note.file_path) {
-            // Delete the physical file
-            const filePath = path.join(__dirname, '../../', note.file_path);
-            if (fs.existsSync(filePath)) {
-                fs.unlinkSync(filePath);
+            // Extract the relative path from the public URL
+            // URL format: https://.../storage/v1/object/public/uploads/notes/filename.pdf
+            // We need: notes/filename.pdf
+            const parts = note.file_path.split('/uploads/');
+            if (parts.length > 1) {
+                const storagePath = parts[1]; // content after .../uploads/
+
+                // Delete from Storage
+                const { error: storageError } = await supabaseAdmin
+                    .storage
+                    .from('uploads')
+                    .remove([storagePath]);
+
+                if (storageError) console.error('Error deleting file from storage:', storageError);
             }
         }
 

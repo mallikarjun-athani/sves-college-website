@@ -38,8 +38,7 @@ app.use(express.json());
 // Parse URL-encoded bodies
 app.use(express.urlencoded({ extended: true }));
 
-// Serve static files from uploads directory
-app.use('/uploads', express.static(path.join(__dirname, '../uploads')));
+
 
 // Serve static files from frontend directory
 app.use(express.static(path.join(__dirname, '../frontend')));
