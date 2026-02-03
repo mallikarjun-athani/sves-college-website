@@ -158,6 +158,26 @@ header.scrolled {
     width: auto;
 }
 
+/* Logo Styling */
+.logo-title {
+    color: var(--white);
+    font-size: 1.5rem;
+    line-height: 1;
+    transition: var(--transition);
+}
+
+.logo-subtitle {
+    color: var(--secondary);
+    font-size: 0.7rem;
+    text-transform: uppercase;
+    letter-spacing: 2px;
+    transition: var(--transition);
+}
+
+header.scrolled .logo-title {
+    color: var(--primary);
+}
+
 .nav-links {
     display: flex;
     gap: 30px;
@@ -262,6 +282,26 @@ header.scrolled .nav-links a {
     border-radius: 2px;
 }
 
+/* --- Why Choose Us --- */
+.why-container {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    flex-wrap: wrap;
+    gap: 30px;
+}
+
+.why-content {
+    flex: 1;
+    min-width: 300px;
+}
+
+.why-image {
+    flex: 1;
+    min-width: 300px;
+    margin-left: 50px;
+}
+
 /* --- Card Layout --- */
 .card-grid {
     display: grid;
@@ -295,6 +335,29 @@ header.scrolled .nav-links a {
     background: var(--primary);
     color: var(--white);
     padding: 10px 0;
+    overflow: hidden;
+}
+
+.ticker-container {
+    display: flex;
+    align-items: center;
+    overflow: hidden;
+}
+
+.latest-badge {
+    background: var(--secondary);
+    color: var(--primary);
+    padding: 5px 15px;
+    font-weight: 700;
+    margin-right: 20px;
+    border-radius: 4px;
+    white-space: nowrap;
+    z-index: 10;
+    position: relative;
+}
+
+.ticker-display {
+    flex: 1;
     overflow: hidden;
 }
 
@@ -379,5 +442,10 @@ footer {
 
     .section-padding {
         padding: 60px 0;
+    }
+
+    .why-image {
+        margin-left: 0;
+        margin-top: 30px;
     }
 }
