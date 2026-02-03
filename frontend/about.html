@@ -40,6 +40,12 @@
             box-shadow: var(--shadow-md);
             border-top: 5px solid var(--secondary);
             text-align: center;
+            transition: var(--transition);
+        }
+
+        .vm-card:hover {
+            transform: translateY(-10px);
+            box-shadow: var(--shadow-lg);
         }
 
         .vm-card i {
@@ -72,89 +78,84 @@
 </head>
 
 <body>
+    <header id="main-header"></header>
 
-    <body>
-        <header id="main-header" class="fixed-top"></header>
+    <section class="about-hero">
+        <div class="container" data-aos="fade-up">
+            <h1>Moments at SVES</h1>
+            <p>Capturing the essence of campus life, academic achievements, and cultural celebrations.</p>
+        </div>
+    </section>
 
-        <section class="about-hero">
-            <div class="container" data-aos="fade-up">
-                <h1>Our Legacy & Vision</h1>
-                <p>Providing quality higher education in rural Karnataka for over 4 decades.</p>
-            </div>
-        </section>
+    <section class="history-section bg-light">
+        <div class="container">
+            <div class="flex align-center justify-between" style="flex-wrap: wrap;">
+                <div style="flex: 1; min-width: 300px;" data-aos="fade-right">
+                    <h2 class="section-title" style="text-align: left; transform: none; left: 0;">Our History</h2>
+                    <p style="margin-top: 20px; line-height: 1.8;">
+                        Shri Vrushabhendra Education Society (SVES) was founded in 1983 with a noble mission to bring
+                        quality education to the rural heartlands of Karnataka. Over the years, the institution has
+                        grown from a small educational initiative into a prestigious center for academic excellence.
+                    </p>
+                    <p style="margin-top: 15px; line-height: 1.8;">
+                        Our institution is reaccredited with an 'A' Grade by NAAC, reflecting our persistent commitment
+                        to maintaining the highest standards of teaching, research, and infrastructure.
+                    </p>
 
-        <section class="history-section bg-light">
-            <div class="container">
-                <div class="flex align-center justify-between" style="flex-wrap: wrap;">
-                    <div style="flex: 1; min-width: 300px;" data-aos="fade-right">
-                        <h2 class="section-title" style="text-align: left; transform: none; left: 0;">Our History</h2>
-                        <p style="margin-top: 20px; line-height: 1.8;">
-                            Shri Vrushabhendra Education Society (SVES) was founded in 1983 with a noble mission to
-                            bring
-                            quality education to the rural heartlands of Karnataka. Over the years, the institution has
-                            grown from a small educational initiative into a prestigious center for academic excellence.
-                        </p>
-                        <p style="margin-top: 15px; line-height: 1.8;">
-                            Our institution is reaccredited with an 'A' Grade by NAAC, reflecting our persistent
-                            commitment
-                            to maintaining the highest standards of teaching, research, and infrastructure.
-                        </p>
-
-                        <ul class="milestone-list">
-                            <li class="milestone-item">
-                                <span class="milestone-year">1983</span>
-                                <div>Establishment of SVES Society by visionary founders.</div>
-                            </li>
-                            <li class="milestone-item">
-                                <span class="milestone-year">1995</span>
-                                <div>Introduction of Bachelor of Computer Applications (BCA).</div>
-                            </li>
-                            <li class="milestone-item">
-                                <span class="milestone-year">2015</span>
-                                <div>NAAC 'A' Grade Accreditation received.</div>
-                            </li>
-                        </ul>
-                    </div>
-                    <div style="flex: 1; min-width: 300px; margin-left: 50px;" data-aos="fade-left">
-                        <img src="assets/images/campus-history.png" alt="Campus History"
-                            style="width: 100%; border-radius: var(--radius-lg); box-shadow: var(--shadow-lg);">
-                    </div>
+                    <ul class="milestone-list">
+                        <li class="milestone-item">
+                            <span class="milestone-year">1983</span>
+                            <div>Establishment of SVES Society by visionary founders.</div>
+                        </li>
+                        <li class="milestone-item">
+                            <span class="milestone-year">1995</span>
+                            <div>Introduction of Bachelor of Computer Applications (BCA).</div>
+                        </li>
+                        <li class="milestone-item">
+                            <span class="milestone-year">2015</span>
+                            <div>NAAC 'A' Grade Accreditation received.</div>
+                        </li>
+                    </ul>
+                </div>
+                <div style="flex: 1; min-width: 300px; margin-left: 50px;" data-aos="fade-left">
+                    <img src="assets/images/campus-history.png" alt="Campus History"
+                        style="width: 100%; border-radius: var(--radius-lg); box-shadow: var(--shadow-lg);">
                 </div>
             </div>
-        </section>
+        </div>
+    </section>
 
-        <section class="section-padding">
-            <div class="container">
-                <div class="vision-mission-grid">
-                    <div class="vm-card" data-aos="fade-up">
-                        <i class="fas fa-eye"></i>
-                        <h3>Our Vision</h3>
-                        <p>To be a premier institution of higher learning, transforming rural youth into globally
-                            competitive and morally upright citizens through quality education.</p>
-                    </div>
-                    <div class="vm-card" data-aos="fade-up" data-aos-delay="100">
-                        <i class="fas fa-bullseye"></i>
-                        <h3>Our Mission</h3>
-                        <p>To provide accessible, affordable, and high-quality education while fostering holistic
-                            development through professional training and community engagement.</p>
-                    </div>
-                    <div class="vm-card" data-aos="fade-up" data-aos-delay="200">
-                        <i class="fas fa-heart"></i>
-                        <h3>Core Values</h3>
-                        <p>Integrity, Excellence, Social Responsibility, and Continuous Innovation in all our academic
-                            and
-                            administrative pursuits.</p>
-                    </div>
+    <section class="section-padding">
+        <div class="container">
+            <div class="vision-mission-grid">
+                <div class="vm-card" data-aos="fade-up">
+                    <i class="fas fa-eye"></i>
+                    <h3>Our Vision</h3>
+                    <p>To be a premier institution of higher learning, transforming rural youth into globally
+                        competitive and morally upright citizens through quality education.</p>
+                </div>
+                <div class="vm-card" data-aos="fade-up" data-aos-delay="100">
+                    <i class="fas fa-bullseye"></i>
+                    <h3>Our Mission</h3>
+                    <p>To provide accessible, affordable, and high-quality education while fostering holistic
+                        development through professional training and community engagement.</p>
+                </div>
+                <div class="vm-card" data-aos="fade-up" data-aos-delay="200">
+                    <i class="fas fa-heart"></i>
+                    <h3>Core Values</h3>
+                    <p>Integrity, Excellence, Social Responsibility, and Continuous Innovation in all our academic and
+                        administrative pursuits.</p>
                 </div>
             </div>
-        </section>
+        </div>
+    </section>
 
-        <footer id="main-site-footer"></footer>
+    <footer id="main-site-footer"></footer>
 
-        <script src="https://unpkg.com/aos@2.3.1/dist/aos.js"></script>
-        <script>AOS.init({ duration: 800, once: true });</script>
-        <script src="assets/js/api.js"></script>
-        <script src="assets/js/main.js"></script>
-    </body>
+    <script src="https://unpkg.com/aos@2.3.1/dist/aos.js"></script>
+    <script>AOS.init({ duration: 800, once: true });</script>
+    <script src="assets/js/api.js"></script>
+    <script src="assets/js/main.js"></script>
+</body>
 
 </html>
