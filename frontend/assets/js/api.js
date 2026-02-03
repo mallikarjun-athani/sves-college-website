@@ -3,8 +3,10 @@
  * This file provides the base URL and helper functions for API calls
  */
 
-// API Base URL - Change this to your deployed backend URL in production
-const API_BASE_URL = 'http://localhost:3000/api';
+// API Base URL - Uses Railway in production and localhost in development
+const API_BASE_URL = window.location.hostname === 'localhost' || window.location.hostname === '127.0.0.1'
+    ? 'http://localhost:3000/api'
+    : 'https://sves-college-harugeri.up.railway.app/api';
 
 // Auth token management
 const AUTH_TOKEN_KEY = 'sves_admin_token';
