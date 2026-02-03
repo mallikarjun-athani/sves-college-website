@@ -1,0 +1,161 @@
+<%- include('includes/header') %>
+
+    <!-- Hero Section -->
+    <section class="hero" style="background-image: url('<%= hero_bg %>');">
+        <div class="container" data-aos="fade-up">
+            <div class="hero-content">
+                <h1>Excellence in Education</h1>
+                <p>Empowering Minds, Shaping Futures at SVES B R Darur First Grade College Harugeri. A legacy of
+                    academic excellence since 1983.</p>
+                <div class="hero-btns">
+                    <a href="/admissions" class="btn btn-secondary">Join Now</a>
+                    <a href="/login" class="btn btn-outline" style="color: white; border-color: white;">Student
+                        Login</a>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Announcements Ticker -->
+    <div class="ticker-wrap"
+        style="background: var(--primary); color: var(--white); padding: 0; overflow: hidden; position: relative; height: 45px; display: flex; align-items: stretch; border-bottom: 3px solid var(--secondary);">
+        <div
+            style="background: var(--secondary); color: var(--primary); padding: 0 25px; display: flex; align-items: center; font-weight: 800; z-index: 101; flex-shrink: 0; box-shadow: 10px 0 20px rgba(0,0,0,0.2); border-radius: 0 5px 5px 0;">
+            LATEST
+        </div>
+        <div style="flex: 1; display: flex; align-items: center; overflow: hidden;">
+            <div class="ticker-content" style="padding-left: 20px; font-weight: 500; font-size: 0.95rem;">
+                <span>🔔 Admissions Open for Academic Year 2026-27 | </span>
+                <span>📅 Semester Exams start from 15th June 2026 | </span>
+                <span>🏆 SVES College wins Zonal Sports Championship | </span>
+                <span>📢 Guest Lecture on AI scheduled for next Friday | </span>
+            </div>
+        </div>
+    </div>
+
+    <!-- Quick Info Cards -->
+    <section class="section-padding bg-light">
+        <div class="container">
+            <div class="card-grid">
+                <div class="card" data-aos="fade-up" data-aos-delay="100" onclick="window.location.href='/about'"
+                    style="cursor: pointer;">
+                    <i class="fas fa-university card-icon"></i>
+                    <h3>Our Institution</h3>
+                    <p>A legacy of academic excellence since 1983. Committed to quality education and holistic
+                        development.</p>
+                    <div style="margin-top: 15px; display: flex; gap: 10px; flex-wrap: wrap;">
+                        <span
+                            style="background: var(--bg-light); padding: 4px 10px; border-radius: 4px; font-size: 0.8rem; font-weight: 600; color: var(--primary);">Est.
+                            1983</span>
+                        <span
+                            style="background: var(--bg-light); padding: 4px 10px; border-radius: 4px; font-size: 0.8rem; font-weight: 600; color: var(--primary);">NAAC
+                            'A'</span>
+                    </div>
+                    <a href="/about" class="btn-link"
+                        style="color: var(--primary); font-weight: 600; margin-top: 20px; display: inline-block;">Learn
+                        More <i class="fas fa-arrow-right"></i></a>
+                </div>
+                <div class="card" data-aos="fade-up" data-aos-delay="200" onclick="window.location.href='/courses'"
+                    style="cursor: pointer;">
+                    <i class="fas fa-graduation-cap card-icon"></i>
+                    <h3>Academics</h3>
+                    <p>Explore our diverse range of undergraduate programs in Arts, Commerce, Science, and BCA.</p>
+                    <div style="margin-top: 15px; display: flex; gap: 10px; flex-wrap: wrap;">
+                        <span
+                            style="background: var(--bg-light); padding: 4px 10px; border-radius: 4px; font-size: 0.8rem; font-weight: 600; color: var(--primary);">4
+                            Courses</span>
+                        <span
+                            style="background: var(--bg-light); padding: 4px 10px; border-radius: 4px; font-size: 0.8rem; font-weight: 600; color: var(--primary);">Expert
+                            Faculty</span>
+                    </div>
+                    <a href="/courses" class="btn-link"
+                        style="color: var(--primary); font-weight: 600; margin-top: 20px; display: inline-block;">View
+                        Courses <i class="fas fa-arrow-right"></i></a>
+                </div>
+                <div class="card" data-aos="fade-up" data-aos-delay="300" onclick="window.location.href='/placements'"
+                    style="cursor: pointer;">
+                    <i class="fas fa-users card-icon"></i>
+                    <h3>Placement Cell</h3>
+                    <p>Our dedicated placement cell ensures that our students are well-prepared for their professional
+                        careers.</p>
+                    <div style="margin-top: 15px; display: flex; gap: 10px; flex-wrap: wrap;">
+                        <span
+                            style="background: var(--bg-light); padding: 4px 10px; border-radius: 4px; font-size: 0.8rem; font-weight: 600; color: var(--primary);">Career
+                            Support</span>
+                        <span
+                            style="background: var(--bg-light); padding: 4px 10px; border-radius: 4px; font-size: 0.8rem; font-weight: 600; color: var(--primary);">Skill
+                            Training</span>
+                    </div>
+                    <a href="/placements" class="btn-link"
+                        style="color: var(--primary); font-weight: 600; margin-top: 20px; display: inline-block;">Career
+                        Support <i class="fas fa-arrow-right"></i></a>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Why Choose Us -->
+    <section class="section-padding">
+        <div class="container">
+            <div class="flex align-center justify-between" style="flex-wrap: wrap;">
+                <div class="why-content" style="flex: 1; min-width: 300px;" data-aos="fade-right">
+                    <div class="section-title" style="text-align: left;">
+                        <h2 style="left: 0; transform: none;">Why Choose SVES?</h2>
+                    </div>
+                    <p style="margin-bottom: 30px; font-size: 1.1rem; color: var(--text-light);">We provide a holistic
+                        environment that foster physical, intellectual, and spiritual growth.</p>
+
+                    <ul class="why-list">
+                        <li style="margin-bottom: 20px; display: flex; align-items: flex-start;">
+                            <i class="fas fa-check-circle"
+                                style="color: var(--secondary); margin-right: 15px; font-size: 1.5rem;"></i>
+                            <div>
+                                <h4 style="color: var(--primary);">NAAC 'A' Accredited</h4>
+                                <p>Proven excellence in quality of education and infrastructure.</p>
+                            </div>
+                        </li>
+                        <li style="margin-bottom: 20px; display: flex; align-items: flex-start;">
+                            <i class="fas fa-check-circle"
+                                style="color: var(--secondary); margin-right: 15px; font-size: 1.5rem;"></i>
+                            <div>
+                                <h4 style="color: var(--primary);">Experienced Faculty</h4>
+                                <p>Dedicated staff with M.Phil and Ph.D degrees for expert guidance.</p>
+                            </div>
+                        </li>
+                        <li style="margin-bottom: 20px; display: flex; align-items: flex-start;">
+                            <i class="fas fa-check-circle"
+                                style="color: var(--secondary); margin-right: 15px; font-size: 1.5rem;"></i>
+                            <div>
+                                <h4 style="color: var(--primary);">Modern Facilities</h4>
+                                <p>Well-equipped labs, digital library, and sports complex.</p>
+                            </div>
+                        </li>
+                    </ul>
+                </div>
+                <div class="why-image" style="flex: 1; min-width: 300px; margin-left: 50px;" data-aos="fade-left">
+                    <div
+                        style="position: relative; border-radius: var(--radius-lg); overflow: hidden; box-shadow: var(--shadow-lg);">
+                        <video src="/Home page/photes/sves harugeri video.mp4" style="width: 100%; display: block;"
+                            autoplay muted loop controls></video>
+                        <div
+                            style="position: absolute; bottom: 30px; left: 30px; background: var(--secondary); padding: 20px; border-radius: var(--radius-md); box-shadow: var(--shadow-md);">
+                            <h2 style="color: var(--primary); font-size: 2.5rem; line-height: 1;">40+</h2>
+                            <p style="color: var(--primary); font-weight: 600;">Years of Excellence</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Call to Action -->
+    <section class="section-padding" style="background: var(--primary); color: var(--white); text-align: center;">
+        <div class="container" data-aos="zoom-in">
+            <h2 style="font-size: 3rem; margin-bottom: 20px;">Ready to Start Your Journey?</h2>
+            <p style="font-size: 1.2rem; margin-bottom: 40px; opacity: 0.8;">Join SVES College and be part of a vibrant
+                academic community.</p>
+            <a href="/contact" class="btn btn-secondary">Get in Touch</a>
+        </div>
+    </section>
+
+    <%- include('includes/footer') %>

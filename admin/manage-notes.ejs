@@ -1,0 +1,223 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>
+        <%= typeof page_title !=='undefined' ? page_title + " | Admin Panel" : "Manage Notes" %>
+    </title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link rel="stylesheet" href="/assets/css/style.css">
+    <style>
+        :root {
+            --sidebar-width: 260px;
+        }
+
+        body {
+            background: #f4f7f6;
+            display: flex;
+        }
+
+        .sidebar {
+            width: var(--sidebar-width);
+            background: var(--primary);
+            color: white;
+            height: 100vh;
+            position: fixed;
+            padding-top: 30px;
+        }
+
+        .main-content {
+            margin-left: var(--sidebar-width);
+            flex: 1;
+            padding: 40px;
+        }
+
+        .sidebar-menu a {
+            display: flex;
+            align-items: center;
+            padding: 15px 30px;
+            color: rgba(255, 255, 255, 0.7);
+            transition: var(--transition);
+        }
+
+        .sidebar-menu a:hover,
+        .sidebar-menu a.active {
+            background: rgba(255, 255, 255, 0.05);
+            color: var(--secondary);
+            border-left: 4px solid var(--secondary);
+        }
+
+        .admin-table {
+            width: 100%;
+            border-collapse: collapse;
+            background: white;
+            border-radius: 8px;
+            overflow: hidden;
+            box-shadow: var(--shadow-sm);
+        }
+
+        .admin-table th,
+        .admin-table td {
+            padding: 15px;
+            text-align: left;
+            border-bottom: 1px solid #eee;
+        }
+
+        .admin-table th {
+            background: #fafafa;
+            font-weight: 600;
+            color: var(--primary);
+        }
+
+        .upload-form {
+            background: white;
+            padding: 30px;
+            border-radius: 8px;
+            margin-bottom: 40px;
+            box-shadow: var(--shadow-sm);
+        }
+
+        .form-grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 20px;
+        }
+
+        .form-group {
+            margin-bottom: 15px;
+        }
+
+        .alert {
+            padding: 15px;
+            background: #d4edda;
+            color: #155724;
+            border-radius: 4px;
+            margin-bottom: 20px;
+        }
+    </style>
+</head>
+
+<body>
+    <div class="sidebar">
+        <div class="sidebar-brand" style="padding: 0 30px 40px;">
+            <h2 style="color:white">SVES Admin</h2>
+        </div>
+        <div class="sidebar-menu">
+            <a href="/admin/dashboard"><i class="fas fa-home"></i> Dashboard</a>
+            <a href="/admin/manage-notes" class="active"><i class="fas fa-file-alt"></i> Manage Notes</a>
+            <a href="/admin/manage-gallery"><i class="fas fa-images"></i> Manage Gallery</a>
+            <a href="/admin/manage-announcements"><i class="fas fa-bullhorn"></i> Announcements</a>
+            <a href="/admin/logout" style="margin-top: 50px; color: #ff6b6b;"><i class="fas fa-sign-out-alt"></i>
+                Logout</a>
+        </div>
+    </div>
+
+    <div class="main-content">
+        <h1>Manage Study Notes</h1>
+
+        <% if(typeof message !=='undefined' && message) { %>
+            <div class="alert">
+                <%= message %>
+            </div>
+            <% } %>
+
+                <div class="upload-form">
+                    <h3>Upload New Note</h3>
+                    <form action="/admin/manage-notes" method="POST" enctype="multipart/form-data">
+                        <div class="form-grid" style="margin-top: 20px;">
+                            <div class="form-group">
+                                <label>Note Title</label>
+                                <input type="text" name="title" class="btn-outline" style="width:100%; padding:10px"
+                                    required>
+                            </div>
+                            <div class="form-group">
+                                <label>Course</label>
+                                <select name="course" class="btn-outline" style="width:100%; padding:10px" required>
+                                    <option value="1">BCA</option>
+                                    <option value="2">BA</option>
+                                    <option value="3">B.Com</option>
+                                    <option value="4">B.Sc</option>
+                                </select>
+                            </div>
+                        </div>
+                        <div class="form-grid">
+                            <div class="form-group">
+                                <label>Semester</label>
+                                <input type="number" name="semester" min="1" max="6" class="btn-outline"
+                                    style="width:100%; padding:10px" required>
+                            </div>
+                            <div class="form-group">
+                                <label>Subject Name</label>
+                                <input type="text" name="subject" class="btn-outline" style="width:100%; padding:10px"
+                                    required>
+                            </div>
+                        </div>
+                        <div class="form-grid">
+                            <div class="form-group">
+                                <label>Unit Name/Number</label>
+                                <input type="text" name="unit" class="btn-outline" style="width:100%; padding:10px"
+                                    required>
+                            </div>
+                            <div class="form-group">
+                                <label>Select PDF File</label>
+                                <input type="file" name="pdf_file" accept=".pdf" class="btn-outline"
+                                    style="width:100%; padding:10px" required>
+                            </div>
+                        </div>
+                        <button type="submit" name="upload_note" class="btn btn-primary">Upload Note</button>
+                    </form>
+                </div>
+
+                <h3>Existing Notes</h3>
+                <table class="admin-table">
+                    <thead>
+                        <tr>
+                            <th>Title</th>
+                            <th>Course</th>
+                            <th>Sem</th>
+                            <th>Subject</th>
+                            <th>Date</th>
+                            <th>Action</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <% if(typeof notes !=='undefined' && notes.length> 0) { %>
+                            <% notes.forEach(note=> { %>
+                                <tr>
+                                    <td>
+                                        <%= note.title %>
+                                    </td>
+                                    <td>
+                                        <%= note.course_id %>
+                                    </td>
+                                    <td>
+                                        <%= note.semester %>
+                                    </td>
+                                    <td>
+                                        <%= note.subject %>
+                                    </td>
+                                    <td>
+                                        <%= new Date(note.upload_date).toLocaleDateString() %>
+                                    </td>
+                                    <td>
+                                        <a href="/<%= note.file_path %>" style="color: var(--primary);"
+                                            target="_blank"><i class="fas fa-eye"></i></a>
+                                        <a href="/admin/manage-notes/delete/<%= note.id %>"
+                                            style="color: #d9534f; margin-left: 15px;"
+                                            onclick="return confirm('Are you sure?')"><i class="fas fa-trash"></i></a>
+                                    </td>
+                                </tr>
+                                <% }) %>
+                                    <% } else { %>
+                                        <tr>
+                                            <td colspan="6" style="text-align: center;">No notes found.</td>
+                                        </tr>
+                                        <% } %>
+                    </tbody>
+                </table>
+    </div>
+</body>
+
+</html>
