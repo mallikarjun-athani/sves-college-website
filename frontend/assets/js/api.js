@@ -98,3 +98,17 @@ function formatDate(dateString) {
     const options = { day: '2-digit', month: 'short', year: 'numeric' };
     return new Date(dateString).toLocaleDateString('en-IN', options);
 }
+
+// Helper to resolve paths (handles absolute URLs from Supabase and relative paths)
+function resolvePath(path) {
+    if (!path) return '';
+    if (path.startsWith('http')) return path;
+
+    // Check if we are in admin folder
+    const isAdmin = window.location.pathname.includes('/admin/');
+    if (isAdmin) {
+        return `../../${path}`;
+    }
+    // For root level pages (index, notes, etc.)
+    return path;
+}

@@ -35,7 +35,7 @@
                 </a>
 
                 <nav class="nav-links">
-                    <a href="index.html">Home</a>
+                    <a href="index.html" class="active">Home</a>
                     <a href="about.html">About Us</a>
                     <div class="dropdown" style="display: inline-block; position: relative;">
                         <a href="javascript:void(0)">Academics <i class="fas fa-chevron-down"
@@ -48,6 +48,7 @@
                     </div>
                     <a href="student-corner.html">Student Corner</a>
                     <a href="notes.html">Notes & Resources</a>
+                    <a href="gallery.html">Gallery</a>
                     <a href="admin/login.html">Admin Login</a>
                     <a href="admissions.html" class="btn btn-secondary"
                         style="padding: 8px 20px; color: var(--primary) !important;">Apply Now</a>
@@ -409,7 +410,7 @@
                 const banners = await bannerRes.json();
                 if (banners.length > 0) {
                     document.getElementById('hero-section').style.backgroundImage =
-                        `url('../${banners[0].image_path}')`;
+                        `url('${resolvePath(banners[0].image_path)}')`;
                 }
             } catch (error) {
                 console.error('Failed to load data:', error);

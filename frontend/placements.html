@@ -4,8 +4,8 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <meta name="description" content="Study Notes & Resources - SVES College Harugeri">
-    <title>Notes & Resources | SVES College</title>
+    <meta name="description" content="Placement Success and Career Support - SVES College Harugeri">
+    <title>Placements | SVES College</title>
 
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <link href="https://unpkg.com/aos@2.3.1/dist/aos.css" rel="stylesheet">
@@ -124,104 +124,72 @@
             }
         }
 
-        .notes-header {
-            background: linear-gradient(rgba(0, 35, 71, 0.9), rgba(0, 35, 71, 0.9)), url('assets/images/notes-bg.jpg');
+        .placements-header {
+            background: linear-gradient(rgba(0, 35, 71, 0.9), rgba(0, 35, 71, 0.9)), url('assets/images/placements-bg.jpg');
             background-size: cover;
             padding: 150px 0 80px;
             color: var(--white);
             text-align: center;
         }
 
-        .filter-section {
-            background: var(--white);
-            padding: 30px;
-            border-radius: var(--radius-md);
-            box-shadow: var(--shadow-md);
+        .stats-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 30px;
             margin-top: -50px;
             position: relative;
             z-index: 10;
         }
 
-        .filter-grid {
-            display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
-            gap: 20px;
-        }
-
-        .filter-item label {
-            display: block;
-            margin-bottom: 8px;
-            font-weight: 600;
-            font-size: 0.9rem;
-            color: var(--primary);
-        }
-
-        .filter-item select,
-        .filter-item input {
-            width: 100%;
-            padding: 12px;
-            border: 1px solid #ddd;
-            border-radius: var(--radius-sm);
-            font-family: inherit;
-        }
-
-        .notes-grid {
-            display: grid;
-            grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
-            gap: 30px;
-            margin-top: 50px;
-        }
-
-        .note-card {
+        .stat-card {
             background: var(--white);
             padding: 30px;
             border-radius: var(--radius-md);
-            box-shadow: var(--shadow-sm);
-            border: 1px solid #eee;
-            transition: var(--transition);
+            box-shadow: var(--shadow-md);
+            text-align: center;
+            border-bottom: 5px solid var(--secondary);
         }
 
-        .note-card:hover {
-            box-shadow: var(--shadow-lg);
-            border-color: var(--secondary);
-        }
-
-        .note-type {
-            background: var(--secondary-light);
+        .stat-card h2 {
+            font-size: 2.5rem;
             color: var(--primary);
-            padding: 3px 10px;
-            border-radius: 4px;
-            font-size: 0.7rem;
-            font-weight: 700;
-            text-transform: uppercase;
-        }
-
-        .note-card h4 {
-            margin: 15px 0 10px;
-            color: var(--primary);
-        }
-
-        .note-meta {
-            font-size: 0.85rem;
-            color: var(--text-light);
-            margin-bottom: 20px;
-        }
-
-        .note-meta span {
-            display: block;
             margin-bottom: 5px;
         }
 
-        .empty-state {
-            grid-column: 1 / -1;
+        .stat-card p {
+            font-weight: 600;
+            color: var(--text-light);
+            text-transform: uppercase;
+            font-size: 0.8rem;
+        }
+
+        .recruiter-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(150px, 1fr));
+            gap: 40px;
+            margin-top: 50px;
+            align-items: center;
+        }
+
+        .recruiter-logo {
+            filter: grayscale(1);
+            opacity: 0.6;
+            transition: var(--transition);
             text-align: center;
-            padding: 50px;
+            font-weight: 800;
+            font-size: 1.2rem;
+            color: #999;
+        }
+
+        .recruiter-logo:hover {
+            filter: grayscale(0);
+            opacity: 1;
+            color: var(--primary);
         }
     </style>
 </head>
 
 <body>
-    <!-- Include Navbar -->
     <header id="main-header">
         <div class="container">
             <div class="header-inner flex align-center justify-between">
@@ -275,7 +243,7 @@
                 <a href="student-corner.html">Student Corner</a>
                 <a href="notes.html">Notes & Resources</a>
                 <a href="gallery.html">Gallery</a>
-                <a href="placements.html">Placements</a>
+                <a href="placements.html" class="active">Placements</a>
                 <a href="admin/login.html">Admin Login</a>
                 <a href="admissions.html" class="btn btn-secondary" style="margin-top: 20px; text-align: center;">Apply
                     Now</a>
@@ -283,59 +251,76 @@
         </div>
     </header>
 
-    <section class="notes-header">
-        <div class="container">
-            <h1>Digital Notes Library</h1>
-            <p>Access high-quality study materials and resources curated by our expert faculty.</p>
+    <section class="placements-header">
+        <div class="container" data-aos="fade-up">
+            <h1>Career Success</h1>
+            <p>Our dedicated placement cell works tirelessly to bridge the gap between education and industry.</p>
         </div>
     </section>
 
     <div class="container">
-        <div class="filter-section">
-            <form id="filter-form" class="filter-grid">
-                <div class="filter-item">
-                    <label>Course</label>
-                    <select name="course" id="filter-course">
-                        <option value="">All Courses</option>
-                        <option value="1">BCA</option>
-                        <option value="2">BA</option>
-                        <option value="3">B.Com</option>
-                        <option value="4">B.Sc</option>
-                    </select>
-                </div>
-                <div class="filter-item">
-                    <label>Semester</label>
-                    <select name="semester" id="filter-semester">
-                        <option value="">All Semesters</option>
-                        <option value="1">Semester 1</option>
-                        <option value="2">Semester 2</option>
-                        <option value="3">Semester 3</option>
-                        <option value="4">Semester 4</option>
-                        <option value="5">Semester 5</option>
-                        <option value="6">Semester 6</option>
-                    </select>
-                </div>
-                <div class="filter-item">
-                    <label>Search Subject</label>
-                    <input type="text" name="subject" id="filter-subject" placeholder="e.g. Data Structures">
-                </div>
-                <div class="filter-item" style="display: flex; align-items: flex-end;">
-                    <button type="submit" class="btn btn-primary" style="width: 100%;">Apply Filters</button>
-                </div>
-            </form>
-        </div>
-
-        <div class="section-padding">
-            <div class="notes-grid" id="notes-container">
-                <div class="empty-state">
-                    <i class="fas fa-spinner fa-spin" style="font-size: 3rem; color: var(--primary);"></i>
-                    <p style="margin-top: 20px;">Loading notes...</p>
-                </div>
+        <div class="stats-grid">
+            <div class="stat-card" data-aos="fade-up">
+                <h2>85%</h2>
+                <p>Placement Rate</p>
+            </div>
+            <div class="stat-card" data-aos="fade-up" data-aos-delay="100">
+                <h2>50+</h2>
+                <p>Hiring Partners</p>
+            </div>
+            <div class="stat-card" data-aos="fade-up" data-aos-delay="200">
+                <h2>6.5 LPA</h2>
+                <p>Highest Package</p>
+            </div>
+            <div class="stat-card" data-aos="fade-up" data-aos-delay="300">
+                <h2>200+</h2>
+                <p>Offers Last Year</p>
             </div>
         </div>
+
+        <section class="section-padding">
+            <h2 class="section-title">Message from Placement Cell</h2>
+            <div class="flex align-center" style="gap: 50px; flex-wrap: wrap; margin-top: 30px;">
+                <div style="flex: 2; min-width: 300px;" data-aos="fade-right">
+                    <p style="font-size: 1.1rem; line-height: 1.8; color: var(--text-light);">
+                        At SVES College, we believe in empowering our students with not just academic knowledge but also
+                        with the professional skills required to excel in their careers. Our Placement Cell provides
+                        training in aptitude, soft skills, and technical interviews to ensure every student is
+                        industry-ready.
+                    </p>
+                    <p style="margin-top: 20px; font-size: 1.1rem; line-height: 1.8; color: var(--text-light);">
+                        We have strong collaborations with leading companies across IT, Finance, and Service sectors,
+                        facilitating numerous campus recruitment drives every year.
+                    </p>
+                </div>
+                <div style="flex: 1; min-width: 250px; background: var(--primary); padding: 40px; color: var(--white); border-radius: var(--radius-md);"
+                    data-aos="fade-left">
+                    <h3>Contact Placement Cell</h3>
+                    <p style="opacity: 0.8; margin-top: 10px;">For industry collaborations and recruitment enquiries:
+                    </p>
+                    <p style="margin-top: 20px;"><i class="fas fa-envelope"
+                            style="color: var(--secondary); margin-right: 10px;"></i> placements@svescollege.in</p>
+                    <p style="margin-top: 10px;"><i class="fas fa-phone"
+                            style="color: var(--secondary); margin-right: 10px;"></i> +91 80507 86199</p>
+                </div>
+            </div>
+        </section>
+
+        <section class="section-padding" style="border-top: 1px solid #eee;">
+            <h2 class="section-title">Our Top Recruiters</h2>
+            <div class="recruiter-grid" data-aos="fade-up">
+                <div class="recruiter-logo">INFOSYS</div>
+                <div class="recruiter-logo">WIPRO</div>
+                <div class="recruiter-logo">TCS</div>
+                <div class="recruiter-logo">ACCENTURE</div>
+                <div class="recruiter-logo">ICICI BANK</div>
+                <div class="recruiter-logo">HDFC BANK</div>
+                <div class="recruiter-logo">BYJU'S</div>
+                <div class="recruiter-logo">TECH MAHINDRA</div>
+            </div>
+        </section>
     </div>
 
-    <!-- Footer -->
     <footer>
         <div class="container">
             <div class="footer-grid">
@@ -394,75 +379,7 @@
 
     <script src="https://unpkg.com/aos@2.3.1/dist/aos.js"></script>
     <script>AOS.init({ duration: 800, once: true });</script>
-    <script src="assets/js/api.js"></script>
     <script src="assets/js/main.js"></script>
-    <script>
-        const notesContainer = document.getElementById('notes-container');
-        const filterForm = document.getElementById('filter-form');
-
-        async function loadNotes(filters = {}) {
-            try {
-                const params = new URLSearchParams();
-                if (filters.course) params.append('course', filters.course);
-                if (filters.semester) params.append('semester', filters.semester);
-                if (filters.subject) params.append('subject', filters.subject);
-
-                const url = `${API_BASE_URL}/notes?${params.toString()}`;
-                const response = await fetch(url);
-                const notes = await response.json();
-
-                if (notes.length === 0) {
-                    notesContainer.innerHTML = `
-                    <div class="empty-state">
-                        <i class="fas fa-folder-open" style="font-size: 4rem; color: #ddd; margin-bottom: 20px;"></i>
-                        <h3>No notes found</h3>
-                        <p>Try adjusting your filters or search keywords.</p>
-                    </div>
-                `;
-                    return;
-                }
-
-                notesContainer.innerHTML = notes.map(note => `
-                <div class="note-card" data-aos="fade-up">
-                    <span class="note-type">PDF</span>
-                    <h4>${note.title}</h4>
-                    <div class="note-meta">
-                        <span><i class="fas fa-book-open"></i> Subject: ${note.subject}</span>
-                        <span><i class="fas fa-layer-group"></i> Unit: ${note.unit}</span>
-                        <span><i class="fas fa-clock"></i> Uploaded: ${formatDate(note.upload_date)}</span>
-                    </div>
-                    <div class="flex">
-                        <a href="${resolvePath(note.file_path)}" class="btn btn-outline" style="padding: 8px 15px; font-size: 0.9rem; flex: 1; margin-right: 10px;" target="_blank">View</a>
-                        <a href="${resolvePath(note.file_path)}" class="btn btn-primary" style="padding: 8px 15px; font-size: 0.9rem; flex: 1;" download>Download</a>
-                    </div>
-                </div>
-            `).join('');
-
-                AOS.refresh();
-            } catch (error) {
-                console.error('Failed to load notes:', error);
-                notesContainer.innerHTML = `
-                <div class="empty-state">
-                    <i class="fas fa-exclamation-triangle" style="font-size: 4rem; color: #d9534f; margin-bottom: 20px;"></i>
-                    <h3>Error loading notes</h3>
-                    <p>Please try again later.</p>
-                </div>
-            `;
-            }
-        }
-
-        filterForm.addEventListener('submit', (e) => {
-            e.preventDefault();
-            loadNotes({
-                course: document.getElementById('filter-course').value,
-                semester: document.getElementById('filter-semester').value,
-                subject: document.getElementById('filter-subject').value
-            });
-        });
-
-        // Load notes on page load
-        document.addEventListener('DOMContentLoaded', () => loadNotes());
-    </script>
 </body>
 
 </html>
