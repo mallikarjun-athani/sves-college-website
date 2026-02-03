@@ -25,9 +25,84 @@
         .gallery-nav {
             display: flex;
             justify-content: center;
-            gap: 15px;
+            gap: 12px;
             margin-bottom: 40px;
             flex-wrap: wrap;
+            padding: 15px 25px;
+            background: rgba(255, 255, 255, 0.8);
+            backdrop-filter: blur(10px);
+            -webkit-backdrop-filter: blur(10px);
+            border-radius: 50px;
+            box-shadow: 0 8px 32px rgba(0, 35, 71, 0.1);
+            display: inline-flex;
+        }
+
+        .gallery-nav-wrapper {
+            display: flex;
+            justify-content: center;
+            margin-bottom: 40px;
+        }
+
+        .filter-btn {
+            padding: 12px 28px;
+            border: none;
+            background: transparent;
+            color: var(--primary);
+            font-weight: 600;
+            font-size: 0.95rem;
+            cursor: pointer;
+            border-radius: 30px;
+            transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+            position: relative;
+            overflow: hidden;
+            letter-spacing: 0.3px;
+        }
+
+        .filter-btn::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(135deg, var(--primary), #1a4a7a);
+            opacity: 0;
+            transition: opacity 0.3s ease;
+            z-index: -1;
+            border-radius: 30px;
+        }
+
+        .filter-btn:hover {
+            color: var(--white);
+            transform: translateY(-2px);
+            box-shadow: 0 4px 15px rgba(0, 35, 71, 0.2);
+        }
+
+        .filter-btn:hover::before {
+            opacity: 1;
+        }
+
+        .filter-btn.active {
+            background: linear-gradient(135deg, var(--primary), #1a4a7a);
+            color: var(--white);
+            box-shadow: 0 4px 20px rgba(0, 35, 71, 0.3);
+        }
+
+        .filter-btn.active::after {
+            content: '';
+            position: absolute;
+            bottom: -2px;
+            left: 50%;
+            transform: translateX(-50%);
+            width: 30px;
+            height: 3px;
+            background: var(--secondary);
+            border-radius: 2px;
+        }
+
+        .filter-btn i {
+            margin-right: 8px;
+            font-size: 0.85rem;
         }
 
         .gallery-grid {
@@ -110,12 +185,15 @@
     </section>
 
     <div class="container section-padding">
-        <div class="gallery-nav" data-aos="fade-up">
-            <button class="filter-btn active" onclick="filterGallery('All')">All Photos</button>
-            <button class="filter-btn" onclick="filterGallery('Events')">Events</button>
-            <button class="filter-btn" onclick="filterGallery('Campus')">Campus</button>
-            <button class="filter-btn" onclick="filterGallery('Academic')">Academic</button>
-            <button class="filter-btn" onclick="filterGallery('Sports')">Sports</button>
+        <div class="gallery-nav-wrapper" data-aos="fade-up">
+            <div class="gallery-nav">
+                <button class="filter-btn active" data-category="All"><i class="fas fa-th"></i>All Photos</button>
+                <button class="filter-btn" data-category="Events"><i class="fas fa-calendar-alt"></i>Events</button>
+                <button class="filter-btn" data-category="Campus"><i class="fas fa-university"></i>Campus</button>
+                <button class="filter-btn" data-category="Academic"><i
+                        class="fas fa-graduation-cap"></i>Academic</button>
+                <button class="filter-btn" data-category="Sports"><i class="fas fa-futbol"></i>Sports</button>
+            </div>
         </div>
 
         <div class="gallery-grid" id="gallery-container">
@@ -170,7 +248,7 @@
         function filterGallery(category) {
             // Update active state of buttons
             document.querySelectorAll('.filter-btn').forEach(btn => {
-                btn.classList.toggle('active', btn.textContent === (category === 'All' ? 'All Photos' : category));
+                btn.classList.toggle('active', btn.dataset.category === category);
             });
 
             if (category === 'All') {
@@ -185,7 +263,16 @@
             window.open(url, '_blank');
         }
 
-        document.addEventListener('DOMContentLoaded', loadGallery);
+        document.addEventListener('DOMContentLoaded', function () {
+            loadGallery();
+
+            // CSP-compliant filter button handlers
+            document.querySelectorAll('.filter-btn').forEach(btn => {
+                btn.addEventListener('click', function () {
+                    filterGallery(this.dataset.category);
+                });
+            });
+        });
     </script>
 </body>
 

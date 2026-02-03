@@ -27,6 +27,15 @@ function isLoggedIn() {
     return !!getToken();
 }
 
+function logout() {
+    console.log("Logging out...");
+    alert("Signing out. Redirecting to home page...");
+    localStorage.clear();
+    window.location.href = "../index.html";
+}
+
+window.logout = logout;
+
 // API helper with authentication
 async function apiCall(endpoint, options = {}) {
     const token = getToken();

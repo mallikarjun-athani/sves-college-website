@@ -129,7 +129,7 @@
             <a href="manage-gallery.html"><i class="fas fa-images"></i> Manage Gallery</a>
             <a href="manage-announcements.html" class="active"><i class="fas fa-bullhorn"></i> Announcements</a>
             <a href="manage-faculty.html"><i class="fas fa-user-tie"></i> Faculty</a>
-            <a href="#" onclick="logout()" style="margin-top: 50px; color: #ff6b6b;"><i class="fas fa-sign-out-alt"></i>
+            <a href="#" id="logout-btn" style="margin-top: 50px; color: #ff6b6b;"><i class="fas fa-sign-out-alt"></i>
                 Logout</a>
         </div>
     </div>
@@ -173,11 +173,21 @@
         </table>
     </div>
 
-    <script src="../assets/js/api.js"></script>
+    <script src="../assets/js/api.js?v=1.1"></script>
     <script>
         if (!isLoggedIn()) window.location.href = 'login.html';
 
-        function logout() { removeToken(); window.location.href = 'login.html'; }
+        // CSP-compliant logout handler
+        document.addEventListener('DOMContentLoaded', function () {
+            var logoutBtn = document.getElementById('logout-btn');
+            if (logoutBtn) {
+                logoutBtn.addEventListener('click', function (e) {
+                    e.preventDefault();
+                    localStorage.clear();
+                    window.location.href = '../index.html';
+                });
+            }
+        });
 
         const alertEl = document.getElementById('alert');
         const listEl = document.getElementById('announcements-list');
@@ -202,7 +212,7 @@
                         <td>${a.link ? `<a href="${a.link}" target="_blank">View Link</a>` : 'No Link'}</td>
                         <td>${formatDate(a.created_at)}</td>
                         <td>
-                            <a href="#" onclick="deleteAnnouncement(${a.id})" style="color: #d9534f;"><i class="fas fa-trash"></i></a>
+                            <a href="#" class="delete-btn" data-id="${a.id}" style="color: #d9534f;"><i class="fas fa-trash"></i></a>
                         </td>
                     </tr>
                 `).join('');
@@ -210,6 +220,17 @@
                 listEl.innerHTML = '<tr><td colspan="4" style="text-align: center; color: red;">Failed to load</td></tr>';
             }
         }
+
+        // Event delegation for delete buttons
+        listEl.addEventListener('click', function (e) {
+            // Traverse up to find the anchor tag if icon was clicked
+            const btn = e.target.closest('.delete-btn');
+            if (btn) {
+                e.preventDefault();
+                const id = btn.getAttribute('data-id');
+                deleteAnnouncement(id);
+            }
+        });
 
         async function deleteAnnouncement(id) {
             if (!confirm('Are you sure?')) return;

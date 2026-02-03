@@ -104,7 +104,7 @@
             <a href="manage-gallery.html"><i class="fas fa-images"></i> Manage Gallery</a>
             <a href="manage-announcements.html"><i class="fas fa-bullhorn"></i> Announcements</a>
             <a href="manage-faculty.html"><i class="fas fa-user-tie"></i> Faculty</a>
-            <a href="#" onclick="logout()" style="margin-top: 50px; color: #ff6b6b;"><i class="fas fa-sign-out-alt"></i>
+            <a href="#" id="logout-btn" style="margin-top: 50px; color: #ff6b6b;"><i class="fas fa-sign-out-alt"></i>
                 Logout</a>
         </div>
     </div>
@@ -168,10 +168,17 @@
             window.location.href = 'login.html';
         }
 
-        function logout() {
-            removeToken();
-            window.location.href = 'login.html';
-        }
+        // CSP-compliant logout handler
+        document.addEventListener('DOMContentLoaded', function () {
+            var logoutBtn = document.getElementById('logout-btn');
+            if (logoutBtn) {
+                logoutBtn.addEventListener('click', function (e) {
+                    e.preventDefault();
+                    localStorage.clear();
+                    window.location.href = '../index.html';
+                });
+            }
+        });
 
         // Load dashboard stats
         async function loadStats() {

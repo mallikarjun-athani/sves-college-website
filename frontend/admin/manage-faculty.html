@@ -139,7 +139,7 @@
             <a href="manage-gallery.html"><i class="fas fa-images"></i> Manage Gallery</a>
             <a href="manage-announcements.html"><i class="fas fa-bullhorn"></i> Announcements</a>
             <a href="manage-faculty.html" class="active"><i class="fas fa-user-tie"></i> Faculty</a>
-            <a href="#" onclick="logout()" style="margin-top: 50px; color: #ff6b6b;"><i class="fas fa-sign-out-alt"></i>
+            <a href="#" id="logout-btn" style="margin-top: 50px; color: #ff6b6b;"><i class="fas fa-sign-out-alt"></i>
                 Logout</a>
         </div>
     </div>
@@ -201,10 +201,21 @@
         </table>
     </div>
 
-    <script src="../assets/js/api.js"></script>
+    <script src="../assets/js/api.js?v=1.1"></script>
     <script>
         if (!isLoggedIn()) window.location.href = 'login.html';
-        function logout() { removeToken(); window.location.href = 'login.html'; }
+
+        // Attach logout handler (CSP-compliant)
+        document.addEventListener('DOMContentLoaded', function () {
+            var logoutBtn = document.getElementById('logout-btn');
+            if (logoutBtn) {
+                logoutBtn.addEventListener('click', function (e) {
+                    e.preventDefault();
+                    localStorage.clear();
+                    window.location.href = '../index.html';
+                });
+            }
+        });
 
         const alertEl = document.getElementById('alert');
         function showAlert(msg, err) { alertEl.textContent = msg; alertEl.className = 'alert' + (err ? ' error' : ''); alertEl.style.display = 'block'; setTimeout(() => alertEl.style.display = 'none', 3000); }
@@ -220,7 +231,7 @@
                         <td>${f.name}</td>
                         <td>${f.designation}</td>
                         <td>${f.department}</td>
-                        <td><a href="#" onclick="deleteFaculty(${f.id})" style="color: #d9534f;"><i class="fas fa-trash"></i></a></td>
+                        <td><a href="#" class="delete-btn" data-id="${f.id}" style="color: #d9534f;"><i class="fas fa-trash"></i></a></td>
                     </tr>
                 `).join('');
             } catch (e) {
@@ -229,6 +240,16 @@
                 list.innerHTML = '<tr><td colspan="5" style="text-align:center; color: red;">Failed to load faculty members. Please try again.</td></tr>';
             }
         }
+
+        // Event delegation for delete
+        document.getElementById('faculty-list').addEventListener('click', function (e) {
+            const btn = e.target.closest('.delete-btn');
+            if (btn) {
+                e.preventDefault();
+                const id = btn.getAttribute('data-id');
+                deleteFaculty(id);
+            }
+        });
 
         async function deleteFaculty(id) {
             if (!confirm('Are you sure?')) return;
