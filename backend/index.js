@@ -26,9 +26,16 @@ const PORT = process.env.PORT || 3000;
 // MIDDLEWARE
 // ============================================
 
-// Enable CORS for frontend
+// Enable CORS for frontend (allow both local and production)
 app.use(cors({
-    origin: ['http://localhost', 'http://127.0.0.1', 'http://localhost:5500'],
+    origin: [
+        'http://localhost',
+        'http://127.0.0.1',
+        'http://localhost:5500',
+        'http://localhost:3000',
+        process.env.FRONTEND_URL, // Your Vercel URL (set in Railway environment variables)
+        /\.vercel\.app$/  // Allow all Vercel preview deployments
+    ].filter(Boolean),
     credentials: true
 }));
 
