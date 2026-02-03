@@ -1,8 +1,11 @@
 {
   "name": "sves-backend",
   "version": "1.0.0",
+  "engines": {
+    "node": ">=20.0.0"
+  },
   "description": "SVES College Website Backend API - Node.js + Supabase",
-  "main": "index.js",
+  "main": "backend/index.js",
   "scripts": {
     "start": "node backend/index.js",
     "dev": "nodemon backend/index.js"
