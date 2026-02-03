@@ -13,6 +13,117 @@
     <link rel="icon" type="image/png" href="assets/images/favicon.png">
 
     <style>
+        /* Header Dropdown Styling */
+        .dropdown-content {
+            display: none;
+            position: absolute;
+            top: 100%;
+            left: 0;
+            background: var(--white);
+            min-width: 200px;
+            box-shadow: var(--shadow-lg);
+            border-radius: var(--radius-sm);
+            padding: 10px 0;
+            z-index: 100;
+        }
+
+        .dropdown-content a {
+            color: var(--primary) !important;
+            padding: 10px 20px;
+            display: block;
+            font-size: 0.9rem;
+        }
+
+        .dropdown-content a:hover {
+            background: var(--bg-light);
+            color: var(--secondary) !important;
+        }
+
+        .dropdown:hover .dropdown-content {
+            display: block;
+        }
+
+        header.scrolled .logo-text h2 {
+            color: var(--primary);
+        }
+
+        header.scrolled .mobile-menu-toggle {
+            color: var(--primary);
+        }
+
+        .mobile-menu-toggle {
+            display: none;
+            color: var(--white);
+            font-size: 1.5rem;
+            cursor: pointer;
+            transition: var(--transition);
+        }
+
+        .mobile-nav {
+            position: fixed;
+            top: 0;
+            right: -100%;
+            width: 80%;
+            max-width: 300px;
+            height: 100vh;
+            background: var(--white);
+            z-index: 2000;
+            padding: 30px;
+            box-shadow: -10px 0 30px rgba(0, 0, 0, 0.1);
+            transition: var(--transition);
+            display: flex;
+            flex-direction: column;
+        }
+
+        .mobile-nav.active {
+            right: 0;
+        }
+
+        .mobile-nav-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 40px;
+        }
+
+        .mobile-nav-header img {
+            height: 40px;
+        }
+
+        #mobile-close {
+            font-size: 1.5rem;
+            color: var(--primary);
+            cursor: pointer;
+        }
+
+        .mobile-nav-links {
+            display: flex;
+            flex-direction: column;
+            gap: 15px;
+        }
+
+        .mobile-nav-links a {
+            font-size: 1.1rem;
+            font-weight: 500;
+            color: var(--primary);
+            padding: 10px 0;
+            border-bottom: 1px solid #eee;
+        }
+
+        .mobile-nav-links a:last-child {
+            border-bottom: none;
+        }
+
+        @media (max-width: 1024px) {
+            .nav-links {
+                display: none;
+            }
+
+            .mobile-menu-toggle {
+                display: block !important;
+            }
+        }
+
         .about-hero {
             background-image: linear-gradient(rgba(0, 35, 71, 0.8), rgba(0, 35, 71, 0.7)), url('assets/images/about-bg.png');
             background-size: cover;
@@ -72,14 +183,41 @@
 </head>
 
 <body>
+    <header id="main-header">
+        <div class="container">
+            <div class="header-inner flex align-center justify-between">
+                <a href="index.html" class="logo flex align-center">
+                    <img src="assets/images/logo.png" alt="SVES Logo">
+                    <div class="logo-text" style="margin-left: 15px;">
+                        <h2 style="color: var(--white); font-size: 1.5rem; line-height: 1;">SVES College</h2>
+                        <span
+                            style="color: var(--secondary); font-size: 0.7rem; text-transform: uppercase; letter-spacing: 2px;">Harugeri</span>
+                    </div>
+                </a>
 
-    <body>
-        <header id="main-header" class="fixed-top"></header>
+                <nav class="nav-links">
+                    <a href="index.html">Home</a>
+                    <a href="about.html" class="active">About Us</a>
+                    <div class="dropdown" style="display: inline-block; position: relative;">
+                        <a href="javascript:void(0)">Academics <i class="fas fa-chevron-down"
+                                style="font-size: 0.7rem;"></i></a>
+                        <div class="dropdown-content">
+                            <a href="departments.html">Departments</a>
+                            <a href="courses.html">Courses</a>
+                            <a href="faculty.html">Faculty</a>
+                        </div>
+                    </div>
+                    <a href="student-corner.html">Student Corner</a>
+                    <a href="notes.html">Notes & Resources</a>
+                    <a href="gallery.html">Gallery</a>
+                    <a href="admin/login.html">Admin Login</a>
+                    <a href="admissions.html" class="btn btn-secondary"
+                        style="padding: 8px 20px; color: var(--primary) !important;">Apply Now</a>
+                </nav>
 
-        <section class="about-hero">
-            <div class="container" data-aos="fade-up">
-                <h1>Our Legacy & Vision</h1>
-                <p>Providing quality higher education in rural Karnataka for over 4 decades.</p>
+                <div class="mobile-menu-toggle" id="mobile-toggle">
+                    <i class="fas fa-bars"></i>
+                </div>
             </div>
         </section>
 
@@ -121,40 +259,75 @@
                     </div>
                 </div>
             </div>
-        </section>
+        </div>
+    </section>
 
-        <section class="section-padding">
-            <div class="container">
-                <div class="vision-mission-grid">
-                    <div class="vm-card" data-aos="fade-up">
-                        <i class="fas fa-eye"></i>
-                        <h3>Our Vision</h3>
-                        <p>To be a premier institution of higher learning, transforming rural youth into globally
-                            competitive and morally upright citizens through quality education.</p>
-                    </div>
-                    <div class="vm-card" data-aos="fade-up" data-aos-delay="100">
-                        <i class="fas fa-bullseye"></i>
-                        <h3>Our Mission</h3>
-                        <p>To provide accessible, affordable, and high-quality education while fostering holistic
-                            development through professional training and community engagement.</p>
-                    </div>
-                    <div class="vm-card" data-aos="fade-up" data-aos-delay="200">
-                        <i class="fas fa-heart"></i>
-                        <h3>Core Values</h3>
-                        <p>Integrity, Excellence, Social Responsibility, and Continuous Innovation in all our academic
-                            and
-                            administrative pursuits.</p>
-                    </div>
+    <section class="section-padding">
+        <div class="container">
+            <div class="vision-mission-grid">
+                <div class="vm-card" data-aos="fade-up">
+                    <i class="fas fa-eye"></i>
+                    <h3>Our Vision</h3>
+                    <p>To be a premier institution of higher learning, transforming rural youth into globally
+                        competitive and morally upright citizens through quality education.</p>
+                </div>
+                <div class="vm-card" data-aos="fade-up" data-aos-delay="100">
+                    <i class="fas fa-bullseye"></i>
+                    <h3>Our Mission</h3>
+                    <p>To provide accessible, affordable, and high-quality education while fostering holistic
+                        development through professional training and community engagement.</p>
+                </div>
+                <div class="vm-card" data-aos="fade-up" data-aos-delay="200">
+                    <i class="fas fa-heart"></i>
+                    <h3>Core Values</h3>
+                    <p>Integrity, Excellence, Social Responsibility, and Continuous Innovation in all our academic
+                        and
+                        administrative pursuits.</p>
                 </div>
             </div>
-        </section>
 
-        <footer id="main-site-footer"></footer>
+            <div class="footer-links">
+                <h3>Quick Links</h3>
+                <ul>
+                    <li><a href="index.html">Home</a></li>
+                    <li><a href="about.html">About Us</a></li>
+                    <li><a href="admissions.html">Admissions</a></li>
+                    <li><a href="student-corner.html">Student Corner</a></li>
+                    <li><a href="gallery.html">Gallery</a></li>
+                </ul>
+            </div>
 
-        <script src="https://unpkg.com/aos@2.3.1/dist/aos.js"></script>
-        <script>AOS.init({ duration: 800, once: true });</script>
-        <script src="assets/js/api.js"></script>
-        <script src="assets/js/main.js"></script>
-    </body>
+            <div class="footer-links">
+                <h3>Academics</h3>
+                <ul>
+                    <li><a href="courses.html">Courses Offered</a></li>
+                    <li><a href="departments.html">Departments</a></li>
+                    <li><a href="faculty.html">Our Faculty</a></li>
+                    <li><a href="notes.html">Notes & Resources</a></li>
+                    <li><a href="placements.html">Placements</a></li>
+                </ul>
+            </div>
+
+            <div class="footer-contact">
+                <h3>Contact Us</h3>
+                <p><i class="fas fa-map-marker-alt" style="color: var(--secondary); margin-right: 10px;"></i>
+                    Harugeri, Karnataka 591220</p>
+                <p><i class="fas fa-phone" style="color: var(--secondary); margin-right: 10px; margin-top: 15px;"></i>
+                    +91 80507 86198
+                </p>
+                <p><i class="fas fa-envelope"
+                        style="color: var(--secondary); margin-right: 10px; margin-top: 15px;"></i>
+                    info@svescollege.in</p>
+            </div>
+        </div>
+    </section>
+
+    <footer id="main-site-footer"></footer>
+
+    <script src="https://unpkg.com/aos@2.3.1/dist/aos.js"></script>
+    <script>AOS.init({ duration: 800, once: true });</script>
+    <script src="assets/js/api.js"></script>
+    <script src="assets/js/main.js"></script>
+</body>
 
 </html>
