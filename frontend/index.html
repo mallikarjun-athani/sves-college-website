@@ -197,7 +197,7 @@
     </style>
 
     <!-- Hero Section -->
-    <section class="hero" id="hero-section" style="background-image: url('assets/images/campus-hero.jpg');">
+    <section class="hero" id="hero-section" style="background-image: url('assets/images/campus-hero.png');">
         <div class="container" data-aos="fade-up">
             <div class="hero-content">
                 <h1>Excellence in Education</h1>
@@ -299,7 +299,7 @@
                 <div class="why-image" data-aos="fade-left">
                     <div
                         style="position: relative; border-radius: var(--radius-lg); overflow: hidden; box-shadow: var(--shadow-lg);">
-                        <video src="assets/images/SVES%20About.mp4" alt="video" autoplay muted loop controls
+                        <video src="assets/images/SVES About.mp4" alt="video" autoplay muted loop controls
                             style="width: 100%;height: 100%;"></video>
                         <div
                             style="position: absolute; bottom: 30px; left: 30px; background: var(--secondary); padding: 20px; border-radius: var(--radius-md); box-shadow: var(--shadow-md);">
@@ -350,6 +350,7 @@
                     ticker.innerHTML = '<span>🔔 Welcome to SVES College Harugeri!</span>';
                 }
 
+                /* 
                 // Load banner from gallery
                 const bannerRes = await fetch(API_BASE_URL + '/gallery/banners');
                 const banners = await bannerRes.json();
@@ -357,6 +358,7 @@
                     document.getElementById('hero-section').style.backgroundImage =
                         `url('${resolvePath(banners[0].image_path)}')`;
                 }
+                */
             } catch (error) {
                 console.error('Failed to load data:', error);
             }
