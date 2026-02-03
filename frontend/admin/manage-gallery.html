@@ -210,13 +210,17 @@
                 if (!data.length) { list.innerHTML = '<tr><td colspan="4" style="text-align:center">No images uploaded yet.</td></tr>'; return; }
                 list.innerHTML = data.map(img => `
                     <tr>
-                        <td><img src="../../${img.image_path}" class="img-preview" alt=""></td>
+                        <td><img src="${resolvePath(img.image_path)}" class="img-preview" alt=""></td>
                         <td>${img.caption}</td>
                         <td><span class="badge">${img.category}</span></td>
                         <td><a href="#" onclick="deleteImage(${img.id})" style="color: #d9534f;"><i class="fas fa-trash"></i> Delete</a></td>
                     </tr>
                 `).join('');
-            } catch (e) { console.error(e); }
+            } catch (e) {
+                console.error('Error loading gallery:', e);
+                const list = document.getElementById('gallery-list');
+                list.innerHTML = '<tr><td colspan="4" style="text-align:center; color: red;">Failed to load gallery images. Please try again.</td></tr>';
+            }
         }
 
         async function deleteImage(id) {

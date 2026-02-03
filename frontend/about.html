@@ -4,8 +4,8 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <meta name="description" content="Study Notes & Resources - SVES College Harugeri">
-    <title>Notes & Resources | SVES College</title>
+    <meta name="description" content="About SVES College Harugeri - History, Mission, and Vision">
+    <title>About Us | SVES College</title>
 
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <link href="https://unpkg.com/aos@2.3.1/dist/aos.css" rel="stylesheet">
@@ -124,104 +124,65 @@
             }
         }
 
-        .notes-header {
-            background: linear-gradient(rgba(0, 35, 71, 0.9), rgba(0, 35, 71, 0.9)), url('assets/images/notes-bg.jpg');
+        .about-hero {
+            background: linear-gradient(rgba(0, 35, 71, 0.8), rgba(0, 35, 71, 0.8)), url('assets/images/about-bg.jpg');
             background-size: cover;
+            background-position: center;
             padding: 150px 0 80px;
             color: var(--white);
             text-align: center;
         }
 
-        .filter-section {
-            background: var(--white);
-            padding: 30px;
-            border-radius: var(--radius-md);
-            box-shadow: var(--shadow-md);
-            margin-top: -50px;
-            position: relative;
-            z-index: 10;
+        .history-section {
+            padding: 80px 0;
         }
 
-        .filter-grid {
+        .vision-mission-grid {
             display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
-            gap: 20px;
-        }
-
-        .filter-item label {
-            display: block;
-            margin-bottom: 8px;
-            font-weight: 600;
-            font-size: 0.9rem;
-            color: var(--primary);
-        }
-
-        .filter-item select,
-        .filter-item input {
-            width: 100%;
-            padding: 12px;
-            border: 1px solid #ddd;
-            border-radius: var(--radius-sm);
-            font-family: inherit;
-        }
-
-        .notes-grid {
-            display: grid;
-            grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
-            gap: 30px;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 40px;
             margin-top: 50px;
         }
 
-        .note-card {
+        .vm-card {
             background: var(--white);
-            padding: 30px;
+            padding: 40px;
             border-radius: var(--radius-md);
-            box-shadow: var(--shadow-sm);
-            border: 1px solid #eee;
-            transition: var(--transition);
+            box-shadow: var(--shadow-md);
+            border-top: 5px solid var(--secondary);
+            text-align: center;
         }
 
-        .note-card:hover {
-            box-shadow: var(--shadow-lg);
-            border-color: var(--secondary);
-        }
-
-        .note-type {
-            background: var(--secondary-light);
+        .vm-card i {
+            font-size: 3rem;
             color: var(--primary);
-            padding: 3px 10px;
-            border-radius: 4px;
-            font-size: 0.7rem;
-            font-weight: 700;
-            text-transform: uppercase;
-        }
-
-        .note-card h4 {
-            margin: 15px 0 10px;
-            color: var(--primary);
-        }
-
-        .note-meta {
-            font-size: 0.85rem;
-            color: var(--text-light);
             margin-bottom: 20px;
         }
 
-        .note-meta span {
-            display: block;
-            margin-bottom: 5px;
+        .milestone-list {
+            list-style: none;
+            padding: 0;
+            margin-top: 30px;
         }
 
-        .empty-state {
-            grid-column: 1 / -1;
-            text-align: center;
-            padding: 50px;
+        .milestone-item {
+            display: flex;
+            align-items: flex-start;
+            margin-bottom: 20px;
+            padding-left: 20px;
+            border-left: 3px solid var(--secondary);
+        }
+
+        .milestone-year {
+            font-weight: 700;
+            color: var(--primary);
+            min-width: 60px;
+            margin-right: 20px;
         }
     </style>
 </head>
 
 <body>
-    <!-- Include Navbar -->
     <header id="main-header">
         <div class="container">
             <div class="header-inner flex align-center justify-between">
@@ -236,7 +197,7 @@
 
                 <nav class="nav-links">
                     <a href="index.html">Home</a>
-                    <a href="about.html">About Us</a>
+                    <a href="about.html" class="active">About Us</a>
                     <div class="dropdown" style="display: inline-block; position: relative;">
                         <a href="javascript:void(0)">Academics <i class="fas fa-chevron-down"
                                 style="font-size: 0.7rem;"></i></a>
@@ -283,59 +244,76 @@
         </div>
     </header>
 
-    <section class="notes-header">
-        <div class="container">
-            <h1>Digital Notes Library</h1>
-            <p>Access high-quality study materials and resources curated by our expert faculty.</p>
+    <section class="about-hero">
+        <div class="container" data-aos="fade-up">
+            <h1>Our Legacy & Vision</h1>
+            <p>Providing quality higher education in rural Karnataka for over 4 decades.</p>
         </div>
     </section>
 
-    <div class="container">
-        <div class="filter-section">
-            <form id="filter-form" class="filter-grid">
-                <div class="filter-item">
-                    <label>Course</label>
-                    <select name="course" id="filter-course">
-                        <option value="">All Courses</option>
-                        <option value="1">BCA</option>
-                        <option value="2">BA</option>
-                        <option value="3">B.Com</option>
-                        <option value="4">B.Sc</option>
-                    </select>
-                </div>
-                <div class="filter-item">
-                    <label>Semester</label>
-                    <select name="semester" id="filter-semester">
-                        <option value="">All Semesters</option>
-                        <option value="1">Semester 1</option>
-                        <option value="2">Semester 2</option>
-                        <option value="3">Semester 3</option>
-                        <option value="4">Semester 4</option>
-                        <option value="5">Semester 5</option>
-                        <option value="6">Semester 6</option>
-                    </select>
-                </div>
-                <div class="filter-item">
-                    <label>Search Subject</label>
-                    <input type="text" name="subject" id="filter-subject" placeholder="e.g. Data Structures">
-                </div>
-                <div class="filter-item" style="display: flex; align-items: flex-end;">
-                    <button type="submit" class="btn btn-primary" style="width: 100%;">Apply Filters</button>
-                </div>
-            </form>
-        </div>
+    <section class="history-section bg-light">
+        <div class="container">
+            <div class="flex align-center justify-between" style="flex-wrap: wrap;">
+                <div style="flex: 1; min-width: 300px;" data-aos="fade-right">
+                    <h2 class="section-title" style="text-align: left; transform: none; left: 0;">Our History</h2>
+                    <p style="margin-top: 20px; line-height: 1.8;">
+                        Shri Vrushabhendra Education Society (SVES) was founded in 1983 with a noble mission to bring
+                        quality education to the rural heartlands of Karnataka. Over the years, the institution has
+                        grown from a small educational initiative into a prestigious center for academic excellence.
+                    </p>
+                    <p style="margin-top: 15px; line-height: 1.8;">
+                        Our institution is reaccredited with an 'A' Grade by NAAC, reflecting our persistent commitment
+                        to maintaining the highest standards of teaching, research, and infrastructure.
+                    </p>
 
-        <div class="section-padding">
-            <div class="notes-grid" id="notes-container">
-                <div class="empty-state">
-                    <i class="fas fa-spinner fa-spin" style="font-size: 3rem; color: var(--primary);"></i>
-                    <p style="margin-top: 20px;">Loading notes...</p>
+                    <ul class="milestone-list">
+                        <li class="milestone-item">
+                            <span class="milestone-year">1983</span>
+                            <div>Establishment of SVES Society by visionary founders.</div>
+                        </li>
+                        <li class="milestone-item">
+                            <span class="milestone-year">1995</span>
+                            <div>Introduction of Bachelor of Computer Applications (BCA).</div>
+                        </li>
+                        <li class="milestone-item">
+                            <span class="milestone-year">2015</span>
+                            <div>NAAC 'A' Grade Accreditation received.</div>
+                        </li>
+                    </ul>
+                </div>
+                <div style="flex: 1; min-width: 300px; margin-left: 50px;" data-aos="fade-left">
+                    <img src="assets/images/campus-history.jpg" alt="Campus History"
+                        style="width: 100%; border-radius: var(--radius-lg); box-shadow: var(--shadow-lg);">
                 </div>
             </div>
         </div>
-    </div>
+    </section>
 
-    <!-- Footer -->
+    <section class="section-padding">
+        <div class="container">
+            <div class="vision-mission-grid">
+                <div class="vm-card" data-aos="fade-up">
+                    <i class="fas fa-eye"></i>
+                    <h3>Our Vision</h3>
+                    <p>To be a premier institution of higher learning, transforming rural youth into globally
+                        competitive and morally upright citizens through quality education.</p>
+                </div>
+                <div class="vm-card" data-aos="fade-up" data-aos-delay="100">
+                    <i class="fas fa-bullseye"></i>
+                    <h3>Our Mission</h3>
+                    <p>To provide accessible, affordable, and high-quality education while fostering holistic
+                        development through professional training and community engagement.</p>
+                </div>
+                <div class="vm-card" data-aos="fade-up" data-aos-delay="200">
+                    <i class="fas fa-heart"></i>
+                    <h3>Core Values</h3>
+                    <p>Integrity, Excellence, Social Responsibility, and Continuous Innovation in all our academic and
+                        administrative pursuits.</p>
+                </div>
+            </div>
+        </div>
+    </section>
+
     <footer>
         <div class="container">
             <div class="footer-grid">
@@ -396,73 +374,6 @@
     <script>AOS.init({ duration: 800, once: true });</script>
     <script src="assets/js/api.js"></script>
     <script src="assets/js/main.js"></script>
-    <script>
-        const notesContainer = document.getElementById('notes-container');
-        const filterForm = document.getElementById('filter-form');
-
-        async function loadNotes(filters = {}) {
-            try {
-                const params = new URLSearchParams();
-                if (filters.course) params.append('course', filters.course);
-                if (filters.semester) params.append('semester', filters.semester);
-                if (filters.subject) params.append('subject', filters.subject);
-
-                const url = `${API_BASE_URL}/notes?${params.toString()}`;
-                const response = await fetch(url);
-                const notes = await response.json();
-
-                if (notes.length === 0) {
-                    notesContainer.innerHTML = `
-                    <div class="empty-state">
-                        <i class="fas fa-folder-open" style="font-size: 4rem; color: #ddd; margin-bottom: 20px;"></i>
-                        <h3>No notes found</h3>
-                        <p>Try adjusting your filters or search keywords.</p>
-                    </div>
-                `;
-                    return;
-                }
-
-                notesContainer.innerHTML = notes.map(note => `
-                <div class="note-card" data-aos="fade-up">
-                    <span class="note-type">PDF</span>
-                    <h4>${note.title}</h4>
-                    <div class="note-meta">
-                        <span><i class="fas fa-book-open"></i> Subject: ${note.subject}</span>
-                        <span><i class="fas fa-layer-group"></i> Unit: ${note.unit}</span>
-                        <span><i class="fas fa-clock"></i> Uploaded: ${formatDate(note.upload_date)}</span>
-                    </div>
-                    <div class="flex">
-                        <a href="${resolvePath(note.file_path)}" class="btn btn-outline" style="padding: 8px 15px; font-size: 0.9rem; flex: 1; margin-right: 10px;" target="_blank">View</a>
-                        <a href="${resolvePath(note.file_path)}" class="btn btn-primary" style="padding: 8px 15px; font-size: 0.9rem; flex: 1;" download>Download</a>
-                    </div>
-                </div>
-            `).join('');
-
-                AOS.refresh();
-            } catch (error) {
-                console.error('Failed to load notes:', error);
-                notesContainer.innerHTML = `
-                <div class="empty-state">
-                    <i class="fas fa-exclamation-triangle" style="font-size: 4rem; color: #d9534f; margin-bottom: 20px;"></i>
-                    <h3>Error loading notes</h3>
-                    <p>Please try again later.</p>
-                </div>
-            `;
-            }
-        }
-
-        filterForm.addEventListener('submit', (e) => {
-            e.preventDefault();
-            loadNotes({
-                course: document.getElementById('filter-course').value,
-                semester: document.getElementById('filter-semester').value,
-                subject: document.getElementById('filter-subject').value
-            });
-        });
-
-        // Load notes on page load
-        document.addEventListener('DOMContentLoaded', () => loadNotes());
-    </script>
 </body>
 
 </html>

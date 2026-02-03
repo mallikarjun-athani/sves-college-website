@@ -4,8 +4,8 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <meta name="description" content="Study Notes & Resources - SVES College Harugeri">
-    <title>Notes & Resources | SVES College</title>
+    <meta name="description" content="Student Corner & Resources - SVES College Harugeri">
+    <title>Student Corner | SVES College</title>
 
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <link href="https://unpkg.com/aos@2.3.1/dist/aos.css" rel="stylesheet">
@@ -124,104 +124,78 @@
             }
         }
 
-        .notes-header {
-            background: linear-gradient(rgba(0, 35, 71, 0.9), rgba(0, 35, 71, 0.9)), url('assets/images/notes-bg.jpg');
+        .student-header {
+            background: linear-gradient(rgba(0, 35, 71, 0.9), rgba(0, 35, 71, 0.9)), url('assets/images/student-bg.jpg');
             background-size: cover;
             padding: 150px 0 80px;
             color: var(--white);
             text-align: center;
         }
 
-        .filter-section {
-            background: var(--white);
-            padding: 30px;
-            border-radius: var(--radius-md);
-            box-shadow: var(--shadow-md);
-            margin-top: -50px;
-            position: relative;
-            z-index: 10;
-        }
-
-        .filter-grid {
+        .resource-grid {
             display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
-            gap: 20px;
-        }
-
-        .filter-item label {
-            display: block;
-            margin-bottom: 8px;
-            font-weight: 600;
-            font-size: 0.9rem;
-            color: var(--primary);
-        }
-
-        .filter-item select,
-        .filter-item input {
-            width: 100%;
-            padding: 12px;
-            border: 1px solid #ddd;
-            border-radius: var(--radius-sm);
-            font-family: inherit;
-        }
-
-        .notes-grid {
-            display: grid;
-            grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
             gap: 30px;
             margin-top: 50px;
         }
 
-        .note-card {
+        .resource-card {
             background: var(--white);
-            padding: 30px;
+            padding: 35px;
             border-radius: var(--radius-md);
             box-shadow: var(--shadow-sm);
+            text-align: center;
             border: 1px solid #eee;
             transition: var(--transition);
         }
 
-        .note-card:hover {
-            box-shadow: var(--shadow-lg);
-            border-color: var(--secondary);
+        .resource-card:hover {
+            box-shadow: var(--shadow-md);
+            border-color: var(--primary);
         }
 
-        .note-type {
-            background: var(--secondary-light);
-            color: var(--primary);
-            padding: 3px 10px;
-            border-radius: 4px;
-            font-size: 0.7rem;
-            font-weight: 700;
-            text-transform: uppercase;
-        }
-
-        .note-card h4 {
-            margin: 15px 0 10px;
-            color: var(--primary);
-        }
-
-        .note-meta {
-            font-size: 0.85rem;
-            color: var(--text-light);
+        .resource-card i {
+            font-size: 2.5rem;
+            color: var(--secondary);
             margin-bottom: 20px;
         }
 
-        .note-meta span {
-            display: block;
-            margin-bottom: 5px;
+        .resource-card h3 {
+            color: var(--primary);
+            margin-bottom: 15px;
         }
 
-        .empty-state {
-            grid-column: 1 / -1;
-            text-align: center;
-            padding: 50px;
+        .notice-board {
+            background: #fff;
+            border-radius: var(--radius-md);
+            padding: 40px;
+            margin-top: 50px;
+            box-shadow: var(--shadow-md);
+        }
+
+        .notice-item {
+            padding: 15px 0;
+            border-bottom: 1px solid #eee;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .notice-item:last-child {
+            border-bottom: none;
+        }
+
+        .notice-date {
+            font-size: 0.8rem;
+            color: var(--text-light);
+            background: #f0f4f8;
+            padding: 4px 10px;
+            border-radius: 4px;
         }
     </style>
 </head>
 
 <body>
-    <!-- Include Navbar -->
     <header id="main-header">
         <div class="container">
             <div class="header-inner flex align-center justify-between">
@@ -246,7 +220,7 @@
                             <a href="faculty.html">Faculty</a>
                         </div>
                     </div>
-                    <a href="student-corner.html">Student Corner</a>
+                    <a href="student-corner.html" class="active">Student Corner</a>
                     <a href="notes.html">Notes & Resources</a>
                     <a href="gallery.html">Gallery</a>
                     <a href="admin/login.html">Admin Login</a>
@@ -283,59 +257,57 @@
         </div>
     </header>
 
-    <section class="notes-header">
-        <div class="container">
-            <h1>Digital Notes Library</h1>
-            <p>Access high-quality study materials and resources curated by our expert faculty.</p>
+    <section class="student-header">
+        <div class="container" data-aos="fade-up">
+            <h1>Student Corner</h1>
+            <p>A dedicated space for students to access resources, updates, and academic support.</p>
         </div>
     </section>
 
-    <div class="container">
-        <div class="filter-section">
-            <form id="filter-form" class="filter-grid">
-                <div class="filter-item">
-                    <label>Course</label>
-                    <select name="course" id="filter-course">
-                        <option value="">All Courses</option>
-                        <option value="1">BCA</option>
-                        <option value="2">BA</option>
-                        <option value="3">B.Com</option>
-                        <option value="4">B.Sc</option>
-                    </select>
-                </div>
-                <div class="filter-item">
-                    <label>Semester</label>
-                    <select name="semester" id="filter-semester">
-                        <option value="">All Semesters</option>
-                        <option value="1">Semester 1</option>
-                        <option value="2">Semester 2</option>
-                        <option value="3">Semester 3</option>
-                        <option value="4">Semester 4</option>
-                        <option value="5">Semester 5</option>
-                        <option value="6">Semester 6</option>
-                    </select>
-                </div>
-                <div class="filter-item">
-                    <label>Search Subject</label>
-                    <input type="text" name="subject" id="filter-subject" placeholder="e.g. Data Structures">
-                </div>
-                <div class="filter-item" style="display: flex; align-items: flex-end;">
-                    <button type="submit" class="btn btn-primary" style="width: 100%;">Apply Filters</button>
-                </div>
-            </form>
+    <div class="container section-padding">
+        <div class="resource-grid">
+            <div class="resource-card" data-aos="fade-up">
+                <i class="fas fa-book-reader"></i>
+                <h3>Library Access</h3>
+                <p>Digital catalog and physical library resources. Access over 50,000 volumes and digital journals.</p>
+                <a href="#" class="btn btn-outline" style="margin-top: 20px;">Explore Portal</a>
+            </div>
+
+            <div class="resource-card" data-aos="fade-up" data-aos-delay="100">
+                <i class="fas fa-calendar-check"></i>
+                <h3>Exam Timetable</h3>
+                <p>Stay updated with the latest semester examination schedules and internal assessment dates.</p>
+                <a href="#" class="btn btn-outline" style="margin-top: 20px;">View Schedule</a>
+            </div>
+
+            <div class="resource-card" data-aos="fade-up" data-aos-delay="200">
+                <i class="fas fa-user-graduate"></i>
+                <h3>Scholarships</h3>
+                <p>Information on government and institutional scholarships available for deserving students.</p>
+                <a href="#" class="btn btn-outline" style="margin-top: 20px;">Apply Now</a>
+            </div>
         </div>
 
-        <div class="section-padding">
-            <div class="notes-grid" id="notes-container">
-                <div class="empty-state">
-                    <i class="fas fa-spinner fa-spin" style="font-size: 3rem; color: var(--primary);"></i>
-                    <p style="margin-top: 20px;">Loading notes...</p>
+        <div class="notice-board" data-aos="fade-up">
+            <h2 style="color: var(--primary); margin-bottom: 30px;"><i class="fas fa-bullhorn"
+                    style="color: var(--secondary); margin-right: 15px;"></i>Important Notices</h2>
+            <div id="student-notices">
+                <div class="notice-item">
+                    <span>Semester Examination registration starts from next Monday.</span>
+                    <span class="notice-date">Nov 15, 2025</span>
+                </div>
+                <div class="notice-item">
+                    <span>Campus Recruitment Drive by Infosys for BCA Final Year.</span>
+                    <span class="notice-date">Nov 10, 2025</span>
+                </div>
+                <div class="notice-item">
+                    <span>NSS Winter Camp registration is now open for all students.</span>
+                    <span class="notice-date">Nov 05, 2025</span>
                 </div>
             </div>
         </div>
     </div>
 
-    <!-- Footer -->
     <footer>
         <div class="container">
             <div class="footer-grid">
@@ -394,75 +366,7 @@
 
     <script src="https://unpkg.com/aos@2.3.1/dist/aos.js"></script>
     <script>AOS.init({ duration: 800, once: true });</script>
-    <script src="assets/js/api.js"></script>
     <script src="assets/js/main.js"></script>
-    <script>
-        const notesContainer = document.getElementById('notes-container');
-        const filterForm = document.getElementById('filter-form');
-
-        async function loadNotes(filters = {}) {
-            try {
-                const params = new URLSearchParams();
-                if (filters.course) params.append('course', filters.course);
-                if (filters.semester) params.append('semester', filters.semester);
-                if (filters.subject) params.append('subject', filters.subject);
-
-                const url = `${API_BASE_URL}/notes?${params.toString()}`;
-                const response = await fetch(url);
-                const notes = await response.json();
-
-                if (notes.length === 0) {
-                    notesContainer.innerHTML = `
-                    <div class="empty-state">
-                        <i class="fas fa-folder-open" style="font-size: 4rem; color: #ddd; margin-bottom: 20px;"></i>
-                        <h3>No notes found</h3>
-                        <p>Try adjusting your filters or search keywords.</p>
-                    </div>
-                `;
-                    return;
-                }
-
-                notesContainer.innerHTML = notes.map(note => `
-                <div class="note-card" data-aos="fade-up">
-                    <span class="note-type">PDF</span>
-                    <h4>${note.title}</h4>
-                    <div class="note-meta">
-                        <span><i class="fas fa-book-open"></i> Subject: ${note.subject}</span>
-                        <span><i class="fas fa-layer-group"></i> Unit: ${note.unit}</span>
-                        <span><i class="fas fa-clock"></i> Uploaded: ${formatDate(note.upload_date)}</span>
-                    </div>
-                    <div class="flex">
-                        <a href="${resolvePath(note.file_path)}" class="btn btn-outline" style="padding: 8px 15px; font-size: 0.9rem; flex: 1; margin-right: 10px;" target="_blank">View</a>
-                        <a href="${resolvePath(note.file_path)}" class="btn btn-primary" style="padding: 8px 15px; font-size: 0.9rem; flex: 1;" download>Download</a>
-                    </div>
-                </div>
-            `).join('');
-
-                AOS.refresh();
-            } catch (error) {
-                console.error('Failed to load notes:', error);
-                notesContainer.innerHTML = `
-                <div class="empty-state">
-                    <i class="fas fa-exclamation-triangle" style="font-size: 4rem; color: #d9534f; margin-bottom: 20px;"></i>
-                    <h3>Error loading notes</h3>
-                    <p>Please try again later.</p>
-                </div>
-            `;
-            }
-        }
-
-        filterForm.addEventListener('submit', (e) => {
-            e.preventDefault();
-            loadNotes({
-                course: document.getElementById('filter-course').value,
-                semester: document.getElementById('filter-semester').value,
-                subject: document.getElementById('filter-subject').value
-            });
-        });
-
-        // Load notes on page load
-        document.addEventListener('DOMContentLoaded', () => loadNotes());
-    </script>
 </body>
 
 </html>

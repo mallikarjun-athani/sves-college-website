@@ -216,14 +216,18 @@
                 if (!data.length) { list.innerHTML = '<tr><td colspan="5" style="text-align:center">No faculty members found.</td></tr>'; return; }
                 list.innerHTML = data.map(f => `
                     <tr>
-                        <td>${f.image_path ? `<img src="../../${f.image_path}" class="faculty-img">` : '<i class="fas fa-user-circle fa-2x" style="color:#ddd;"></i>'}</td>
+                        <td>${f.image_path ? `<img src="${resolvePath(f.image_path)}" class="faculty-img">` : '<i class="fas fa-user-circle fa-2x" style="color:#ddd;"></i>'}</td>
                         <td>${f.name}</td>
                         <td>${f.designation}</td>
                         <td>${f.department}</td>
                         <td><a href="#" onclick="deleteFaculty(${f.id})" style="color: #d9534f;"><i class="fas fa-trash"></i></a></td>
                     </tr>
                 `).join('');
-            } catch (e) { console.error(e); }
+            } catch (e) {
+                console.error('Error loading faculty:', e);
+                const list = document.getElementById('faculty-list');
+                list.innerHTML = '<tr><td colspan="5" style="text-align:center; color: red;">Failed to load faculty members. Please try again.</td></tr>';
+            }
         }
 
         async function deleteFaculty(id) {

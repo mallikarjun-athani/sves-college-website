@@ -4,8 +4,8 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <meta name="description" content="Study Notes & Resources - SVES College Harugeri">
-    <title>Notes & Resources | SVES College</title>
+    <meta name="description" content="Our Expert Faculty - SVES College Harugeri">
+    <title>Our Faculty | SVES College</title>
 
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <link href="https://unpkg.com/aos@2.3.1/dist/aos.css" rel="stylesheet">
@@ -124,104 +124,111 @@
             }
         }
 
-        .notes-header {
-            background: linear-gradient(rgba(0, 35, 71, 0.9), rgba(0, 35, 71, 0.9)), url('assets/images/notes-bg.jpg');
+        .faculty-header {
+            background: linear-gradient(rgba(0, 35, 71, 0.9), rgba(0, 35, 71, 0.9)), url('assets/images/faculty-bg.jpg');
             background-size: cover;
             padding: 150px 0 80px;
             color: var(--white);
             text-align: center;
         }
 
-        .filter-section {
-            background: var(--white);
-            padding: 30px;
-            border-radius: var(--radius-md);
-            box-shadow: var(--shadow-md);
-            margin-top: -50px;
-            position: relative;
-            z-index: 10;
-        }
-
-        .filter-grid {
+        .faculty-grid {
             display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
-            gap: 20px;
-        }
-
-        .filter-item label {
-            display: block;
-            margin-bottom: 8px;
-            font-weight: 600;
-            font-size: 0.9rem;
-            color: var(--primary);
-        }
-
-        .filter-item select,
-        .filter-item input {
-            width: 100%;
-            padding: 12px;
-            border: 1px solid #ddd;
-            border-radius: var(--radius-sm);
-            font-family: inherit;
-        }
-
-        .notes-grid {
-            display: grid;
-            grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+            grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
             gap: 30px;
             margin-top: 50px;
         }
 
-        .note-card {
+        .faculty-card {
             background: var(--white);
-            padding: 30px;
             border-radius: var(--radius-md);
+            overflow: hidden;
             box-shadow: var(--shadow-sm);
+            transition: var(--transition);
+            text-align: center;
             border: 1px solid #eee;
+        }
+
+        .faculty-card:hover {
+            transform: translateY(-5px);
+            box-shadow: var(--shadow-md);
+        }
+
+        .faculty-img-container {
+            width: 100%;
+            height: 250px;
+            overflow: hidden;
+            background: #f0f4f8;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .faculty-img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+        }
+
+        .faculty-info {
+            padding: 25px;
+        }
+
+        .faculty-info h3 {
+            color: var(--primary);
+            margin-bottom: 5px;
+            font-size: 1.25rem;
+        }
+
+        .faculty-info .designation {
+            color: var(--secondary);
+            font-weight: 600;
+            font-size: 0.9rem;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            display: block;
+            margin-bottom: 10px;
+        }
+
+        .faculty-info .dept {
+            color: var(--text-light);
+            font-size: 0.9rem;
+        }
+
+        .filter-tabs {
+            display: flex;
+            justify-content: center;
+            gap: 15px;
+            margin-top: 40px;
+            flex-wrap: wrap;
+        }
+
+        .filter-btn {
+            padding: 10px 25px;
+            border-radius: 30px;
+            border: 2px solid var(--primary);
+            background: transparent;
+            color: var(--primary);
+            font-weight: 600;
+            cursor: pointer;
             transition: var(--transition);
         }
 
-        .note-card:hover {
-            box-shadow: var(--shadow-lg);
-            border-color: var(--secondary);
+        .filter-btn.active,
+        .filter-btn:hover {
+            background: var(--primary);
+            color: var(--white);
         }
 
-        .note-type {
-            background: var(--secondary-light);
-            color: var(--primary);
-            padding: 3px 10px;
-            border-radius: 4px;
-            font-size: 0.7rem;
-            font-weight: 700;
-            text-transform: uppercase;
-        }
-
-        .note-card h4 {
-            margin: 15px 0 10px;
-            color: var(--primary);
-        }
-
-        .note-meta {
-            font-size: 0.85rem;
-            color: var(--text-light);
-            margin-bottom: 20px;
-        }
-
-        .note-meta span {
-            display: block;
-            margin-bottom: 5px;
-        }
-
-        .empty-state {
+        .loading-container {
             grid-column: 1 / -1;
-            text-align: center;
             padding: 50px;
+            text-align: center;
         }
     </style>
 </head>
 
 <body>
-    <!-- Include Navbar -->
     <header id="main-header">
         <div class="container">
             <div class="header-inner flex align-center justify-between">
@@ -238,12 +245,12 @@
                     <a href="index.html">Home</a>
                     <a href="about.html">About Us</a>
                     <div class="dropdown" style="display: inline-block; position: relative;">
-                        <a href="javascript:void(0)">Academics <i class="fas fa-chevron-down"
+                        <a href="javascript:void(0)" class="active">Academics <i class="fas fa-chevron-down"
                                 style="font-size: 0.7rem;"></i></a>
                         <div class="dropdown-content">
                             <a href="departments.html">Departments</a>
                             <a href="courses.html">Courses</a>
-                            <a href="faculty.html">Faculty</a>
+                            <a href="faculty.html" class="active">Faculty</a>
                         </div>
                     </div>
                     <a href="student-corner.html">Student Corner</a>
@@ -283,59 +290,30 @@
         </div>
     </header>
 
-    <section class="notes-header">
-        <div class="container">
-            <h1>Digital Notes Library</h1>
-            <p>Access high-quality study materials and resources curated by our expert faculty.</p>
+    <section class="faculty-header">
+        <div class="container" data-aos="fade-up">
+            <h1>Our Expert Faculty</h1>
+            <p>Meet the dedicated educators who guide our students towards academic and professional success.</p>
         </div>
     </section>
 
-    <div class="container">
-        <div class="filter-section">
-            <form id="filter-form" class="filter-grid">
-                <div class="filter-item">
-                    <label>Course</label>
-                    <select name="course" id="filter-course">
-                        <option value="">All Courses</option>
-                        <option value="1">BCA</option>
-                        <option value="2">BA</option>
-                        <option value="3">B.Com</option>
-                        <option value="4">B.Sc</option>
-                    </select>
-                </div>
-                <div class="filter-item">
-                    <label>Semester</label>
-                    <select name="semester" id="filter-semester">
-                        <option value="">All Semesters</option>
-                        <option value="1">Semester 1</option>
-                        <option value="2">Semester 2</option>
-                        <option value="3">Semester 3</option>
-                        <option value="4">Semester 4</option>
-                        <option value="5">Semester 5</option>
-                        <option value="6">Semester 6</option>
-                    </select>
-                </div>
-                <div class="filter-item">
-                    <label>Search Subject</label>
-                    <input type="text" name="subject" id="filter-subject" placeholder="e.g. Data Structures">
-                </div>
-                <div class="filter-item" style="display: flex; align-items: flex-end;">
-                    <button type="submit" class="btn btn-primary" style="width: 100%;">Apply Filters</button>
-                </div>
-            </form>
+    <div class="container section-padding">
+        <div class="filter-tabs" data-aos="fade-up">
+            <button class="filter-btn active" onclick="filterFaculty('All')">All Departments</button>
+            <button class="filter-btn" onclick="filterFaculty('BCA')">BCA</button>
+            <button class="filter-btn" onclick="filterFaculty('BA')">BA</button>
+            <button class="filter-btn" onclick="filterFaculty('B.Com')">B.Com</button>
+            <button class="filter-btn" onclick="filterFaculty('B.Sc')">B.Sc</button>
         </div>
 
-        <div class="section-padding">
-            <div class="notes-grid" id="notes-container">
-                <div class="empty-state">
-                    <i class="fas fa-spinner fa-spin" style="font-size: 3rem; color: var(--primary);"></i>
-                    <p style="margin-top: 20px;">Loading notes...</p>
-                </div>
+        <div class="faculty-grid" id="faculty-container">
+            <div class="loading-container">
+                <i class="fas fa-spinner fa-spin fa-3x" style="color: var(--primary);"></i>
+                <p style="margin-top: 15px;">Loading faculty profiles...</p>
             </div>
         </div>
     </div>
 
-    <!-- Footer -->
     <footer>
         <div class="container">
             <div class="footer-grid">
@@ -397,71 +375,59 @@
     <script src="assets/js/api.js"></script>
     <script src="assets/js/main.js"></script>
     <script>
-        const notesContainer = document.getElementById('notes-container');
-        const filterForm = document.getElementById('filter-form');
+        const facultyContainer = document.getElementById('faculty-container');
+        let allFaculty = [];
 
-        async function loadNotes(filters = {}) {
+        async function loadFaculty() {
             try {
-                const params = new URLSearchParams();
-                if (filters.course) params.append('course', filters.course);
-                if (filters.semester) params.append('semester', filters.semester);
-                if (filters.subject) params.append('subject', filters.subject);
+                const response = await fetch(API_BASE_URL + '/faculty');
+                allFaculty = await response.json();
+                renderFaculty(allFaculty);
+            } catch (error) {
+                console.error('Failed to load faculty:', error);
+                facultyContainer.innerHTML = '<div class="loading-container"><p style="color:red;">Error loading faculty members.</p></div>';
+            }
+        }
 
-                const url = `${API_BASE_URL}/notes?${params.toString()}`;
-                const response = await fetch(url);
-                const notes = await response.json();
+        function renderFaculty(data) {
+            if (data.length === 0) {
+                facultyContainer.innerHTML = '<div class="loading-container"><p>No faculty members found in this category.</p></div>';
+                return;
+            }
 
-                if (notes.length === 0) {
-                    notesContainer.innerHTML = `
-                    <div class="empty-state">
-                        <i class="fas fa-folder-open" style="font-size: 4rem; color: #ddd; margin-bottom: 20px;"></i>
-                        <h3>No notes found</h3>
-                        <p>Try adjusting your filters or search keywords.</p>
+            facultyContainer.innerHTML = data.map(f => `
+                <div class="faculty-card" data-aos="fade-up">
+                    <div class="faculty-img-container">
+                        ${f.image_path ?
+                    `<img src="${resolvePath(f.image_path)}" alt="${f.name}" class="faculty-img">` :
+                    '<i class="fas fa-user-circle fa-7x" style="color:#ddd;"></i>'}
                     </div>
-                `;
-                    return;
-                }
-
-                notesContainer.innerHTML = notes.map(note => `
-                <div class="note-card" data-aos="fade-up">
-                    <span class="note-type">PDF</span>
-                    <h4>${note.title}</h4>
-                    <div class="note-meta">
-                        <span><i class="fas fa-book-open"></i> Subject: ${note.subject}</span>
-                        <span><i class="fas fa-layer-group"></i> Unit: ${note.unit}</span>
-                        <span><i class="fas fa-clock"></i> Uploaded: ${formatDate(note.upload_date)}</span>
-                    </div>
-                    <div class="flex">
-                        <a href="${resolvePath(note.file_path)}" class="btn btn-outline" style="padding: 8px 15px; font-size: 0.9rem; flex: 1; margin-right: 10px;" target="_blank">View</a>
-                        <a href="${resolvePath(note.file_path)}" class="btn btn-primary" style="padding: 8px 15px; font-size: 0.9rem; flex: 1;" download>Download</a>
+                    <div class="faculty-info">
+                        <h3>${f.name}</h3>
+                        <span class="designation">${f.designation}</span>
+                        <p class="dept">Department of ${f.department}</p>
                     </div>
                 </div>
             `).join('');
 
-                AOS.refresh();
-            } catch (error) {
-                console.error('Failed to load notes:', error);
-                notesContainer.innerHTML = `
-                <div class="empty-state">
-                    <i class="fas fa-exclamation-triangle" style="font-size: 4rem; color: #d9534f; margin-bottom: 20px;"></i>
-                    <h3>Error loading notes</h3>
-                    <p>Please try again later.</p>
-                </div>
-            `;
+            AOS.refresh();
+        }
+
+        function filterFaculty(dept) {
+            // Update active state of buttons
+            document.querySelectorAll('.filter-btn').forEach(btn => {
+                btn.classList.toggle('active', btn.textContent === (dept === 'All' ? 'All Departments' : dept));
+            });
+
+            if (dept === 'All') {
+                renderFaculty(allFaculty);
+            } else {
+                const filtered = allFaculty.filter(f => f.department === dept);
+                renderFaculty(filtered);
             }
         }
 
-        filterForm.addEventListener('submit', (e) => {
-            e.preventDefault();
-            loadNotes({
-                course: document.getElementById('filter-course').value,
-                semester: document.getElementById('filter-semester').value,
-                subject: document.getElementById('filter-subject').value
-            });
-        });
-
-        // Load notes on page load
-        document.addEventListener('DOMContentLoaded', () => loadNotes());
+        document.addEventListener('DOMContentLoaded', loadFaculty);
     </script>
 </body>
 

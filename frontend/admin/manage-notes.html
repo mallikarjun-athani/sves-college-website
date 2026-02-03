@@ -233,12 +233,16 @@
                         <td>${n.subject}</td>
                         <td>${formatDate(n.upload_date)}</td>
                         <td>
-                            <a href="../../${n.file_path}" target="_blank" style="color: var(--primary);"><i class="fas fa-eye"></i></a>
+                            <a href="${resolvePath(n.file_path)}" target="_blank" style="color: var(--primary);"><i class="fas fa-eye"></i></a>
                             <a href="#" onclick="deleteNote(${n.id})" style="color: #d9534f; margin-left: 15px;"><i class="fas fa-trash"></i></a>
                         </td>
                     </tr>
                 `).join('');
-            } catch (e) { console.error(e); }
+            } catch (e) {
+                console.error('Error loading notes:', e);
+                const list = document.getElementById('notes-list');
+                list.innerHTML = '<tr><td colspan="6" style="text-align:center; color: red;">Failed to load notes. Please try again.</td></tr>';
+            }
         }
 
         async function deleteNote(id) {
