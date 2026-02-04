@@ -427,6 +427,62 @@ footer {
     margin-bottom: 12px;
 }
 
+.footer-links a {
+    position: relative;
+    padding-bottom: 2px;
+    transition: var(--transition);
+    color: rgba(255, 255, 255, 0.8);
+}
+
+.footer-links a::after {
+    content: '';
+    position: absolute;
+    bottom: 0;
+    left: 0;
+    width: 0;
+    height: 1px;
+    background: var(--secondary);
+    transition: var(--transition);
+}
+
+.footer-links a:hover {
+    color: var(--secondary);
+    padding-left: 5px;
+}
+
+.footer-links a:hover::after {
+    width: 100%;
+}
+
+.social-icons {
+    display: flex;
+    gap: 15px;
+    margin-top: 20px;
+}
+
+.social-icons a {
+    width: 40px;
+    height: 40px;
+    background: rgba(255, 255, 255, 0.05);
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 1.1rem !important;
+    color: var(--white) !important;
+    transition: var(--transition);
+    border: 1px solid rgba(255, 255, 255, 0.1);
+    margin-right: 0 !important;
+}
+
+.social-icons a:hover {
+    background: var(--secondary) !important;
+    color: var(--primary) !important;
+    transform: translateY(-5px) scale(1.1);
+    box-shadow: 0 5px 15px rgba(212, 175, 55, 0.3);
+    border-color: var(--secondary) !important;
+}
+
 .footer-bottom {
     border-top: 1px solid rgba(255, 255, 255, 0.1);
     padding-top: 20px;
