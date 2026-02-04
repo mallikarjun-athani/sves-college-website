@@ -1,13 +1,21 @@
 <div class="container">
     <div class="footer-grid">
         <div class="footer-about">
-            <h3>SVES College</h3>
-            <p>Establishing excellence in higher education since 1983. Reaccredited with 'A' Grade by NAAC.</p>
-            <div class="social-icons" style="margin-top: 20px;">
-                <a href="#" style="margin-right: 15px; font-size: 1.2rem;"><i class="fab fa-facebook"></i></a>
-                <a href="#" style="margin-right: 15px; font-size: 1.2rem;"><i class="fab fa-twitter"></i></a>
-                <a href="#" style="margin-right: 15px; font-size: 1.2rem;"><i class="fab fa-instagram"></i></a>
-                <a href="#" style="margin-right: 15px; font-size: 1.2rem;"><i class="fab fa-linkedin"></i></a>
+            <a href="index.html" class="logo flex align-center" style="margin-bottom: 25px;">
+                <img src="assets/images/logo.png" alt="SVES Logo" style="height: 50px;">
+                <div class="logo-text" style="margin-left: 15px;">
+                    <h2 style="color: var(--white); font-size: 1.4rem;">SVES College</h2>
+                    <span style="color: var(--secondary); font-size: 0.7rem;">Harugeri</span>
+                </div>
+            </a>
+            <p style="color: var(--text-light); line-height: 1.8;">SVES B R Darur First Grade College Harugeri,
+                established in 1983, is committed to providing quality education and fostering excellence in Arts,
+                Commerce, Science, and Computer Applications.</p>
+            <div class="social-icons" style="margin-top: 30px; display: flex; gap: 15px;">
+                <a href="#" class="social-btn"><i class="fab fa-facebook-f"></i></a>
+                <a href="#" class="social-btn"><i class="fab fa-twitter"></i></a>
+                <a href="#" class="social-btn"><i class="fab fa-instagram"></i></a>
+                <a href="#" class="social-btn"><i class="fab fa-linkedin-in"></i></a>
             </div>
         </div>
 
@@ -19,34 +27,103 @@
                 <li><a href="admissions.html">Admissions</a></li>
                 <li><a href="student-corner.html">Student Corner</a></li>
                 <li><a href="gallery.html">Gallery</a></li>
+                <li><a href="contact.html">Contact Us</a></li>
             </ul>
         </div>
 
         <div class="footer-links">
             <h3>Academics</h3>
             <ul>
-                <li><a href="courses.html">Courses Offered</a></li>
+                <li><a href="courses.html">Our Courses</a></li>
                 <li><a href="departments.html">Departments</a></li>
-                <li><a href="faculty.html">Our Faculty</a></li>
-                <li><a href="notes.html">Notes & Resources</a></li>
-                <li><a href="placements.html">Placements</a></li>
+                <li><a href="faculty.html">Faculty Members</a></li>
+                <li><a href="notes.html">Study Resources</a></li>
+                <li><a href="placements.html">Career Placements</a></li>
             </ul>
         </div>
 
         <div class="footer-contact">
-            <h3>Contact Us</h3>
-            <p><i class="fas fa-map-marker-alt" style="color: var(--secondary); margin-right: 10px;"></i>
-                Harugeri, Karnataka 591220</p>
-            <p><i class="fas fa-phone" style="color: var(--secondary); margin-right: 10px; margin-top: 15px;"></i> +91
-                80507 86198
-            </p>
-            <p><i class="fas fa-envelope" style="color: var(--secondary); margin-right: 10px; margin-top: 15px;"></i>
-                info@svescollege.in</p>
+            <h3>Contact Info</h3>
+            <ul class="contact-list">
+                <li>
+                    <i class="fas fa-map-marker-alt"></i>
+                    <span>Harugeri-591220, Tq: Raibag, Dist: Belagavi, Karnataka</span>
+                </li>
+                <li>
+                    <i class="fas fa-phone-alt"></i>
+                    <span>+91 80507 86198</span>
+                </li>
+                <li>
+                    <i class="fas fa-envelope"></i>
+                    <span>info@svescollege.in</span>
+                </li>
+            </ul>
         </div>
     </div>
 
-    <div class="footer-bottom text-center">
-        <p>&copy; 2026 SVES College, Harugeri. All Rights Reserved. | <a href="admin/login.html"
-                style="color: var(--secondary);">Admin Login</a></p>
+    <div class="footer-bottom">
+        <div class="flex justify-between align-center" style="flex-wrap: wrap; gap: 20px;">
+            <p>&copy; 2026 SVES College Harugeri. Developed by SVES IT Cell.</p>
+            <div class="footer-bottom-links">
+                <a href="admin/login.html" style="color: var(--secondary);">Admin Portal</a>
+                <span style="margin: 0 10px; color: var(--text-muted);">|</span>
+                <a href="#">Privacy Policy</a>
+            </div>
+        </div>
     </div>
 </div>
+
+<style>
+    .social-btn {
+        width: 40px;
+        height: 40px;
+        background: var(--primary-light);
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        border-radius: 50%;
+        color: var(--white);
+        transition: var(--transition);
+        border: 1px solid rgba(255, 255, 255, 0.1);
+    }
+
+    .social-btn:hover {
+        background: var(--secondary);
+        color: var(--primary);
+        transform: translateY(-5px);
+    }
+
+    .contact-list li {
+        display: flex;
+        align-items: flex-start;
+        gap: 15px;
+        margin-bottom: 20px;
+        color: var(--text-light);
+    }
+
+    .contact-list i {
+        color: var(--secondary);
+        font-size: 1.1rem;
+        margin-top: 5px;
+    }
+
+    .footer-links ul li a {
+        color: var(--text-light);
+        transition: var(--transition);
+        display: block;
+        padding: 5px 0;
+    }
+
+    .footer-links ul li a:hover {
+        color: var(--secondary);
+        padding-left: 10px;
+    }
+
+    .footer-bottom {
+        border-top: 1px solid rgba(255, 255, 255, 0.05);
+        padding: 30px 0;
+        margin-top: 50px;
+        color: var(--text-muted);
+        font-size: 0.9rem;
+    }
+</style>
