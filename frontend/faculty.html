@@ -187,29 +187,92 @@
             font-size: 0.9rem;
         }
 
-        .filter-tabs {
+        .faculty-info .dept {
+            color: var(--text-light);
+            font-size: 0.9rem;
+        }
+
+        .filter-nav-wrapper {
             display: flex;
             justify-content: center;
-            gap: 15px;
-            margin-top: 40px;
+            margin-bottom: 40px;
+        }
+
+        .filter-nav {
+            display: flex;
+            justify-content: center;
+            gap: 12px;
+            margin-bottom: 40px;
             flex-wrap: wrap;
+            padding: 15px 25px;
+            background: rgba(255, 255, 255, 0.8);
+            backdrop-filter: blur(10px);
+            -webkit-backdrop-filter: blur(10px);
+            border-radius: 50px;
+            box-shadow: 0 8px 32px rgba(0, 35, 71, 0.1);
+            display: inline-flex;
         }
 
         .filter-btn {
-            padding: 10px 25px;
-            border-radius: 30px;
-            border: 2px solid var(--primary);
+            padding: 12px 28px;
+            border: none;
             background: transparent;
             color: var(--primary);
             font-weight: 600;
+            font-size: 0.95rem;
             cursor: pointer;
-            transition: var(--transition);
+            border-radius: 30px;
+            transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+            position: relative;
+            overflow: hidden;
+            letter-spacing: 0.3px;
         }
 
-        .filter-btn.active,
+        .filter-btn::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(135deg, var(--primary), #1a4a7a);
+            opacity: 0;
+            transition: opacity 0.3s ease;
+            z-index: -1;
+            border-radius: 30px;
+        }
+
         .filter-btn:hover {
-            background: var(--primary);
             color: var(--white);
+            transform: translateY(-2px);
+            box-shadow: 0 4px 15px rgba(0, 35, 71, 0.2);
+        }
+
+        .filter-btn:hover::before {
+            opacity: 1;
+        }
+
+        .filter-btn.active {
+            background: linear-gradient(135deg, var(--primary), #1a4a7a);
+            color: var(--white);
+            box-shadow: 0 4px 20px rgba(0, 35, 71, 0.3);
+        }
+
+        .filter-btn.active::after {
+            content: '';
+            position: absolute;
+            bottom: -2px;
+            left: 50%;
+            transform: translateX(-50%);
+            width: 30px;
+            height: 3px;
+            background: var(--secondary);
+            border-radius: 2px;
+        }
+
+        .filter-btn i {
+            margin-right: 8px;
+            font-size: 0.85rem;
         }
 
         .loading-container {
@@ -283,12 +346,15 @@
     </section>
 
     <div class="container section-padding">
-        <div class="filter-tabs" data-aos="fade-up">
-            <button class="filter-btn active" onclick="filterFaculty('All')">All Departments</button>
-            <button class="filter-btn" onclick="filterFaculty('BCA')">BCA</button>
-            <button class="filter-btn" onclick="filterFaculty('BA')">BA</button>
-            <button class="filter-btn" onclick="filterFaculty('B.Com')">B.Com</button>
-            <button class="filter-btn" onclick="filterFaculty('B.Sc')">B.Sc</button>
+        <div class="filter-nav-wrapper" data-aos="fade-up">
+            <div class="filter-nav">
+                <button class="filter-btn active" data-dept="All"><i class="fas fa-th"></i>All
+                    Departments</button>
+                <button class="filter-btn" data-dept="BCA"><i class="fas fa-code"></i>BCA</button>
+                <button class="filter-btn" data-dept="BA"><i class="fas fa-book-open"></i>BA</button>
+                <button class="filter-btn" data-dept="B.Com"><i class="fas fa-file-invoice-dollar"></i>B.Com</button>
+                <button class="filter-btn" data-dept="B.Sc"><i class="fas fa-microscope"></i>B.Sc</button>
+            </div>
         </div>
 
         <div class="faculty-grid" id="faculty-container">
@@ -401,7 +467,7 @@
         function filterFaculty(dept) {
             // Update active state of buttons
             document.querySelectorAll('.filter-btn').forEach(btn => {
-                btn.classList.toggle('active', btn.textContent === (dept === 'All' ? 'All Departments' : dept));
+                btn.classList.toggle('active', btn.dataset.dept === dept);
             });
 
             if (dept === 'All') {
@@ -412,7 +478,16 @@
             }
         }
 
-        document.addEventListener('DOMContentLoaded', loadFaculty);
+        document.addEventListener('DOMContentLoaded', function () {
+            loadFaculty();
+
+            // Event listeners for filter buttons
+            document.querySelectorAll('.filter-btn').forEach(btn => {
+                btn.addEventListener('click', function () {
+                    filterFaculty(this.dataset.dept);
+                });
+            });
+        });
     </script>
 </body>
 
