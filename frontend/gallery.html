@@ -12,340 +12,171 @@
     <link rel="stylesheet" href="assets/css/style.css">
     <link rel="icon" type="image/png" href="assets/images/favicon.png">
 
-    <style>
-        /* Header Dropdown Styling */
-        .dropdown-content {
-            display: none;
-            position: absolute;
-            top: 100%;
-            left: 0;
-            background: var(--white);
-            min-width: 200px;
-            box-shadow: var(--shadow-lg);
-            border-radius: var(--radius-sm);
-            padding: 10px 0;
-            z-index: 100;
-        }
 
-        .dropdown-content a {
-            color: var(--primary) !important;
-            padding: 10px 20px;
-            display: block;
-            font-size: 0.9rem;
-        }
 
-        .dropdown-content a:hover {
-            background: var(--bg-light);
-            color: var(--secondary) !important;
-        }
+    .gallery-header {
+    background: linear-gradient(rgba(0, 35, 71, 0.9), rgba(0, 35, 71, 0.8)), url('assets/images/gallery-bg.png');
+    background-size: cover;
+    background-position: center;
+    padding: 150px 0 80px;
+    color: var(--white);
+    text-align: center;
+    }
 
-        .dropdown:hover .dropdown-content {
-            display: block;
-        }
+    .gallery-nav {
+    display: flex;
+    justify-content: center;
+    gap: 12px;
+    margin-bottom: 40px;
+    flex-wrap: wrap;
+    padding: 15px 25px;
+    background: rgba(255, 255, 255, 0.8);
+    backdrop-filter: blur(10px);
+    -webkit-backdrop-filter: blur(10px);
+    border-radius: 50px;
+    box-shadow: 0 8px 32px rgba(0, 35, 71, 0.1);
+    display: inline-flex;
+    }
 
-        header.scrolled .logo-text h2 {
-            color: var(--primary);
-        }
+    .gallery-nav-wrapper {
+    display: flex;
+    justify-content: center;
+    margin-bottom: 40px;
+    }
 
-        header.scrolled .mobile-menu-toggle {
-            color: var(--primary);
-        }
+    .filter-btn {
+    padding: 12px 28px;
+    border: none;
+    background: transparent;
+    color: var(--primary);
+    font-weight: 600;
+    font-size: 0.95rem;
+    cursor: pointer;
+    border-radius: 30px;
+    transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+    position: relative;
+    overflow: hidden;
+    letter-spacing: 0.3px;
+    }
 
-        .mobile-menu-toggle {
-            display: none;
-            color: var(--white);
-            font-size: 1.5rem;
-            cursor: pointer;
-            transition: var(--transition);
-        }
+    .filter-btn::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: linear-gradient(135deg, var(--primary), #1a4a7a);
+    opacity: 0;
+    transition: opacity 0.3s ease;
+    z-index: -1;
+    border-radius: 30px;
+    }
 
-        .mobile-nav {
-            position: fixed;
-            top: 0;
-            right: -100%;
-            width: 80%;
-            max-width: 300px;
-            height: 100vh;
-            background: var(--white);
-            z-index: 2000;
-            padding: 30px;
-            box-shadow: -10px 0 30px rgba(0, 0, 0, 0.1);
-            transition: var(--transition);
-            display: flex;
-            flex-direction: column;
-        }
+    .filter-btn:hover {
+    color: var(--white);
+    transform: translateY(-2px);
+    box-shadow: 0 4px 15px rgba(0, 35, 71, 0.2);
+    }
 
-        .mobile-nav.active {
-            right: 0;
-        }
+    .filter-btn:hover::before {
+    opacity: 1;
+    }
 
-        .mobile-nav-header {
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            margin-bottom: 40px;
-        }
+    .filter-btn.active {
+    background: linear-gradient(135deg, var(--primary), #1a4a7a);
+    color: var(--white);
+    box-shadow: 0 4px 20px rgba(0, 35, 71, 0.3);
+    }
 
-        .mobile-nav-header img {
-            height: 40px;
-        }
+    .filter-btn.active::after {
+    content: '';
+    position: absolute;
+    bottom: -2px;
+    left: 50%;
+    transform: translateX(-50%);
+    width: 30px;
+    height: 3px;
+    background: var(--secondary);
+    border-radius: 2px;
+    }
 
-        #mobile-close {
-            font-size: 1.5rem;
-            color: var(--primary);
-            cursor: pointer;
-        }
+    .filter-btn i {
+    margin-right: 8px;
+    font-size: 0.85rem;
+    }
 
-        .mobile-nav-links {
-            display: flex;
-            flex-direction: column;
-            gap: 15px;
-        }
+    .gallery-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+    gap: 25px;
+    }
 
-        .mobile-nav-links a {
-            font-size: 1.1rem;
-            font-weight: 500;
-            color: var(--primary);
-            padding: 10px 0;
-            border-bottom: 1px solid #eee;
-        }
+    .gallery-item {
+    position: relative;
+    border-radius: var(--radius-md);
+    overflow: hidden;
+    box-shadow: var(--shadow-sm);
+    height: 250px;
+    cursor: pointer;
+    transition: var(--transition);
+    }
 
-        .mobile-nav-links a:last-child {
-            border-bottom: none;
-        }
+    .gallery-item:hover {
+    transform: scale(1.02);
+    box-shadow: var(--shadow-lg);
+    }
 
-        @media (max-width: 1024px) {
-            .nav-links {
-                display: none;
-            }
+    .gallery-item img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    }
 
-            .mobile-menu-toggle {
-                display: block !important;
-            }
-        }
+    .gallery-overlay {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: rgba(0, 35, 71, 0.7);
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    opacity: 0;
+    transition: var(--transition);
+    color: var(--white);
+    padding: 20px;
+    text-align: center;
+    }
 
-        .gallery-header {
-            background: linear-gradient(rgba(0, 35, 71, 0.9), rgba(0, 35, 71, 0.8)), url('assets/images/gallery-bg.png');
-            background-size: cover;
-            background-position: center;
-            padding: 150px 0 80px;
-            color: var(--white);
-            text-align: center;
-        }
+    .gallery-item:hover .gallery-overlay {
+    opacity: 1;
+    }
 
-        .gallery-nav {
-            display: flex;
-            justify-content: center;
-            gap: 12px;
-            margin-bottom: 40px;
-            flex-wrap: wrap;
-            padding: 15px 25px;
-            background: rgba(255, 255, 255, 0.8);
-            backdrop-filter: blur(10px);
-            -webkit-backdrop-filter: blur(10px);
-            border-radius: 50px;
-            box-shadow: 0 8px 32px rgba(0, 35, 71, 0.1);
-            display: inline-flex;
-        }
+    .gallery-overlay h4 {
+    font-size: 1.1rem;
+    margin-bottom: 5px;
+    }
 
-        .gallery-nav-wrapper {
-            display: flex;
-            justify-content: center;
-            margin-bottom: 40px;
-        }
+    .gallery-overlay span {
+    font-size: 0.8rem;
+    color: var(--secondary);
+    text-transform: uppercase;
+    font-weight: 600;
+    }
 
-        .filter-btn {
-            padding: 12px 28px;
-            border: none;
-            background: transparent;
-            color: var(--primary);
-            font-weight: 600;
-            font-size: 0.95rem;
-            cursor: pointer;
-            border-radius: 30px;
-            transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
-            position: relative;
-            overflow: hidden;
-            letter-spacing: 0.3px;
-        }
-
-        .filter-btn::before {
-            content: '';
-            position: absolute;
-            top: 0;
-            left: 0;
-            width: 100%;
-            height: 100%;
-            background: linear-gradient(135deg, var(--primary), #1a4a7a);
-            opacity: 0;
-            transition: opacity 0.3s ease;
-            z-index: -1;
-            border-radius: 30px;
-        }
-
-        .filter-btn:hover {
-            color: var(--white);
-            transform: translateY(-2px);
-            box-shadow: 0 4px 15px rgba(0, 35, 71, 0.2);
-        }
-
-        .filter-btn:hover::before {
-            opacity: 1;
-        }
-
-        .filter-btn.active {
-            background: linear-gradient(135deg, var(--primary), #1a4a7a);
-            color: var(--white);
-            box-shadow: 0 4px 20px rgba(0, 35, 71, 0.3);
-        }
-
-        .filter-btn.active::after {
-            content: '';
-            position: absolute;
-            bottom: -2px;
-            left: 50%;
-            transform: translateX(-50%);
-            width: 30px;
-            height: 3px;
-            background: var(--secondary);
-            border-radius: 2px;
-        }
-
-        .filter-btn i {
-            margin-right: 8px;
-            font-size: 0.85rem;
-        }
-
-        .gallery-grid {
-            display: grid;
-            grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
-            gap: 25px;
-        }
-
-        .gallery-item {
-            position: relative;
-            border-radius: var(--radius-md);
-            overflow: hidden;
-            box-shadow: var(--shadow-sm);
-            height: 250px;
-            cursor: pointer;
-            transition: var(--transition);
-        }
-
-        .gallery-item:hover {
-            transform: scale(1.02);
-            box-shadow: var(--shadow-lg);
-        }
-
-        .gallery-item img {
-            width: 100%;
-            height: 100%;
-            object-fit: cover;
-        }
-
-        .gallery-overlay {
-            position: absolute;
-            top: 0;
-            left: 0;
-            width: 100%;
-            height: 100%;
-            background: rgba(0, 35, 71, 0.7);
-            display: flex;
-            flex-direction: column;
-            justify-content: center;
-            align-items: center;
-            opacity: 0;
-            transition: var(--transition);
-            color: var(--white);
-            padding: 20px;
-            text-align: center;
-        }
-
-        .gallery-item:hover .gallery-overlay {
-            opacity: 1;
-        }
-
-        .gallery-overlay h4 {
-            font-size: 1.1rem;
-            margin-bottom: 5px;
-        }
-
-        .gallery-overlay span {
-            font-size: 0.8rem;
-            color: var(--secondary);
-            text-transform: uppercase;
-            font-weight: 600;
-        }
-
-        .loading-container {
-            grid-column: 1 / -1;
-            padding: 50px;
-            text-align: center;
-        }
+    .loading-container {
+    grid-column: 1 / -1;
+    padding: 50px;
+    text-align: center;
+    }
     </style>
 </head>
 
 <body>
-    <header id="main-header">
-        <div class="container">
-            <div class="header-inner flex align-center justify-between">
-                <a href="index.html" class="logo flex align-center">
-                    <img src="assets/images/logo.png" alt="SVES Logo">
-                    <div class="logo-text" style="margin-left: 15px;">
-                        <h2 style="color: var(--white); font-size: 1.5rem; line-height: 1;">SVES College</h2>
-                        <span
-                            style="color: var(--secondary); font-size: 0.7rem; text-transform: uppercase; letter-spacing: 2px;">Harugeri</span>
-                    </div>
-                </a>
-
-                <nav class="nav-links">
-                    <a href="index.html">Home</a>
-                    <a href="about.html">About Us</a>
-                    <div class="dropdown" style="display: inline-block; position: relative;">
-                        <a href="javascript:void(0)">Academics <i class="fas fa-chevron-down"
-                                style="font-size: 0.7rem;"></i></a>
-                        <div class="dropdown-content">
-                            <a href="departments.html">Departments</a>
-                            <a href="courses.html">Courses</a>
-                            <a href="faculty.html">Faculty</a>
-                        </div>
-                    </div>
-                    <a href="student-corner.html">Student Corner</a>
-                    <a href="notes.html">Notes & Resources</a>
-                    <a href="gallery.html" class="active">Gallery</a>
-                    <a href="admin/login.html">Admin Login</a>
-                    <a href="admissions.html" class="btn btn-secondary"
-                        style="padding: 8px 20px; color: var(--primary) !important;">Apply Now</a>
-                </nav>
-
-                <div class="mobile-menu-toggle" id="mobile-toggle">
-                    <i class="fas fa-bars"></i>
-                </div>
-            </div>
-        </div>
-
-        <!-- Mobile Navigation Drawer -->
-        <div class="mobile-nav" id="mobile-nav">
-            <div class="mobile-nav-header">
-                <img src="assets/images/logo.png" alt="SVES Logo">
-                <i class="fas fa-times" id="mobile-close"></i>
-            </div>
-            <div class="mobile-nav-links">
-                <a href="index.html">Home</a>
-                <a href="about.html">About Us</a>
-                <a href="departments.html">Departments</a>
-                <a href="courses.html">Courses</a>
-                <a href="faculty.html">Faculty</a>
-                <a href="student-corner.html">Student Corner</a>
-                <a href="notes.html">Notes & Resources</a>
-                <a href="gallery.html">Gallery</a>
-                <a href="placements.html">Placements</a>
-                <a href="admin/login.html">Admin Login</a>
-                <a href="admissions.html" class="btn btn-secondary" style="margin-top: 20px; text-align: center;">Apply
-                    Now</a>
-            </div>
-        </div>
-    </header>
+    <header id="main-header"></header>
 
     <section class="gallery-header">
         <div class="container" data-aos="fade-up">

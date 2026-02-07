@@ -116,6 +116,7 @@ router.post('/', authMiddleware, upload.single('image'), async (req, res) => {
                 name,
                 designation,
                 department,
+                status: req.body.status || 'Available',
                 image_path: publicUrl
             }])
             .select()
@@ -153,6 +154,7 @@ router.put('/:id', authMiddleware, upload.single('image'), async (req, res) => {
         if (name) updateData.name = name;
         if (designation) updateData.designation = designation;
         if (department) updateData.department = department;
+        if (req.body.status) updateData.status = req.body.status;
 
         // Handle new image upload
         if (req.file) {

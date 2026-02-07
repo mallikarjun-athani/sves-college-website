@@ -6,7 +6,12 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <meta name="description"
         content="SVES College Harugeri - Excellence in Education. Providing quality education in BCA, BA, B.Com, and B.Sc.">
+    <meta name="theme-color" content="#0a192f">
     <title>SVES College Harugeri - Excellence in Education</title>
+
+    <!-- PWA -->
+    <link rel="manifest" href="manifest.json">
+    <link rel="apple-touch-icon" href="assets/images/logo.png">
 
     <!-- Google Fonts -->
     <link rel="preconnect" href="https://fonts.googleapis.com">
@@ -22,194 +27,23 @@
 </head>
 
 <body>
-    <header id="main-header">
-        <div class="container">
-            <div class="header-inner flex align-center justify-between">
-                <a href="index.html" class="logo flex align-center">
-                    <img src="assets/images/logo.png" alt="SVES Logo">
-                    <div class="logo-text" style="margin-left: 15px;">
-                        <h2 style="color: var(--white); font-size: 1.5rem; line-height: 1;">SVES College</h2>
-                        <span
-                            style="color: var(--secondary); font-size: 0.7rem; text-transform: uppercase; letter-spacing: 2px;">Harugeri</span>
-                    </div>
-                </a>
-
-                <nav class="nav-links">
-                    <a href="index.html" class="active">Home</a>
-                    <a href="about.html">About Us</a>
-                    <div class="dropdown" style="display: inline-block; position: relative;">
-                        <a href="javascript:void(0)">Academics <i class="fas fa-chevron-down"
-                                style="font-size: 0.7rem;"></i></a>
-                        <div class="dropdown-content">
-                            <a href="departments.html">Departments</a>
-                            <a href="courses.html">Courses</a>
-                            <a href="faculty.html">Faculty</a>
-                        </div>
-                    </div>
-                    <a href="student-corner.html">Student Corner</a>
-                    <a href="notes.html">Notes & Resources</a>
-                    <a href="gallery.html">Gallery</a>
-                    <a href="admin/login.html">Admin Login</a>
-                    <a href="admissions.html" class="btn btn-secondary"
-                        style="padding: 8px 20px; color: var(--primary) !important;">Apply Now</a>
-                </nav>
-
-                <div class="mobile-menu-toggle" id="mobile-toggle">
-                    <i class="fas fa-bars"></i>
-                </div>
-            </div>
-        </div>
-
-        <!-- Mobile Navigation Drawer -->
-        <div class="mobile-nav" id="mobile-nav">
-            <div class="mobile-nav-header">
-                <img src="assets/images/logo.png" alt="SVES Logo">
-                <i class="fas fa-times" id="mobile-close"></i>
-            </div>
-            <div class="mobile-nav-links">
-                <a href="index.html">Home</a>
-                <a href="about.html">About Us</a>
-                <a href="departments.html">Departments</a>
-                <a href="courses.html">Courses</a>
-                <a href="faculty.html">Faculty</a>
-                <a href="student-corner.html">Student Corner</a>
-                <a href="notes.html">Notes & Resources</a>
-                <a href="gallery.html">Gallery</a>
-                <a href="placements.html">Placements</a>
-                <a href="admin/login.html">Admin Login</a>
-                <a href="admissions.html" class="btn btn-secondary" style="margin-top: 20px; text-align: center;">Apply
-                    Now</a>
-            </div>
-        </div>
-    </header>
-
-    <style>
-        /* Header Dropdown Styling */
-        .dropdown-content {
-            display: none;
-            position: absolute;
-            top: 100%;
-            left: 0;
-            background: var(--white);
-            min-width: 200px;
-            box-shadow: var(--shadow-lg);
-            border-radius: var(--radius-sm);
-            padding: 10px 0;
-            z-index: 100;
-        }
-
-        .dropdown-content a {
-            color: var(--primary) !important;
-            padding: 10px 20px;
-            display: block;
-            font-size: 0.9rem;
-        }
-
-        .dropdown-content a:hover {
-            background: var(--bg-light);
-            color: var(--secondary) !important;
-        }
-
-        .dropdown:hover .dropdown-content {
-            display: block;
-        }
-
-        header.scrolled .logo-text h2 {
-            color: var(--primary);
-        }
-
-        header.scrolled .mobile-menu-toggle {
-            color: var(--primary);
-        }
-
-        .mobile-menu-toggle {
-            display: none;
-            color: var(--white);
-            font-size: 1.5rem;
-            cursor: pointer;
-            transition: var(--transition);
-        }
-
-        .mobile-nav {
-            position: fixed;
-            top: 0;
-            right: -100%;
-            width: 80%;
-            max-width: 300px;
-            height: 100vh;
-            background: var(--white);
-            z-index: 2000;
-            padding: 30px;
-            box-shadow: -10px 0 30px rgba(0, 0, 0, 0.1);
-            transition: var(--transition);
-            display: flex;
-            flex-direction: column;
-        }
-
-        .mobile-nav.active {
-            right: 0;
-        }
-
-        .mobile-nav-header {
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            margin-bottom: 40px;
-        }
-
-        .mobile-nav-header img {
-            height: 40px;
-        }
-
-        #mobile-close {
-            font-size: 1.5rem;
-            color: var(--primary);
-            cursor: pointer;
-        }
-
-        .mobile-nav-links {
-            display: flex;
-            flex-direction: column;
-            gap: 15px;
-        }
-
-        .mobile-nav-links a {
-            font-size: 1.1rem;
-            font-weight: 500;
-            color: var(--primary);
-            padding: 10px 0;
-            border-bottom: 1px solid #eee;
-        }
-
-        .mobile-nav-links a:last-child {
-            border-bottom: none;
-        }
-
-        @media (max-width: 1024px) {
-            .nav-links {
-                display: none;
-            }
-
-            .mobile-menu-toggle {
-                display: block !important;
-            }
-        }
-    </style>
+    <header id="main-header"></header>
 
     <!-- Hero Section -->
     <section class="hero" id="hero-section" style="background-image: url('assets/images/campus-hero.png');">
         <div class="container">
             <div class="hero-content" data-aos="fade-right" data-aos-duration="1000">
                 <span class="hero-label"
-                    style="color: var(--secondary); font-weight: 700; letter-spacing: 2px; text-transform: uppercase; margin-bottom: 20px; display: block;">Welcome
-                    to SVES Harugeri</span>
-                <h1>Shaping Minds <br>Building Futures</h1>
-                <p>SVES B R Darur First Grade College Harugeri provides a transformative educational experience with a
-                    legacy of excellence since 1983.</p>
+                    style="color: var(--secondary); font-weight: 700; letter-spacing: 2px; text-transform: uppercase; margin-bottom: 20px; display: block;">Transforming
+                    Education Since 1983</span>
+                <h1>Excellence in Every <br>Dimension.</h1>
+                <p>Welcome to SVES B R Darur First Grade College Harugeri. Experience a modern campus with a rich
+                    academic legacy and innovative learning tools.</p>
                 <div class="hero-btns" data-aos="fade-up" data-aos-delay="400">
-                    <a href="admissions.html" class="btn btn-secondary">Apply for Admission</a>
-                    <a href="about.html" class="btn btn-outline"
-                        style="border-color: var(--white); color: var(--white); margin-left: 10px;">Learn More</a>
+                    <a href="admissions.html" class="btn btn-secondary">Admission 2024-25</a>
+                    <a href="virtual-tour.html" class="btn btn-outline"
+                        style="border-color: var(--white); color: var(--white); margin-left: 10px;">360° Virtual
+                        Tour</a>
                 </div>
             </div>
         </div>
@@ -218,52 +52,120 @@
         </div>
     </section>
 
-    <!-- Announcements Ticker -->
+    <!-- Live Notice Board (Ticker) -->
     <div class="ticker-wrap">
         <div class="container">
-            <div class="ticker-container">
-                <span class="latest-badge">LATEST</span>
+            <div class="ticker-container notice-ticker">
+                <span class="latest-badge" style="background: #ff4757;">LIVE NOTICES</span>
                 <div class="ticker-display">
                     <div class="ticker-content" id="announcements-ticker">
-                        <span>Loading announcements...</span>
+                        <span class="notice-item">🔔 Fetching real-time updates from campus...</span>
                     </div>
                 </div>
             </div>
         </div>
     </div>
 
-    <!-- Quick Info Cards -->
+    <!-- Interactive Quick Actions -->
     <section class="section-padding bg-light">
         <div class="container">
+            <div class="section-title">
+                <h1>Campus Smart Features</h1>
+                <p>Digital tools designed to enhance your academic journey and campus life.</p>
+            </div>
             <div class="card-grid">
-                <div class="card" data-aos="fade-up" data-aos-delay="100">
-                    <i class="fas fa-university card-icon"></i>
-                    <h3>Our Institution</h3>
-                    <p>Learn about our rich history, mission, and the visionary leadership behind SVES.</p>
-                    <a href="about.html" class="btn-link"
-                        style="color: var(--primary); font-weight: 600; margin-top: 15px; display: inline-block;">Learn
-                        More <i class="fas fa-arrow-right"></i></a>
+                <!-- Compare Courses -->
+                <div class="action-card" data-aos="fade-up" data-aos-delay="100">
+                    <div class="card-icon-wrapper">
+                        <i class="fas fa-columns"></i>
+                    </div>
+                    <div class="card-body">
+                        <h3>Compare Courses</h3>
+                        <p>Analyze BCA, BA, B.Sc, and B.Com programs side-by-side to find your perfect fit.</p>
+                        <a href="compare-courses.html" class="action-btn">
+                            <span>Compare Now</span>
+                            <i class="fas fa-arrow-right"></i>
+                        </a>
+                    </div>
                 </div>
-                <div class="card" data-aos="fade-up" data-aos-delay="200">
-                    <i class="fas fa-graduation-cap card-icon"></i>
-                    <h3>Academics</h3>
-                    <p>Explore our diverse range of undergraduate programs in Arts, Commerce, Science, and BCA.</p>
-                    <a href="courses.html" class="btn-link"
-                        style="color: var(--primary); font-weight: 600; margin-top: 15px; display: inline-block;">View
-                        Courses <i class="fas fa-arrow-right"></i></a>
+
+                <!-- Smart Timetable -->
+                <div class="action-card" data-aos="fade-up" data-aos-delay="200">
+                    <div class="card-icon-wrapper">
+                        <i class="fas fa-calendar-alt"></i>
+                    </div>
+                    <div class="card-body">
+                        <h3>Smart Timetable</h3>
+                        <p>Access your department-wise class schedules and lecture updates on any device.</p>
+                        <a href="timetable.html" class="action-btn">
+                            <span>View Schedule</span>
+                            <i class="fas fa-arrow-right"></i>
+                        </a>
+                    </div>
                 </div>
-                <div class="card" data-aos="fade-up" data-aos-delay="300">
-                    <i class="fas fa-users card-icon"></i>
-                    <h3>Placement Cell</h3>
-                    <p>Our dedicated placement cell ensures that our students are well-prepared for their professional
-                        careers.</p>
-                    <a href="placements.html" class="btn-link"
-                        style="color: var(--primary); font-weight: 600; margin-top: 15px; display: inline-block;">Career
-                        Support <i class="fas fa-arrow-right"></i></a>
+
+                <!-- Faculty Status -->
+                <div class="action-card" data-aos="fade-up" data-aos-delay="300">
+                    <div class="card-icon-wrapper">
+                        <i class="fas fa-user-check"></i>
+                    </div>
+                    <div class="card-body">
+                        <h3>Faculty Status</h3>
+                        <p>Check real-time availability and office hours of professors for better interaction.</p>
+                        <a href="faculty.html" class="action-btn">
+                            <span>Check Status</span>
+                            <i class="fas fa-arrow-right"></i>
+                        </a>
+                    </div>
+                </div>
+
+                <!-- Digital Library / Notes -->
+                <div class="action-card" data-aos="fade-up" data-aos-delay="400">
+                    <div class="card-icon-wrapper">
+                        <i class="fas fa-book-open"></i>
+                    </div>
+                    <div class="card-body">
+                        <h3>Study Resources</h3>
+                        <p>Download previous year question papers, lecture notes, and digital library resources.</p>
+                        <a href="notes.html" class="action-btn">
+                            <span>Explore Library</span>
+                            <i class="fas fa-arrow-right"></i>
+                        </a>
+                    </div>
                 </div>
             </div>
         </div>
     </section>
+
+    <!-- Feature: Student Showcase Highlight -->
+    <section class="section-padding bg-white" id="student-showcase-section">
+        <div class="container">
+            <div class="flex justify-between align-center" style="margin-bottom: 40px; flex-wrap: wrap; gap: 20px;">
+                <div class="section-title" style="text-align: left; margin: 0;">
+                    <h1>Student Showcase</h1>
+                    <p>Celebrating innovation and academic excellence from our brilliant students.</p>
+                </div>
+                <a href="portfolios.html" class="btn btn-outline" style="color: var(--primary);">View All Portfolios</a>
+            </div>
+
+            <div class="showcase-grid" id="showcase-container">
+                <!-- Data will be injected here by JS -->
+                <div class="skeleton-card" style="height: 400px;"></div>
+                <div class="skeleton-card" style="height: 400px;"></div>
+                <div class="skeleton-card" style="height: 400px;"></div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Showcase Modal -->
+    <div class="modal-overlay" id="showcase-modal">
+        <div class="modal-content">
+            <div class="modal-close" onclick="closeShowcaseModal()">&times;</div>
+            <div id="modal-body">
+                <!-- Content injected by JS -->
+            </div>
+        </div>
+    </div>
 
     <!-- Why Choose Us -->
     <section class="section-padding bg-light">
@@ -272,37 +174,35 @@
                 <div class="why-content" data-aos="fade-right">
                     <div class="section-title" style="text-align: left;">
                         <span
-                            style="color: var(--secondary); font-weight: 600; text-transform: uppercase; letter-spacing: 2px;">Why
-                            SVES?</span>
-                        <h2 style="left: 0; transform: none; display: block; margin-top: 10px;">The SVES Advantage</h2>
+                            style="color: var(--secondary); font-weight: 600; text-transform: uppercase; letter-spacing: 2px;">The
+                            SVES Edge</span>
+                        <h2 style="display: block; margin-top: 10px;">Why We Lead in Rural Education</h2>
                     </div>
-                    <p style="margin-bottom: 30px; font-size: 1.1rem; color: var(--text-light); line-height: 1.8;">We
-                        provide an environment where students grow intellectually, physically, and spiritually through
-                        our specialized curriculum and state-of-the-art facilities.</p>
+                    <p style="margin-bottom: 30px; font-size: 1.1rem; color: var(--text-light); line-height: 1.8;">
+                        Serving
+                        the community with dedication, we blend traditional values with modern technology to create a
+                        unique learning ecosystem.</p>
 
                     <div class="why-list">
                         <div class="why-item">
+                            <i class="fas fa-wifi"></i>
+                            <div>
+                                <h4>Digital-First Campus</h4>
+                                <p>Wi-Fi enabled campus with smart classrooms and interactive learning modules.</p>
+                            </div>
+                        </div>
+                        <div class="why-item">
+                            <i class="fas fa-graduation-cap"></i>
+                            <div>
+                                <h4>Career Pathways</h4>
+                                <p>Dedicated course comparison and placement assistance for every student.</p>
+                            </div>
+                        </div>
+                        <div class="why-item">
                             <i class="fas fa-award"></i>
                             <div>
-                                <h4>NAAC 'A' Accredited</h4>
-                                <p>Consistently maintaining high standards in educational quality and institutional
-                                    infrastructure.</p>
-                            </div>
-                        </div>
-                        <div class="why-item">
-                            <i class="fas fa-chalkboard-teacher"></i>
-                            <div>
-                                <h4>Expert Mentorship</h4>
-                                <p>Learn from highly qualified educators with extensive research and industrial
-                                    experience.</p>
-                            </div>
-                        </div>
-                        <div class="why-item">
-                            <i class="fas fa-microscope"></i>
-                            <div>
-                                <h4>Modern Labs & Tech</h4>
-                                <p>Access to advanced laboratories and a digital library to support your academic
-                                    journey.</p>
+                                <h4>Proven Legacy</h4>
+                                <p>NAAC 'A' Accredited institution with over 40 years of academic brilliance.</p>
                             </div>
                         </div>
                     </div>
@@ -325,13 +225,29 @@
         </div>
     </section>
 
-    <!-- Call to Action -->
-    <section class="section-padding" style="background: var(--primary); color: var(--white); text-align: center;">
-        <div class="container" data-aos="zoom-in">
-            <h2 style="font-size: 3rem; margin-bottom: 20px;">Ready to Start Your Journey?</h2>
-            <p style="font-size: 1.2rem; margin-bottom: 40px; opacity: 0.8;">Join SVES College and be part of a vibrant
-                academic community.</p>
-            <a href="contact.html" class="btn btn-secondary">Get in Touch</a>
+    <!-- Achievement Wall Quick Preview -->
+    <section class="section-padding">
+        <div class="container">
+            <div class="section-title">
+                <h1>Our Wall of Fame</h1>
+                <p>Recent milestones that define our institutional success.</p>
+            </div>
+            <div class="card-grid" id="achievement-preview">
+                <!-- Will be populated by JS or static highlights -->
+                <div class="card" style="padding: 15px;">
+                    <div style="height: 150px; background: #eee; margin-bottom: 20px; border-radius: 10px;"></div>
+                    <h4>University Rank 2024</h4>
+                    <p>BCA VI Sem student secures 5th Rank in State Level competition.</p>
+                </div>
+                <div class="card" style="padding: 15px;">
+                    <div style="height: 150px; background: #eee; margin-bottom: 20px; border-radius: 10px;"></div>
+                    <h4>National Sports Meet</h4>
+                    <p>Our volleyball team won Bronze at the Inter-University level.</p>
+                </div>
+            </div>
+            <div class="text-center" style="margin-top: 40px;">
+                <a href="achievements.html" class="btn btn-primary">View Full Achievement Wall</a>
+            </div>
         </div>
     </section>
 
@@ -339,42 +255,124 @@
 
     <!-- JS Dependencies -->
     <script src="https://unpkg.com/aos@2.3.1/dist/aos.js"></script>
-    <script>
-        AOS.init({
-            duration: 800,
-            once: true
-        });
-    </script>
-    <script src="assets/js/main.js"></script>
     <script src="assets/js/api.js"></script>
+    <script src="assets/js/main.js"></script>
     <script>
-        // Load announcements from API
+        // Load announcements and showcase from API
         document.addEventListener('DOMContentLoaded', async () => {
+            // Announcements
             try {
                 const response = await fetch(API_BASE_URL + '/announcements');
                 const announcements = await response.json();
-
                 const ticker = document.getElementById('announcements-ticker');
                 if (announcements.length > 0) {
                     ticker.innerHTML = announcements.map(a =>
-                        `<span>📢 ${a.title}${a.link ? ` <a href="${a.link}" target="_blank">[View]</a>` : ''} | </span>`
+                        `<span class="notice-item">📢 ${a.title}${a.link ? ` <a href="${a.link}" target="_blank">[View]</a>` : ''} | </span>`
                     ).join('');
                 } else {
-                    ticker.innerHTML = '<span>🔔 Welcome to SVES College Harugeri!</span>';
+                    ticker.innerHTML = '<span class="notice-item">🔔 Welcome to the New SVES Digital Campus Experience!</span>';
+                }
+            } catch (e) { console.error('Announcements error:', e); }
+
+            // Student Showcase
+            try {
+                const response = await fetch(API_BASE_URL + '/showcase');
+                const showcaseItems = await response.json();
+                const container = document.getElementById('showcase-container');
+
+                if (showcaseItems.length > 0) {
+                    container.innerHTML = showcaseItems.map(item => `
+                        <div class="portfolio-card" data-aos="fade-up">
+                            <div class="portfolio-img" style="background-image: url('${item.thumbnail_url || 'assets/images/placeholder.jpg'}')">
+                                <span class="portfolio-category">${item.category}</span>
+                            </div>
+                            <div class="portfolio-body">
+                                <h3 class="portfolio-title">${item.title}</h3>
+                                <p class="portfolio-desc">${item.description.substring(0, 100)}${item.description.length > 100 ? '...' : ''}</p>
+                                <div class="portfolio-footer">
+                                    <span style="font-size: 0.8rem; font-weight: 600; color: var(--secondary-dark);">
+                                        <i class="fas fa-user-graduate"></i> ${item.student_name}
+                                    </span>
+                                    <button onclick="openShowcaseModal(${item.id})" class="view-project" style="background: none; border: none; cursor: pointer; padding: 0;">
+                                        ${item.category === 'Research Paper' ? 'Read Paper' : 'View Portfolio'} <i class="fas fa-arrow-right"></i>
+                                    </button>
+                                </div>
+                            </div>
+                        </div>
+                    `).join('');
+                } else {
+                    container.innerHTML = '<p class="text-center" style="grid-column: 1/-1;">No showcase items available yet.</p>';
+                }
+            } catch (e) {
+                console.error('Showcase error:', e);
+                document.getElementById('showcase-container').innerHTML = '<p class="text-center">Failed to load showcase items.</p>';
+            }
+        });
+
+        // Modal Logic
+        async function openShowcaseModal(id) {
+            const modal = document.getElementById('showcase-modal');
+            const body = document.getElementById('modal-body');
+            modal.classList.add('active');
+            body.innerHTML = '<div style="text-align:center; padding:50px;"><div class="spinner"></div></div>';
+
+            try {
+                const response = await fetch(`${API_BASE_URL}/showcase/${id}`);
+                const item = await response.json();
+
+                let galleryHtml = '';
+                if (item.category === 'Research Paper' && item.content_url) {
+                    galleryHtml = `
+                        <div class="pdf-container" style="margin-top: 20px;">
+                            <iframe src="${item.content_url}" class="pdf-preview"></iframe>
+                            <div style="margin-top: 20px; text-align: center;">
+                                <a href="${item.content_url}" class="btn btn-primary" download>
+                                    <i class="fas fa-download"></i> Download Full Research Paper (PDF)
+                                </a>
+                            </div>
+                        </div>
+                    `;
+                } else if (item.gallery_images && Array.isArray(item.gallery_images) && item.gallery_images.length > 0) {
+                    galleryHtml = `
+                        <div class="modal-gallery">
+                            ${item.gallery_images.map(img => `<img src="${img}" alt="Gallery image" onclick="window.open('${img}', '_blank')">`).join('')}
+                        </div>
+                        <p style="font-size: 0.8rem; color: #888; margin-top: 10px; text-align: center;">Click images to expand</p>
+                    `;
                 }
 
-                /* 
-                // Load banner from gallery
-                const bannerRes = await fetch(API_BASE_URL + '/gallery/banners');
-                const banners = await bannerRes.json();
-                if (banners.length > 0) {
-                    document.getElementById('hero-section').style.backgroundImage =
-                        `url('${resolvePath(banners[0].image_path)}')`;
-                }
-                */
-            } catch (error) {
-                console.error('Failed to load data:', error);
+                body.innerHTML = `
+                    <div class="modal-header">
+                        <h2>${item.title}</h2>
+                        <div class="modal-meta">
+                            <span><i class="fas fa-tag"></i> ${item.category}</span>
+                            <span><i class="fas fa-user"></i> ${item.student_name}</span>
+                        </div>
+                    </div>
+                    <div class="modal-text">
+                        <p style="line-height: 1.8; color: #444;">${item.description}</p>
+                    </div>
+                    ${galleryHtml}
+                    ${item.content_url && item.category !== 'Research Paper' ? `
+                        <div style="margin-top: 30px; border-top: 1px solid #eee; padding-top: 20px; text-align: center;">
+                            <a href="${item.content_url}" target="_blank" class="btn btn-primary">
+                                <i class="fas fa-external-link-alt"></i> Visit Live Portfolio / Project
+                            </a>
+                        </div>
+                    ` : ''}
+                `;
+            } catch (e) {
+                body.innerHTML = '<p class="text-center">Error loading details. Please try again.</p>';
             }
+        }
+
+        function closeShowcaseModal() {
+            document.getElementById('showcase-modal').classList.remove('active');
+        }
+
+        // Close on overlay click
+        document.getElementById('showcase-modal').addEventListener('click', (e) => {
+            if (e.target === document.getElementById('showcase-modal')) closeShowcaseModal();
         });
     </script>
 </body>

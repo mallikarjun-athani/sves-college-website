@@ -1,0 +1,170 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Campus Facilities & Hostel - SVES College Harugeri</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link href="https://unpkg.com/aos@2.3.1/dist/aos.css" rel="stylesheet">
+    <link rel="stylesheet" href="assets/css/style.css">
+    <style>
+        .facility-card {
+            background: white;
+            border-radius: var(--radius-lg);
+            overflow: hidden;
+            display: flex;
+            margin-bottom: 40px;
+            box-shadow: var(--shadow-md);
+            border: 1px solid #eee;
+        }
+
+        .facility-img {
+            flex: 1;
+            min-height: 300px;
+            background-size: cover;
+            background-position: center;
+        }
+
+        .facility-content {
+            flex: 1;
+            padding: 40px;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+        }
+
+        .facility-card:nth-child(even) {
+            flex-direction: row-reverse;
+        }
+
+        .facility-title {
+            font-size: 1.8rem;
+            color: var(--primary);
+            margin-bottom: 20px;
+        }
+
+        .facility-features {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 15px;
+            margin-top: 25px;
+        }
+
+        .feature-item {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            font-size: 0.9rem;
+            color: #555;
+        }
+
+        .feature-item i {
+            color: var(--secondary);
+            font-size: 1.1rem;
+        }
+
+        @media (max-width: 992px) {
+
+            .facility-card,
+            .facility-card:nth-child(even) {
+                flex-direction: column;
+            }
+
+            .facility-img {
+                height: 250px;
+            }
+
+            .facility-content {
+                padding: 30px;
+            }
+        }
+    </style>
+</head>
+
+<body>
+    <header id="main-header"></header>
+
+    <section class="inner-page-header">
+        <div class="container" data-aos="fade-down">
+            <h1>Campus Facilities</h1>
+            <p>We provide a vibrant and supportive environment with modern infrastructure for holistic development.</p>
+        </div>
+    </section>
+
+    <section class="section-padding">
+        <div class="container">
+
+            <!-- Hostel -->
+            <div class="facility-card" data-aos="fade-up">
+                <div class="facility-img" style="background-image: url('assets/images/hostel-facility.jpg');"></div>
+                <div class="facility-content">
+                    <h2 class="facility-title">Smart Hostel Living</h2>
+                    <p>Safe and comfortable separate hostel blocks for boys and girls with a homely atmosphere and
+                        dedicated wardens.</p>
+                    <div class="facility-features">
+                        <div class="feature-item"><i class="fas fa-wifi"></i> 24/7 High-speed Wi-Fi</div>
+                        <div class="feature-item"><i class="fas fa-utensils"></i> Hygienic Veg Mess</div>
+                        <div class="feature-item"><i class="fas fa-shield-alt"></i> CCTV & Security</div>
+                        <div class="feature-item"><i class="fas fa-tint"></i> RO Drinking Water</div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Library -->
+            <div class="facility-card" data-aos="fade-up">
+                <div class="facility-img" style="background-image: url('assets/images/library-facility.jpg');"></div>
+                <div class="facility-content">
+                    <h2 class="facility-title">Digital Library & Info Center</h2>
+                    <p>Extensive collection of over 20,000 books, journals, and digital resources with a peaceful
+                        reading environment.</p>
+                    <div class="facility-features">
+                        <div class="feature-item"><i class="fas fa-laptop"></i> E-Journal Access</div>
+                        <div class="feature-item"><i class="fas fa-print"></i> Reprography Center</div>
+                        <div class="feature-item"><i class="fas fa-hourglass-half"></i> Late Hours Access</div>
+                        <div class="feature-item"><i class="fas fa-book"></i> Book Bank Facility</div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Sports -->
+            <div class="facility-card" data-aos="fade-up">
+                <div class="facility-img" style="background-image: url('assets/images/sports-facility.jpg');"></div>
+                <div class="facility-content">
+                    <h2 class="facility-title">Sports & Recreation</h2>
+                    <p>Expansive playgrounds and indoor facilities to encourage physical fitness and competitive sports
+                        spirit.</p>
+                    <div class="facility-features">
+                        <div class="feature-item"><i class="fas fa-volleyball-ball"></i> Outdoor Courts</div>
+                        <div class="feature-item"><i class="fas fa-dumbbell"></i> Modern Gym</div>
+                        <div class="feature-item"><i class="fas fa-table-tennis"></i> Indoor Games</div>
+                        <div class="feature-item"><i class="fas fa-running"></i> Athletic Track</div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Transport -->
+            <div class="facility-card" data-aos="fade-up">
+                <div class="facility-img" style="background-image: url('assets/images/bus-facility.jpg');"></div>
+                <div class="facility-content">
+                    <h2 class="facility-title">Transport Connectivity</h2>
+                    <p>Dedicated college buses connecting Harugeri with surrounding rural regions for safe and timely
+                        commute.</p>
+                    <div class="facility-features">
+                        <div class="feature-item"><i class="fas fa-bus"></i> GPS Tracked Fleet</div>
+                        <div class="feature-item"><i class="fas fa-map-marked-alt"></i> All Rural Routes</div>
+                        <div class="feature-item"><i class="fas fa-id-card"></i> Student Concessions</div>
+                        <div class="feature-item"><i class="fas fa-phone-alt"></i> 24/7 Driver Support</div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <footer id="main-site-footer"></footer>
+
+    <script src="https://unpkg.com/aos@2.3.1/dist/aos.js"></script>
+    <script src="assets/js/main.js"></script>
+</body>
+
+</html>

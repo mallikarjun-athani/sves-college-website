@@ -1,0 +1,189 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="description"
+        content="Take a 360-degree virtual tour of SVES College Harugeri campus. Explore classrooms, labs, library, and hostels from your mobile or desktop.">
+    <title>360° Virtual Campus Tour - SVES College Harugeri</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link href="https://unpkg.com/aos@2.3.1/dist/aos.css" rel="stylesheet">
+    <link rel="stylesheet" href="assets/css/style.css">
+    <style>
+        .tour-viewport {
+            width: 100%;
+            height: 70vh;
+            background: #000;
+            border-radius: var(--radius-md);
+            overflow: hidden;
+            position: relative;
+            margin-bottom: 30px;
+        }
+
+        .tour-controls {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(140px, 1fr));
+            gap: 15px;
+            margin-top: 20px;
+        }
+
+        .tour-btn {
+            background: var(--white);
+            border: 2px solid #eee;
+            padding: 15px;
+            border-radius: var(--radius-sm);
+            text-align: center;
+            cursor: pointer;
+            transition: var(--transition);
+        }
+
+        .tour-btn:hover,
+        .tour-btn.active {
+            border-color: var(--secondary);
+            background: rgba(255, 193, 7, 0.05);
+            transform: translateY(-3px);
+        }
+
+        .tour-btn i {
+            font-size: 1.5rem;
+            margin-bottom: 10px;
+            color: var(--primary);
+            display: block;
+        }
+
+        .tour-overlay {
+            position: absolute;
+            top: 20px;
+            left: 20px;
+            background: rgba(10, 25, 47, 0.8);
+            color: white;
+            padding: 10px 20px;
+            border-radius: 30px;
+            font-weight: 600;
+            pointer-events: none;
+            z-index: 10;
+        }
+
+        .tour-placeholder {
+            width: 100%;
+            height: 100%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            flex-direction: column;
+            color: #666;
+            background-size: cover;
+            background-position: center;
+            transition: background-image 0.5s ease;
+        }
+
+        .tour-placeholder i {
+            font-size: 4rem;
+            color: var(--secondary);
+            margin-bottom: 20px;
+            animation: pulse 2s infinite;
+        }
+
+        @keyframes pulse {
+            0% {
+                transform: scale(1);
+                opacity: 0.8;
+            }
+
+            50% {
+                transform: scale(1.1);
+                opacity: 1;
+            }
+
+            100% {
+                transform: scale(1);
+                opacity: 0.8;
+            }
+        }
+    </style>
+</head>
+
+<body>
+    <header id="main-header"></header>
+
+    <section class="inner-page-header">
+        <div class="container" data-aos="fade-down">
+            <h1>Virtual Campus Tour</h1>
+            <p>Experience our state-of-the-art infrastructure from anywhere in the world.</p>
+        </div>
+    </section>
+
+    <section class="section-padding">
+        <div class="container">
+
+            <div class="tour-viewport" data-aos="zoom-in">
+                <div class="tour-overlay" id="location-name">Main Entrance</div>
+                <div class="tour-placeholder" id="viewport-bg"
+                    style="background-image: linear-gradient(rgba(0,0,0,0.5), rgba(0,0,0,0.5)), url('assets/images/campus-main.jpg');">
+                    <i class="fas fa-vr-cardboard"></i>
+                    <h3>360° Interactive Experience</h3>
+                    <p>Drag to look around • Scroll to zoom</p>
+                </div>
+            </div>
+
+            <div class="tour-controls" data-aos="fade-up">
+                <div class="tour-btn active" onclick="switchTour('Main Entrance', 'campus-main.jpg', this)">
+                    <i class="fas fa-archway"></i>
+                    Main Entrance
+                </div>
+                <div class="tour-btn" onclick="switchTour('Smart Classrooms', 'classroom.jpg', this)">
+                    <i class="fas fa-chalkboard-teacher"></i>
+                    Classrooms
+                </div>
+                <div class="tour-btn" onclick="switchTour('Science Labs', 'lab.jpg', this)">
+                    <i class="fas fa-flask"></i>
+                    Laboratories
+                </div>
+                <div class="tour-btn" onclick="switchTour('Digital Library', 'library.jpg', this)">
+                    <i class="fas fa-book-reader"></i>
+                    Library
+                </div>
+                <div class="tour-btn" onclick="switchTour('Computer Center', 'comp-lab.jpg', this)">
+                    <i class="fas fa-laptop-code"></i>
+                    Computer Lab
+                </div>
+                <div class="tour-btn" onclick="switchTour('Hostel Block', 'hostel.jpg', this)">
+                    <i class="fas fa-bed"></i>
+                    Hostel Life
+                </div>
+            </div>
+
+            <div class="info-card"
+                style="margin-top: 50px; background: var(--bg-light); border-radius: var(--radius-md); padding: 30px;"
+                data-aos="fade-up">
+                <div class="flex" style="gap: 20px; align-items: center;">
+                    <i class="fas fa-info-circle" style="font-size: 2rem; color: var(--secondary);"></i>
+                    <div>
+                        <h3>Touch Navigation Optimized</h3>
+                        <p>Our virtual tour is designed for mobile-first experience. Use your fingers to pan and tilt
+                            the view just like you would on a physical campus visit.</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <footer id="main-site-footer"></footer>
+
+    <script src="https://unpkg.com/aos@2.3.1/dist/aos.js"></script>
+    <script src="assets/js/main.js"></script>
+    <script>
+        function switchTour(name, img, btn) {
+            document.getElementById('location-name').innerText = name;
+            // In a real scenario, you'd re-initialize Pannellum or change scene
+            // Here we just change the placeholder bg
+            document.getElementById('viewport-bg').style.backgroundImage = `linear-gradient(rgba(0,0,0,0.5), rgba(0,0,0,0.5)), url('assets/images/${img}')`;
+
+            document.querySelectorAll('.tour-btn').forEach(b => b.classList.remove('active'));
+            btn.classList.add('active');
+        }
+    </script>
+</body>
+
+</html>

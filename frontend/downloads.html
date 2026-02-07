@@ -1,0 +1,225 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="description"
+        content="Downloads and Academic Resources - SVES College Harugeri. Syllabus, Calendar, and more.">
+    <title>Downloads & Resources - SVES College Harugeri</title>
+
+    <!-- Google Fonts -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+
+    <!-- CSS Dependencies -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link href="https://unpkg.com/aos@2.3.1/dist/aos.css" rel="stylesheet">
+    <link rel="stylesheet" href="assets/css/style.css">
+
+    <!-- Favicon -->
+    <link rel="icon" type="image/png" href="assets/images/favicon.png">
+
+    <style>
+        .search-box {
+            background: var(--white);
+            padding: 30px;
+            border-radius: var(--radius-md);
+            box-shadow: var(--shadow-md);
+            margin-bottom: 50px;
+            display: flex;
+            gap: 15px;
+        }
+
+        .search-box input {
+            flex: 1;
+            padding: 12px 20px;
+            border: 1px solid #ddd;
+            border-radius: var(--radius-sm);
+            font-size: 1rem;
+        }
+
+        .download-item {
+            background: var(--white);
+            padding: 20px;
+            border-radius: var(--radius-sm);
+            box-shadow: var(--shadow-sm);
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            margin-bottom: 15px;
+            transition: var(--transition);
+            border-left: 4px solid var(--primary);
+        }
+
+        .download-item:hover {
+            transform: translateX(5px);
+            box-shadow: var(--shadow-md);
+        }
+
+        .download-info h4 {
+            margin: 0;
+            color: var(--primary);
+        }
+
+        .download-info p {
+            margin: 5px 0 0;
+            font-size: 0.85rem;
+            color: var(--text-light);
+        }
+
+        .download-btn {
+            color: var(--secondary);
+            font-size: 1.5rem;
+            transition: var(--transition);
+        }
+
+        .download-btn:hover {
+            color: var(--primary);
+        }
+
+        .category-tab {
+            padding: 10px 25px;
+            background: #eee;
+            border-radius: 30px;
+            cursor: pointer;
+            font-weight: 600;
+            transition: var(--transition);
+        }
+
+        .category-tab.active {
+            background: var(--primary);
+            color: var(--white);
+        }
+
+        .tabs-container {
+            display: flex;
+            gap: 10px;
+            flex-wrap: wrap;
+            margin-bottom: 40px;
+        }
+    </style>
+</head>
+
+<body>
+    <header id="main-header"></header>
+
+    <section class="section-padding">
+        <div class="container">
+            <div class="section-title">
+                <h1>Downloads & Resources</h1>
+                <p>Access important academic documents, forms, and calendars here.</p>
+            </div>
+
+            <div class="search-box" data-aos="fade-up">
+                <input type="text" id="resource-search" placeholder="Search for syllabus, forms, or calendars...">
+                <button class="btn btn-primary"><i class="fas fa-search"></i> Search</button>
+            </div>
+
+            <div class="tabs-container" data-aos="fade-up">
+                <div class="category-tab active" onclick="filterResources('all')">All</div>
+                <div class="category-tab" onclick="filterResources('syllabus')">Syllabus</div>
+                <div class="category-tab" onclick="filterResources('calendar')">Academic Calendar</div>
+                <div class="category-tab" onclick="filterResources('exam')">Exam & Results</div>
+                <div class="category-tab" onclick="filterResources('forms')">Forms & Prospectus</div>
+            </div>
+
+            <div class="resources-list" id="resources-list">
+                <!-- Academic Calendar -->
+                <div class="download-item" data-category="calendar" data-aos="fade-up">
+                    <div class="download-info">
+                        <h4>Academic Calendar 2024-25</h4>
+                        <p>PDF | 1.2 MB | Updated: Jan 2024</p>
+                    </div>
+                    <a href="#" class="download-btn"><i class="fas fa-file-pdf"></i></a>
+                </div>
+
+                <!-- Syllabus BCA -->
+                <div class="download-item" data-category="syllabus" data-aos="fade-up" data-aos-delay="50">
+                    <div class="download-info">
+                        <h4>BCA Syllabus (CBCS Scheme)</h4>
+                        <p>PDF | 2.5 MB | Updated: Aug 2023</p>
+                    </div>
+                    <a href="#" class="download-btn"><i class="fas fa-file-pdf"></i></a>
+                </div>
+
+                <!-- Exam Timetable -->
+                <div class="download-item" data-category="exam" data-aos="fade-up" data-aos-delay="100">
+                    <div class="download-info">
+                        <h4>Degree Semester Exam Timetable - March 2024</h4>
+                        <p>PDF | 800 KB | Updated: Feb 2024</p>
+                    </div>
+                    <a href="#" class="download-btn"><i class="fas fa-file-pdf"></i></a>
+                </div>
+
+                <!-- Prospectus -->
+                <div class="download-item" data-category="forms" data-aos="fade-up" data-aos-delay="150">
+                    <div class="download-info">
+                        <h4>College Prospectus 2024-25</h4>
+                        <p>PDF | 5.2 MB | Updated: Jan 2024</p>
+                    </div>
+                    <a href="#" class="download-btn"><i class="fas fa-file-pdf"></i></a>
+                </div>
+
+                <!-- Admission Form -->
+                <div class="download-item" data-category="forms" data-aos="fade-up" data-aos-delay="200">
+                    <div class="download-info">
+                        <h4>Offline Admission Application Form</h4>
+                        <p>PDF | 1.1 MB | Updated: Jan 2024</p>
+                    </div>
+                    <a href="#" class="download-btn"><i class="fas fa-file-pdf"></i></a>
+                </div>
+
+                <!-- Syllabus BA -->
+                <div class="download-item" data-category="syllabus" data-aos="fade-up" data-aos-delay="250">
+                    <div class="download-info">
+                        <h4>BA Syllabus (All Streams)</h4>
+                        <p>PDF | 3.1 MB | Updated: Aug 2023</p>
+                    </div>
+                    <a href="#" class="download-btn"><i class="fas fa-file-pdf"></i></a>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <footer id="main-site-footer"></footer>
+
+    <!-- JS Dependencies -->
+    <script src="https://unpkg.com/aos@2.3.1/dist/aos.js"></script>
+    <script src="assets/js/main.js"></script>
+
+    <script>
+        function filterResources(category) {
+            // Update tabs
+            document.querySelectorAll('.category-tab').forEach(t => t.classList.remove('active'));
+            event.target.classList.add('active');
+
+            // Filter items
+            const items = document.querySelectorAll('.download-item');
+            items.forEach(item => {
+                if (category === 'all' || item.getAttribute('data-category') === category) {
+                    item.style.display = 'flex';
+                } else {
+                    item.style.display = 'none';
+                }
+            });
+        }
+
+        // Simple Search
+        document.getElementById('resource-search').addEventListener('input', function (e) {
+            const term = e.target.value.toLowerCase();
+            const items = document.querySelectorAll('.download-item');
+
+            items.forEach(item => {
+                const title = item.querySelector('h4').textContent.toLowerCase();
+                if (title.includes(term)) {
+                    item.style.display = 'flex';
+                } else {
+                    item.style.display = 'none';
+                }
+            });
+        });
+    </script>
+</body>
+
+</html>

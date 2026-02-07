@@ -1,0 +1,343 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="description"
+        content="Compare undergraduate courses at SVES College side by side. Duration, eligibility, career options, and more.">
+    <title>Course Comparison Tool - SVES College Harugeri</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link href="https://unpkg.com/aos@2.3.1/dist/aos.css" rel="stylesheet">
+    <link rel="stylesheet" href="assets/css/style.css">
+    <style>
+        .comparison-container {
+            margin-top: -60px;
+            position: relative;
+            z-index: 10;
+        }
+
+        .comparison-card {
+            background: var(--white);
+            border-radius: var(--radius-lg);
+            box-shadow: var(--shadow-lg);
+            overflow: hidden;
+            border: 1px solid rgba(0, 0, 0, 0.05);
+        }
+
+        .comparison-header {
+            display: grid;
+            grid-template-columns: 250px 1fr 1fr;
+            background: var(--primary);
+            color: white;
+        }
+
+        .header-cell {
+            padding: 30px;
+            text-align: center;
+            border-right: 1px solid rgba(255, 255, 255, 0.1);
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+        }
+
+        .header-cell:first-child {
+            background: rgba(255, 255, 255, 0.05);
+            text-align: left;
+            font-weight: 700;
+            font-size: 1.2rem;
+        }
+
+        .header-cell select {
+            width: 100%;
+            padding: 12px;
+            border-radius: var(--radius-sm);
+            border: none;
+            background: rgba(255, 255, 255, 0.15);
+            color: white;
+            font-weight: 600;
+            margin-top: 10px;
+            cursor: pointer;
+            transition: var(--transition);
+        }
+
+        .header-cell select:hover {
+            background: rgba(255, 255, 255, 0.25);
+        }
+
+        .header-cell select option {
+            color: var(--primary);
+        }
+
+        .comparison-row {
+            display: grid;
+            grid-template-columns: 250px 1fr 1fr;
+            transition: var(--transition);
+        }
+
+        .comparison-row:nth-child(even) {
+            background: #f8f9fa;
+        }
+
+        .comparison-row:hover {
+            background: rgba(212, 175, 55, 0.03);
+        }
+
+        .data-cell {
+            padding: 25px 30px;
+            border-right: 1px solid #eee;
+            color: var(--text-muted);
+            line-height: 1.6;
+        }
+
+        .label-cell {
+            padding: 25px 30px;
+            font-weight: 700;
+            color: var(--primary);
+            border-right: 1px solid #eee;
+            background: rgba(0, 0, 0, 0.02);
+            display: flex;
+            align-items: center;
+            gap: 12px;
+        }
+
+        .label-cell i {
+            color: var(--secondary);
+            width: 20px;
+        }
+
+        .career-badge {
+            display: inline-block;
+            background: rgba(212, 175, 55, 0.1);
+            color: var(--secondary-dark);
+            padding: 4px 12px;
+            border-radius: 20px;
+            font-size: 0.8rem;
+            margin: 4px;
+            font-weight: 600;
+            border: 1px solid rgba(212, 175, 55, 0.2);
+        }
+
+        .loading-overlay {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(255, 255, 255, 0.8);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            z-index: 100;
+            border-radius: var(--radius-lg);
+            display: none;
+        }
+
+        .spinner {
+            width: 40px;
+            height: 40px;
+            border: 4px solid #f3f3f3;
+            border-top: 4px solid var(--secondary);
+            border-radius: 50%;
+            animation: spin 1s linear infinite;
+        }
+
+        @keyframes spin {
+            0% {
+                transform: rotate(0deg);
+            }
+
+            100% {
+                transform: rotate(360deg);
+            }
+        }
+
+        @media (max-width: 992px) {
+
+            .comparison-header,
+            .comparison-row {
+                grid-template-columns: 200px 1fr 1fr;
+            }
+        }
+
+        @media (max-width: 768px) {
+
+            .comparison-header,
+            .comparison-row {
+                grid-template-columns: 1fr 1fr;
+            }
+
+            .header-cell:first-child,
+            .label-cell {
+                grid-column: span 2;
+                border-right: none;
+                border-bottom: 1px solid #eee;
+                background: var(--primary-light);
+                color: white;
+            }
+
+            .label-cell i {
+                color: var(--secondary-light);
+            }
+        }
+    </style>
+</head>
+
+<body>
+    <header id="main-header"></header>
+
+    <section class="inner-page-header">
+        <div class="container" data-aos="fade-down">
+            <h1>Course Comparison Tool</h1>
+            <p>Side-by-side analysis of academic programs to help you choose the best career path.</p>
+        </div>
+    </section>
+
+    <div class="container comparison-container">
+        <div class="comparison-card" data-aos="fade-up">
+            <div id="loading" class="loading-overlay">
+                <div class="spinner"></div>
+            </div>
+
+            <!-- Header Row -->
+            <div class="comparison-header">
+                <div class="header-cell">
+                    <span>Select Programs</span>
+                    <small style="font-weight: 400; opacity: 0.7;">Choose two courses to compare</small>
+                </div>
+                <div class="header-cell">
+                    <label style="font-size: 0.8rem; text-transform: uppercase;">Course A</label>
+                    <select id="course1"></select>
+                </div>
+                <div class="header-cell">
+                    <label style="font-size: 0.8rem; text-transform: uppercase;">Course B</label>
+                    <select id="course2"></select>
+                </div>
+            </div>
+
+            <!-- Data Rows -->
+            <div id="comparison-rows">
+                <div class="comparison-row">
+                    <div class="label-cell"><i class="fas fa-clock"></i> Duration</div>
+                    <div class="data-cell" id="c1-duration">--</div>
+                    <div class="data-cell" id="c2-duration">--</div>
+                </div>
+                <div class="comparison-row">
+                    <div class="label-cell"><i class="fas fa-graduation-cap"></i> Eligibility</div>
+                    <div class="data-cell" id="c1-eligibility">--</div>
+                    <div class="data-cell" id="c2-eligibility">--</div>
+                </div>
+                <div class="comparison-row">
+                    <div class="label-cell"><i class="fas fa-book"></i> Key Subjects</div>
+                    <div class="data-cell" id="c1-subjects">--</div>
+                    <div class="data-cell" id="c2-subjects">--</div>
+                </div>
+                <div class="comparison-row">
+                    <div class="label-cell"><i class="fas fa-briefcase"></i> Career Paths</div>
+                    <div class="data-cell" id="c1-career">--</div>
+                    <div class="data-cell" id="c2-career">--</div>
+                </div>
+                <div class="comparison-row">
+                    <div class="label-cell"><i class="fas fa-tags"></i> Approx. Fees</div>
+                    <div class="data-cell" id="c1-fee">--</div>
+                    <div class="data-cell" id="c2-fee">--</div>
+                </div>
+            </div>
+        </div>
+
+        <div class="text-center" style="margin: 60px 0;">
+            <div class="cta-box"
+                style="background: var(--bg-light); padding: 40px; border-radius: var(--radius-md); border: 1px dashed var(--secondary);">
+                <h3 style="color: var(--primary); margin-bottom: 15px;">Ready to start your journey?</h3>
+                <p style="margin-bottom: 25px; color: var(--text-muted);">Enroll today in your chosen program and shape
+                    your future with SVES College.</p>
+                <a href="admissions.html" class="btn btn-primary">Proceed to Admission</a>
+            </div>
+        </div>
+    </div>
+
+    <footer id="main-site-footer"></footer>
+
+    <script src="https://unpkg.com/aos@2.3.1/dist/aos.js"></script>
+    <script src="assets/js/api.js"></script>
+    <script src="assets/js/main.js"></script>
+    <script>
+        let allCourses = [];
+        const loading = document.getElementById('loading');
+
+        async function initComparison() {
+            loading.style.display = 'flex';
+            try {
+                const response = await fetch(API_BASE_URL + '/courses');
+                allCourses = await response.json();
+
+                if (!allCourses || allCourses.length === 0) {
+                    console.error('No courses found');
+                    loading.style.display = 'none';
+                    return;
+                }
+
+                const s1 = document.getElementById('course1');
+                const s2 = document.getElementById('course2');
+
+                // Populate selects
+                const options = allCourses.map(c => `<option value="${c.id}">${c.name}</option>`).join('');
+                s1.innerHTML = options;
+                s2.innerHTML = options;
+
+                // Set defaults: BCA (1) and B.Com (3)
+                s1.value = allCourses[0]?.id || '';
+                s2.value = allCourses[2]?.id || (allCourses[1]?.id || '');
+
+                updateComparison();
+
+                // Add event listeners
+                s1.addEventListener('change', updateComparison);
+                s2.addEventListener('change', updateComparison);
+
+            } catch (error) {
+                console.error('Failed to load comparison data:', error);
+            } finally {
+                loading.style.display = 'none';
+            }
+        }
+
+        function updateComparison() {
+            const id1 = document.getElementById('course1').value;
+            const id2 = document.getElementById('course2').value;
+
+            const course1 = allCourses.find(c => c.id == id1);
+            const course2 = allCourses.find(c => c.id == id2);
+
+            if (!course1 || !course2) return;
+
+            const updateCol = (prefix, data) => {
+                document.getElementById(`${prefix}-duration`).innerText = data.duration || '3 Years';
+                document.getElementById(`${prefix}-eligibility`).innerText = data.eligibility || 'Check website';
+                document.getElementById(`${prefix}-subjects`).innerText = data.subjects || 'Syllabus available at office';
+                document.getElementById(`${prefix}-fee`).innerText = data.fee_estimate || 'Contact office';
+
+                // Handle career options dynamically
+                let careers = data.career_options;
+                if (typeof careers === 'string') {
+                    try { careers = JSON.parse(careers); } catch (e) { careers = [careers]; }
+                }
+
+                if (Array.isArray(careers)) {
+                    document.getElementById(`${prefix}-career`).innerHTML = careers.map(c =>
+                        `<span class="career-badge">${c}</span>`
+                    ).join('');
+                } else {
+                    document.getElementById(`${prefix}-career`).innerHTML = `<span class="career-badge">${careers || 'N/A'}</span>`;
+                }
+            };
+
+            updateCol('c1', course1);
+            updateCol('c2', course2);
+        }
+
+        document.addEventListener('DOMContentLoaded', initComparison);
+    </script>
+</body>
+
+</html>

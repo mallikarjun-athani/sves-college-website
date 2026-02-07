@@ -12,229 +12,75 @@
     <link rel="stylesheet" href="assets/css/style.css">
     <link rel="icon" type="image/png" href="assets/images/favicon.png">
 
-    <style>
-        /* Header Dropdown Styling */
-        .dropdown-content {
-            display: none;
-            position: absolute;
-            top: 100%;
-            left: 0;
-            background: var(--white);
-            min-width: 200px;
-            box-shadow: var(--shadow-lg);
-            border-radius: var(--radius-sm);
-            padding: 10px 0;
-            z-index: 100;
-        }
 
-        .dropdown-content a {
-            color: var(--primary) !important;
-            padding: 10px 20px;
-            display: block;
-            font-size: 0.9rem;
-        }
 
-        .dropdown-content a:hover {
-            background: var(--bg-light);
-            color: var(--secondary) !important;
-        }
+    .placements-header {
+    background: linear-gradient(rgba(0, 35, 71, 0.9), rgba(0, 35, 71, 0.9)), url('assets/images/placements-bg.jpg');
+    background-size: cover;
+    padding: 150px 0 80px;
+    color: var(--white);
+    text-align: center;
+    }
 
-        .dropdown:hover .dropdown-content {
-            display: block;
-        }
+    .stats-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+    gap: 30px;
+    margin-top: -50px;
+    position: relative;
+    z-index: 10;
+    }
 
-        .mobile-menu-toggle {
-            display: none;
-            color: var(--white);
-            font-size: 1.5rem;
-            cursor: pointer;
-            transition: var(--transition);
-        }
+    .stat-card {
+    background: var(--white);
+    padding: 30px;
+    border-radius: var(--radius-md);
+    box-shadow: var(--shadow-md);
+    text-align: center;
+    border-bottom: 5px solid var(--secondary);
+    }
 
-        .mobile-nav {
-            position: fixed;
-            top: 0;
-            right: -100%;
-            width: 80%;
-            max-width: 300px;
-            height: 100vh;
-            background: var(--white);
-            z-index: 2000;
-            padding: 30px;
-            box-shadow: -10px 0 30px rgba(0, 0, 0, 0.1);
-            transition: var(--transition);
-            display: flex;
-            flex-direction: column;
-        }
+    .stat-card h2 {
+    font-size: 2.5rem;
+    color: var(--primary);
+    margin-bottom: 5px;
+    }
 
-        .mobile-nav.active {
-            right: 0;
-        }
+    .stat-card p {
+    font-weight: 600;
+    color: var(--text-light);
+    text-transform: uppercase;
+    font-size: 0.8rem;
+    }
 
-        .mobile-nav-header {
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            margin-bottom: 40px;
-        }
+    .recruiter-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(150px, 1fr));
+    gap: 40px;
+    margin-top: 50px;
+    align-items: center;
+    }
 
-        .mobile-nav-header img {
-            height: 40px;
-        }
+    .recruiter-logo {
+    filter: grayscale(1);
+    opacity: 0.6;
+    transition: var(--transition);
+    text-align: center;
+    font-weight: 800;
+    font-size: 1.2rem;
+    color: #999;
+    }
 
-        #mobile-close {
-            font-size: 1.5rem;
-            color: var(--primary);
-            cursor: pointer;
-        }
-
-        .mobile-nav-links {
-            display: flex;
-            flex-direction: column;
-            gap: 15px;
-        }
-
-        .mobile-nav-links a {
-            font-size: 1.1rem;
-            font-weight: 500;
-            color: var(--primary);
-            padding: 10px 0;
-            border-bottom: 1px solid #eee;
-        }
-
-        .mobile-nav-links a:last-child {
-            border-bottom: none;
-        }
-
-        @media (max-width: 1024px) {
-            .nav-links {
-                display: none;
-            }
-
-            .mobile-menu-toggle {
-                display: block !important;
-            }
-        }
-
-        .placements-header {
-            background: linear-gradient(rgba(0, 35, 71, 0.9), rgba(0, 35, 71, 0.9)), url('assets/images/placements-bg.jpg');
-            background-size: cover;
-            padding: 150px 0 80px;
-            color: var(--white);
-            text-align: center;
-        }
-
-        .stats-grid {
-            display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
-            gap: 30px;
-            margin-top: -50px;
-            position: relative;
-            z-index: 10;
-        }
-
-        .stat-card {
-            background: var(--white);
-            padding: 30px;
-            border-radius: var(--radius-md);
-            box-shadow: var(--shadow-md);
-            text-align: center;
-            border-bottom: 5px solid var(--secondary);
-        }
-
-        .stat-card h2 {
-            font-size: 2.5rem;
-            color: var(--primary);
-            margin-bottom: 5px;
-        }
-
-        .stat-card p {
-            font-weight: 600;
-            color: var(--text-light);
-            text-transform: uppercase;
-            font-size: 0.8rem;
-        }
-
-        .recruiter-grid {
-            display: grid;
-            grid-template-columns: repeat(auto-fill, minmax(150px, 1fr));
-            gap: 40px;
-            margin-top: 50px;
-            align-items: center;
-        }
-
-        .recruiter-logo {
-            filter: grayscale(1);
-            opacity: 0.6;
-            transition: var(--transition);
-            text-align: center;
-            font-weight: 800;
-            font-size: 1.2rem;
-            color: #999;
-        }
-
-        .recruiter-logo:hover {
-            filter: grayscale(0);
-            opacity: 1;
-            color: var(--primary);
-        }
+    .recruiter-logo:hover {
+    filter: grayscale(0);
+    opacity: 1;
+    color: var(--primary);
+    }
     </style>
 </head>
 
 <body>
-    <header id="main-header">
-        <div class="container">
-            <div class="header-inner flex align-center justify-between">
-                <a href="index.html" class="logo flex align-center">
-                    <img src="assets/images/logo.png" alt="SVES Logo">
-                    <div class="logo-text" style="margin-left: 15px;">
-                        <h2 class="logo-title">SVES College</h2>
-                        <span class="logo-subtitle">Harugeri</span>
-                    </div>
-                </a>
-
-                <nav class="nav-links">
-                    <a href="index.html">Home</a>
-                    <a href="about.html">About Us</a>
-                    <div class="dropdown" style="display: inline-block; position: relative;">
-                        <a href="javascript:void(0)">Academics <i class="fas fa-chevron-down"
-                                style="font-size: 0.7rem;"></i></a>
-                        <div class="dropdown-content">
-                            <a href="departments.html">Departments</a>
-                            <a href="courses.html">Courses</a>
-                            <a href="faculty.html">Faculty</a>
-                        </div>
-                    </div>
-                    <a href="student-corner.html">Student Corner</a>
-                    <a href="notes.html">Notes & Resources</a>
-                    <a href="gallery.html">Gallery</a>
-                </nav>
-
-                <div class="mobile-menu-toggle" id="mobile-toggle">
-                    <i class="fas fa-bars"></i>
-                </div>
-            </div>
-        </div>
-
-        <!-- Mobile Navigation Drawer -->
-        <div class="mobile-nav" id="mobile-nav">
-            <div class="mobile-nav-header">
-                <img src="assets/images/logo.png" alt="SVES Logo">
-                <i class="fas fa-times" id="mobile-close"></i>
-            </div>
-            <div class="mobile-nav-links">
-                <a href="index.html">Home</a>
-                <a href="about.html">About Us</a>
-                <a href="departments.html">Departments</a>
-                <a href="courses.html">Courses</a>
-                <a href="faculty.html">Faculty</a>
-                <a href="student-corner.html">Student Corner</a>
-                <a href="notes.html">Notes & Resources</a>
-                <a href="gallery.html">Gallery</a>
-                <a href="placements.html" class="active">Placements</a>
-            </div>
-        </div>
-    </header>
+    <header id="main-header"></header>
 
     <section class="placements-header">
         <div class="container" data-aos="fade-up">
@@ -304,63 +150,76 @@
                 <div class="recruiter-logo">TECH MAHINDRA</div>
             </div>
         </section>
+
+        <!-- Student Success Highlights -->
+        <section class="section-padding" style="border-top: 1px solid #eee;">
+            <h2 class="section-title">Student Placement Highlights</h2>
+            <div class="card-grid" style="margin-top: 40px;">
+                <div class="card" data-aos="flip-left">
+                    <div style="text-align: center; margin-bottom: 20px;">
+                        <img src="assets/images/student-1.jpg" alt="Student"
+                            style="width: 100px; height: 100px; border-radius: 50%; object-fit: cover;">
+                    </div>
+                    <h3 style="text-align: center;">Rahul Mehta</h3>
+                    <p style="text-align: center; color: var(--secondary); font-weight: 600;">Placed at Infosys</p>
+                    <p style="text-align: center; font-size: 0.9rem; margin-top: 10px;">"The training sessions and mock
+                        interviews conducted by the placement cell were life-changing."</p>
+                </div>
+                <div class="card" data-aos="flip-left" data-aos-delay="100">
+                    <div style="text-align: center; margin-bottom: 20px;">
+                        <img src="assets/images/student-2.jpg" alt="Student"
+                            style="width: 100px; height: 100px; border-radius: 50%; object-fit: cover;">
+                    </div>
+                    <h3 style="text-align: center;">Anjali Desai</h3>
+                    <p style="text-align: center; color: var(--secondary); font-weight: 600;">Placed at TCS</p>
+                    <p style="text-align: center; font-size: 0.9rem; margin-top: 10px;">"I am grateful to my professors
+                        and the placement cell for their constant support and guidance."</p>
+                </div>
+                <div class="card" data-aos="flip-left" data-aos-delay="200">
+                    <div style="text-align: center; margin-bottom: 20px;">
+                        <img src="assets/images/student-3.jpg" alt="Student"
+                            style="width: 100px; height: 100px; border-radius: 50%; object-fit: cover;">
+                    </div>
+                    <h3 style="text-align: center;">Kiran Patil</h3>
+                    <p style="text-align: center; color: var(--secondary); font-weight: 600;">Placed at Wipro</p>
+                    <p style="text-align: center; font-size: 0.9rem; margin-top: 10px;">"SVES College provided me with
+                        the platform to showcase my skills and secure a great job."</p>
+                </div>
+            </div>
+        </section>
+
+        <!-- Career Guidance -->
+        <section class="section-padding bg-light" style="border-radius: var(--radius-lg); margin-bottom: 50px;">
+            <div class="flex align-center" style="gap: 50px; flex-wrap: wrap;">
+                <div style="flex: 1; min-width: 300px;" data-aos="fade-right">
+                    <h2 style="margin-bottom: 20px;">Career Guidance & Counseling</h2>
+                    <p style="line-height: 1.8; color: var(--text-light);">
+                        We don't just help with placements; we help you plan your career. Our expert counselors provide:
+                    </p>
+                    <ul style="margin-top: 20px; list-style: none;">
+                        <li style="margin-bottom: 10px;"><i class="fas fa-check-circle"
+                                style="color: var(--secondary); margin-right: 10px;"></i> Personalized Career Career
+                            Pathing</li>
+                        <li style="margin-bottom: 10px;"><i class="fas fa-check-circle"
+                                style="color: var(--secondary); margin-right: 10px;"></i> Resume Building Workshops</li>
+                        <li style="margin-bottom: 10px;"><i class="fas fa-check-circle"
+                                style="color: var(--secondary); margin-right: 10px;"></i> Soft Skills Training</li>
+                        <li style="margin-bottom: 10px;"><i class="fas fa-check-circle"
+                                style="color: var(--secondary); margin-right: 10px;"></i> Higher Education Guidance
+                            (MBA, M.Sc, etc.)</li>
+                        <li style="margin-bottom: 10px;"><i class="fas fa-check-circle"
+                                style="color: var(--secondary); margin-right: 10px;"></i> Entrepreneurship Support</li>
+                    </ul>
+                </div>
+                <div style="flex: 1; min-width: 300px;" data-aos="fade-left">
+                    <img src="assets/images/career-guidance.jpg" alt="Career Guidance"
+                        style="width: 100%; border-radius: var(--radius-md); box-shadow: var(--shadow-lg);">
+                </div>
+            </div>
+        </section>
     </div>
 
-    <footer>
-        <div class="container">
-            <div class="footer-grid">
-                <div class="footer-about">
-                    <h3>SVES College</h3>
-                    <p>Establishing excellence in higher education since 1983. Reaccredited with 'A' Grade by NAAC.</p>
-                    <div class="social-icons" style="margin-top: 20px;">
-                        <a href="#" style="margin-right: 15px; font-size: 1.2rem;"><i class="fab fa-facebook"></i></a>
-                        <a href="#" style="margin-right: 15px; font-size: 1.2rem;"><i class="fab fa-twitter"></i></a>
-                        <a href="#" style="margin-right: 15px; font-size: 1.2rem;"><i class="fab fa-instagram"></i></a>
-                        <a href="#" style="margin-right: 15px; font-size: 1.2rem;"><i class="fab fa-linkedin"></i></a>
-                    </div>
-                </div>
-
-                <div class="footer-links">
-                    <h3>Quick Links</h3>
-                    <ul>
-                        <li><a href="index.html">Home</a></li>
-                        <li><a href="about.html">About Us</a></li>
-                        <li><a href="admissions.html">Admissions</a></li>
-                        <li><a href="student-corner.html">Student Corner</a></li>
-                        <li><a href="gallery.html">Gallery</a></li>
-                    </ul>
-                </div>
-
-                <div class="footer-links">
-                    <h3>Academics</h3>
-                    <ul>
-                        <li><a href="courses.html">Courses Offered</a></li>
-                        <li><a href="departments.html">Departments</a></li>
-                        <li><a href="faculty.html">Our Faculty</a></li>
-                        <li><a href="notes.html">Notes & Resources</a></li>
-                        <li><a href="placements.html">Placements</a></li>
-                    </ul>
-                </div>
-
-                <div class="footer-contact">
-                    <h3>Contact Us</h3>
-                    <p><i class="fas fa-map-marker-alt" style="color: var(--secondary); margin-right: 10px;"></i>
-                        Harugeri, Karnataka 591220</p>
-                    <p><i class="fas fa-phone"
-                            style="color: var(--secondary); margin-right: 10px; margin-top: 15px;"></i> +91 80507 86198
-                    </p>
-                    <p><i class="fas fa-envelope"
-                            style="color: var(--secondary); margin-right: 10px; margin-top: 15px;"></i>
-                        info@svescollege.in</p>
-                </div>
-            </div>
-
-            <div class="footer-bottom text-center">
-                <p>&copy; 2026 SVES College, Harugeri. All Rights Reserved. | <a href="admin/login.html"
-                        style="color: var(--secondary);">Admin Login</a></p>
-            </div>
-        </div>
-    </footer>
+    <footer id="main-site-footer"></footer>
 
     <script src="https://unpkg.com/aos@2.3.1/dist/aos.js"></script>
     <script>AOS.init({ duration: 800, once: true });</script>

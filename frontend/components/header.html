@@ -3,61 +3,121 @@
         <a href="index.html" class="logo flex align-center">
             <img src="assets/images/logo.png" alt="SVES Logo">
             <div class="logo-text" style="margin-left: 15px;">
-                <h2>SVES College</h2>
-                <span>Harugeri</span>
+                <h2 style="font-size: 1.5rem; line-height: 1;">SVES College</h2>
+                <span style="font-size: 0.7rem; text-transform: uppercase; letter-spacing: 2px;">Harugeri</span>
             </div>
         </a>
 
+        <!-- Desktop Menu -->
         <nav class="nav-links">
-            <a href="index.html" id="nav-home">Home</a>
-            <a href="about.html" id="nav-about">About Us</a>
-            <div class="dropdown" style="display: inline-block; position: relative;">
+            <a href="index.html">Home</a>
+            <div class="dropdown">
+                <a href="javascript:void(0)" class="flex align-center">Explore <i class="fas fa-chevron-down"
+                        style="font-size: 0.7rem; margin-left: 5px;"></i></a>
+                <div class="dropdown-content">
+                    <a href="about.html">About Us</a>
+                    <a href="virtual-tour.html"><i class="fas fa-vr-cardboard"></i> Virtual Tour</a>
+                    <a href="facilities.html"><i class="fas fa-building"></i> Campus & Hostel</a>
+                    <a href="achievements.html"><i class="fas fa-trophy"></i> Achievement Wall</a>
+                    <a href="gallery.html">Gallery</a>
+                </div>
+            </div>
+            <div class="dropdown">
                 <a href="javascript:void(0)" class="flex align-center">Academics <i class="fas fa-chevron-down"
                         style="font-size: 0.7rem; margin-left: 5px;"></i></a>
                 <div class="dropdown-content">
+                    <a href="courses.html">Our Courses</a>
+                    <a href="compare-courses.html"><i class="fas fa-columns"></i> Compare Courses</a>
                     <a href="departments.html">Departments</a>
-                    <a href="courses.html">Courses</a>
-                    <a href="faculty.html">Faculty</a>
+                    <a href="timetable.html"><i class="fas fa-calendar-alt"></i> Smart Timetable</a>
+                    <a href="faculty.html">Faculty Status</a>
+                    <a href="notes.html">Resources</a>
                 </div>
             </div>
-            <a href="student-corner.html" id="nav-student">Student Corner</a>
-            <a href="notes.html" id="nav-notes">Notes & Resources</a>
-            <a href="gallery.html" id="nav-gallery">Gallery</a>
-            <a href="admin/login.html" id="nav-admin">Admin Login</a>
-            <a href="admissions.html" class="btn btn-secondary"
-                style="padding: 10px 25px; color: var(--primary) !important;">Apply Now</a>
+            <div class="dropdown">
+                <a href="javascript:void(0)" class="flex align-center">Student Life <i class="fas fa-chevron-down"
+                        style="font-size: 0.7rem; margin-left: 5px;"></i></a>
+                <div class="dropdown-content">
+                    <a href="placements.html">Placements</a>
+                    <a href="alumni.html">Alumni Hub</a>
+                    <a href="portfolios.html"><i class="fas fa-briefcase"></i> Student Portfolios</a>
+                    <a href="student-corner.html">Student Corner</a>
+                    <a href="downloads.html">Downloads</a>
+                    <a href="faq.html">FAQ</a>
+                </div>
+            </div>
+            <a href="fee-payment.html">Fees</a>
         </nav>
 
-        <div class="mobile-menu-toggle" id="mobile-toggle">
-            <i class="fas fa-bars"></i>
+        <div class="flex align-center header-right">
+            <div class="header-utilities flex align-center" style="gap: 15px; margin-right: 15px;">
+                <a href="javascript:void(0)" id="header-search-toggle" title="Search"><i class="fas fa-search"></i></a>
+                <a href="javascript:void(0)" id="theme-toggle" title="High Contrast Mode"><i
+                        class="fas fa-adjust"></i></a>
+                <div class="lang-switcher">
+                    <select id="lang-select">
+                        <option value="en">EN</option>
+                        <option value="kn">KN</option>
+                    </select>
+                </div>
+            </div>
+
+            <a href="admissions.html" class="btn btn-secondary desktop-only" style="padding: 10px 20px;">Apply Now</a>
+
+            <div class="mobile-menu-toggle" id="mobile-toggle">
+                <i class="fas fa-bars"></i>
+            </div>
         </div>
+    </div>
+</div>
+
+<!-- Search Overlay -->
+<div id="search-overlay" class="search-overlay">
+    <div class="search-inner">
+        <input type="text" id="global-search-input" placeholder="Search pages, notes, notices...">
+        <i class="fas fa-times" id="search-close"></i>
+        <div id="search-results" class="search-results"></div>
     </div>
 </div>
 
 <!-- Mobile Navigation Drawer -->
 <div class="mobile-nav" id="mobile-nav">
     <div class="mobile-nav-header">
-        <a href="index.html" class="logo flex align-center" style="transform: scale(0.8); margin-left: -20px;">
+        <a href="index.html" class="logo flex align-center" style="transform: scale(0.8);">
             <img src="assets/images/logo.png" alt="SVES Logo">
             <div class="logo-text" style="margin-left: 10px;">
                 <h2 style="color: var(--primary); font-size: 1.2rem;">SVES College</h2>
-                <span style="color: var(--text-light); font-size:0.6rem;">Harugeri</span>
             </div>
         </a>
         <i class="fas fa-times" id="mobile-close"></i>
     </div>
     <div class="mobile-nav-links">
+        <div class="mobile-group-title">Main Navigation</div>
         <a href="index.html">Home</a>
-        <a href="about.html">About Us</a>
-        <a href="departments.html">Departments</a>
-        <a href="courses.html">Courses</a>
-        <a href="faculty.html">Faculty</a>
-        <a href="student-corner.html">Student Corner</a>
-        <a href="notes.html">Notes & Resources</a>
-        <a href="gallery.html">Gallery</a>
+        <a href="admissions.html">Admissions</a>
+        <a href="fee-payment.html">Online Payment</a>
+
+        <div class="mobile-group-title">Explore Campus</div>
+        <a href="virtual-tour.html"><i class="fas fa-vr-cardboard"></i> 360° Virtual Tour</a>
+        <a href="facilities.html"><i class="fas fa-building"></i> Facilities & Hostel</a>
+        <a href="achievements.html"><i class="fas fa-trophy"></i> Achievement Wall</a>
+
+        <div class="mobile-group-title">Academics</div>
+        <a href="compare-courses.html"><i class="fas fa-columns"></i> Course Comparison</a>
+        <a href="timetable.html"><i class="fas fa-calendar-alt"></i> Smart Timetable</a>
+        <a href="faculty.html">Faculty Availability</a>
+        <a href="notes.html">Study Resources</a>
+
+        <div class="mobile-group-title">Student Hub</div>
+        <a href="portfolios.html"><i class="fas fa-briefcase"></i> Showcase Portfolios</a>
         <a href="placements.html">Placements</a>
-        <a href="admin/login.html">Admin Login</a>
-        <a href="admissions.html" class="btn btn-primary"
-            style="margin-top: 20px; text-align: center; color: var(--white) !important;">Apply Now</a>
+        <a href="alumni.html">Alumni Stories</a>
+
+        <div class="mobile-utilities" style="margin-top: 30px; padding-top: 20px; border-top: 1px solid #eee;">
+            <a href="javascript:void(0)"
+                onclick="document.getElementById('header-search-toggle').click(); document.getElementById('mobile-close').click();"><i
+                    class="fas fa-search"></i> Search Website</a>
+            <a href="admin/login.html" style="color: var(--secondary);"><i class="fas fa-user-lock"></i> Staff Login</a>
+        </div>
     </div>
 </div>

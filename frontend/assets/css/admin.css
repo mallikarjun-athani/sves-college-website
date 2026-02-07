@@ -1,0 +1,133 @@
+/* Admin Panel Styles */
+:root {
+    --sidebar-width: 260px;
+}
+
+/* --- Admin Layout --- */
+.admin-layout {
+    display: flex;
+    min-height: 100vh;
+}
+
+.sidebar {
+    width: var(--sidebar-width);
+    background: var(--primary-dark);
+    color: var(--white);
+    height: 100vh;
+    position: fixed;
+    left: 0;
+    top: 0;
+    z-index: 1000;
+    transition: var(--transition);
+}
+
+.main-content {
+    margin-left: var(--sidebar-width);
+    flex: 1;
+    background: var(--bg-light);
+    min-height: 100vh;
+    display: flex;
+    flex-direction: column;
+}
+
+/* --- Admin Header --- */
+.header-bar {
+    background: var(--primary-dark);
+    padding: 15px 40px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    box-shadow: 0 5px 15px rgba(0, 0, 0, 0.2);
+    position: sticky;
+    top: 0;
+    z-index: 900;
+    border-bottom: 1px solid rgba(255, 255, 255, 0.05);
+}
+
+.header-bar h1 {
+    font-size: 1.5rem;
+    color: var(--white);
+    margin: 0;
+}
+
+.admin-profile {
+    color: var(--secondary);
+}
+
+/* --- Admin Sidebar Menu --- */
+.sidebar-brand {
+    padding: 30px;
+    border-bottom: 1px solid rgba(255, 255, 255, 0.05);
+}
+
+.sidebar-brand h2 {
+    font-size: 1.4rem;
+    color: var(--secondary);
+    margin: 0;
+}
+
+.sidebar-menu {
+    padding: 20px 0;
+}
+
+.sidebar-menu a {
+    display: flex;
+    align-items: center;
+    padding: 15px 30px;
+    color: rgba(255, 255, 255, 0.7);
+    text-decoration: none;
+    transition: var(--transition);
+    font-weight: 500;
+}
+
+.sidebar-menu a i {
+    margin-right: 15px;
+    width: 20px;
+    font-size: 1.1rem;
+}
+
+.sidebar-menu a:hover,
+.sidebar-menu a.active {
+    background: rgba(255, 255, 255, 0.05);
+    color: var(--secondary);
+}
+
+.sidebar-menu a.active {
+    border-left: 4px solid var(--secondary);
+}
+
+/* --- Admin Content Area --- */
+.admin-body {
+    padding: 40px;
+    flex: 1;
+}
+
+/* --- Admin Footer --- */
+.admin-footer {
+    background: var(--primary-dark);
+    color: rgba(255, 255, 255, 0.5);
+    padding: 20px 40px;
+    text-align: center;
+    font-size: 0.85rem;
+    border-top: 1px solid rgba(255, 255, 255, 0.05);
+}
+
+.admin-footer a {
+    color: var(--secondary);
+    text-decoration: none;
+}
+
+/* --- Responsive --- */
+@media (max-width: 1024px) {
+    .sidebar {
+        transform: translateX(-100%);
+    }
+
+    .sidebar.active {
+        transform: translateX(0);
+    }
+
+    .main-content {
+        margin-left: 0;
+    }
+}

@@ -5,7 +5,7 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <meta name="description" content="Our Expert Faculty - SVES College Harugeri">
-    <title>Our Faculty | SVES College</title>
+    <title>Faculty Availability Status | SVES College</title>
 
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <link href="https://unpkg.com/aos@2.3.1/dist/aos.css" rel="stylesheet">
@@ -13,406 +13,241 @@
     <link rel="icon" type="image/png" href="assets/images/favicon.png">
 
     <style>
-        /* Header Dropdown Styling */
-        .dropdown-content {
-            display: none;
+        .status-badge {
             position: absolute;
-            top: 100%;
-            left: 0;
-            background: var(--white);
-            min-width: 200px;
-            box-shadow: var(--shadow-lg);
-            border-radius: var(--radius-sm);
-            padding: 10px 0;
-            z-index: 100;
-        }
-
-        .dropdown-content a {
-            color: var(--primary) !important;
-            padding: 10px 20px;
-            display: block;
-            font-size: 0.9rem;
-        }
-
-        .dropdown-content a:hover {
-            background: var(--bg-light);
-            color: var(--secondary) !important;
-        }
-
-        .dropdown:hover .dropdown-content {
-            display: block;
-        }
-
-        .mobile-menu-toggle {
-            display: none;
-            color: var(--white);
-            font-size: 1.5rem;
-            cursor: pointer;
-            transition: var(--transition);
-        }
-
-        .mobile-nav {
-            position: fixed;
-            top: 0;
-            right: -100%;
-            width: 80%;
-            max-width: 300px;
-            height: 100vh;
-            background: var(--white);
-            z-index: 2000;
-            padding: 30px;
-            box-shadow: -10px 0 30px rgba(0, 0, 0, 0.1);
-            transition: var(--transition);
+            top: 20px;
+            left: 20px;
+            padding: 6px 15px;
+            border-radius: 30px;
+            font-size: 0.75rem;
+            font-weight: 700;
             display: flex;
-            flex-direction: column;
-        }
-
-        .mobile-nav.active {
-            right: 0;
-        }
-
-        .mobile-nav-header {
-            display: flex;
-            justify-content: space-between;
             align-items: center;
-            margin-bottom: 40px;
+            gap: 8px;
+            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.15);
+            z-index: 10;
+            text-transform: uppercase;
+            letter-spacing: 1px;
         }
 
-        .mobile-nav-header img {
-            height: 40px;
+        .status-available {
+            background: #27ae60;
+            color: white;
+            border: 2px solid rgba(255, 255, 255, 0.2);
         }
 
-        #mobile-close {
-            font-size: 1.5rem;
-            color: var(--primary);
-            cursor: pointer;
+        .status-busy {
+            background: #f39c12;
+            color: white;
+            border: 2px solid rgba(255, 255, 255, 0.2);
         }
 
-        .mobile-nav-links {
-            display: flex;
-            flex-direction: column;
-            gap: 15px;
-        }
-
-        .mobile-nav-links a {
-            font-size: 1.1rem;
-            font-weight: 500;
-            color: var(--primary);
-            padding: 10px 0;
-            border-bottom: 1px solid #eee;
-        }
-
-        .mobile-nav-links a:last-child {
-            border-bottom: none;
-        }
-
-        @media (max-width: 1024px) {
-            .nav-links {
-                display: none;
-            }
-
-            .mobile-menu-toggle {
-                display: block !important;
-            }
-        }
-
-        .faculty-header {
-            background: linear-gradient(rgba(0, 35, 71, 0.9), rgba(0, 35, 71, 0.9)), url('assets/images/faculty-bg.jpg');
-            background-size: cover;
-            padding: 150px 0 80px;
-            color: var(--white);
-            text-align: center;
-        }
-
-        .faculty-grid {
-            display: grid;
-            grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
-            gap: 30px;
-            margin-top: 50px;
+        .status-on-leave {
+            background: #e74c3c;
+            color: white;
+            border: 2px solid rgba(255, 255, 255, 0.2);
         }
 
         .faculty-card {
             background: var(--white);
-            border-radius: var(--radius-md);
+            border-radius: var(--radius-lg);
             overflow: hidden;
             box-shadow: var(--shadow-sm);
             transition: var(--transition);
-            text-align: center;
-            border: 1px solid #eee;
+            border: 1px solid #f0f0f0;
+            position: relative;
         }
 
         .faculty-card:hover {
-            transform: translateY(-5px);
-            box-shadow: var(--shadow-md);
+            transform: translateY(-10px);
+            box-shadow: var(--shadow-lg);
         }
 
-        .faculty-img-container {
-            width: 100%;
-            height: 250px;
+        .faculty-img-box {
+            height: 300px;
             overflow: hidden;
-            background: #f0f4f8;
+            background: #f8f9fa;
             display: flex;
             align-items: center;
             justify-content: center;
         }
 
-        .faculty-img {
+        .faculty-img-box img {
             width: 100%;
             height: 100%;
             object-fit: cover;
+            transition: var(--transition);
         }
 
-        .faculty-info {
+        .faculty-card:hover .faculty-img-box img {
+            transform: scale(1.1);
+        }
+
+        .faculty-details {
             padding: 25px;
+            text-align: center;
         }
 
-        .faculty-info h3 {
+        .faculty-details h3 {
+            font-size: 1.3rem;
             color: var(--primary);
             margin-bottom: 5px;
-            font-size: 1.25rem;
         }
 
-        .faculty-info .designation {
+        .faculty-details .designation {
             color: var(--secondary);
-            font-weight: 600;
+            font-weight: 700;
             font-size: 0.9rem;
-            text-transform: uppercase;
-            letter-spacing: 1px;
             display: block;
-            margin-bottom: 10px;
+            margin-bottom: 15px;
         }
 
-        .faculty-info .dept {
-            color: var(--text-light);
-            font-size: 0.9rem;
+        .faculty-details .dept {
+            color: var(--text-muted);
+            font-size: 0.85rem;
+            margin-bottom: 20px;
+            background: #f8f9fa;
+            padding: 5px 10px;
+            border-radius: 4px;
+            display: inline-block;
         }
 
-        .filter-tabs {
+        .interaction-info {
+            border-top: 1px solid #eee;
+            padding-top: 15px;
+            font-size: 0.85rem;
+            font-weight: 600;
+        }
+
+        .filter-section {
             display: flex;
             justify-content: center;
             gap: 15px;
-            margin-top: 40px;
+            margin-bottom: 50px;
             flex-wrap: wrap;
         }
 
-        .filter-btn {
+        .filter-pill {
             padding: 10px 25px;
             border-radius: 30px;
-            border: 2px solid var(--primary);
-            background: transparent;
+            background: var(--white);
+            border: 1px solid #ddd;
             color: var(--primary);
-            font-weight: 600;
+            font-weight: 700;
             cursor: pointer;
             transition: var(--transition);
         }
 
-        .filter-btn.active,
-        .filter-btn:hover {
+        .filter-pill.active {
             background: var(--primary);
-            color: var(--white);
+            color: var(--secondary);
+            border-color: var(--primary);
+            box-shadow: var(--shadow-md);
         }
 
-        .loading-container {
-            grid-column: 1 / -1;
-            padding: 50px;
+        .loader {
             text-align: center;
+            padding: 100px 0;
+            width: 100%;
         }
     </style>
 </head>
 
 <body>
-    <header id="main-header">
-        <div class="container">
-            <div class="header-inner flex align-center justify-between">
-                <a href="index.html" class="logo flex align-center">
-                    <img src="assets/images/logo.png" alt="SVES Logo">
-                    <div class="logo-text" style="margin-left: 15px;">
-                        <h2 class="logo-title">SVES College</h2>
-                        <span class="logo-subtitle">Harugeri</span>
-                    </div>
-                </a>
+    <header id="main-header"></header>
 
-                <nav class="nav-links">
-                    <a href="index.html">Home</a>
-                    <a href="about.html">About Us</a>
-                    <div class="dropdown" style="display: inline-block; position: relative;">
-                        <a href="javascript:void(0)" class="active">Academics <i class="fas fa-chevron-down"
-                                style="font-size: 0.7rem;"></i></a>
-                        <div class="dropdown-content">
-                            <a href="departments.html">Departments</a>
-                            <a href="courses.html">Courses</a>
-                            <a href="faculty.html" class="active">Faculty</a>
-                        </div>
-                    </div>
-                    <a href="student-corner.html">Student Corner</a>
-                    <a href="notes.html">Notes & Resources</a>
-                    <a href="gallery.html">Gallery</a>
-                </nav>
-
-                <div class="mobile-menu-toggle" id="mobile-toggle">
-                    <i class="fas fa-bars"></i>
-                </div>
-            </div>
-        </div>
-
-        <!-- Mobile Navigation Drawer -->
-        <div class="mobile-nav" id="mobile-nav">
-            <div class="mobile-nav-header">
-                <img src="assets/images/logo.png" alt="SVES Logo">
-                <i class="fas fa-times" id="mobile-close"></i>
-            </div>
-            <div class="mobile-nav-links">
-                <a href="index.html">Home</a>
-                <a href="about.html">About Us</a>
-                <a href="departments.html">Departments</a>
-                <a href="courses.html">Courses</a>
-                <a href="faculty.html">Faculty</a>
-                <a href="student-corner.html">Student Corner</a>
-                <a href="notes.html">Notes & Resources</a>
-                <a href="gallery.html">Gallery</a>
-                <a href="placements.html">Placements</a>
-            </div>
-        </div>
-    </header>
-
-    <section class="faculty-header">
-        <div class="container" data-aos="fade-up">
-            <h1>Our Expert Faculty</h1>
-            <p>Meet the dedicated educators who guide our students towards academic and professional success.</p>
+    <section class="inner-page-header">
+        <div class="container" data-aos="fade-down">
+            <h1>Faculty Availability</h1>
+            <p>Connect with our expert academicians and plan your guidance sessions effectively.</p>
         </div>
     </section>
 
     <div class="container section-padding">
-        <div class="filter-tabs" data-aos="fade-up">
-            <button class="filter-btn active" onclick="filterFaculty('All')">All Departments</button>
-            <button class="filter-btn" onclick="filterFaculty('BCA')">BCA</button>
-            <button class="filter-btn" onclick="filterFaculty('BA')">BA</button>
-            <button class="filter-btn" onclick="filterFaculty('B.Com')">B.Com</button>
-            <button class="filter-btn" onclick="filterFaculty('B.Sc')">B.Sc</button>
+        <div class="filter-section" data-aos="fade-up">
+            <div class="filter-pill active" data-dept="All">All Faculty</div>
+            <div class="filter-pill" data-dept="BCA">BCA</div>
+            <div class="filter-pill" data-dept="B.Com">B.Com</div>
+            <div class="filter-pill" data-dept="BA">BA</div>
+            <div class="filter-pill" data-dept="B.Sc">B.Sc</div>
         </div>
 
-        <div class="faculty-grid" id="faculty-container">
-            <div class="loading-container">
-                <i class="fas fa-spinner fa-spin fa-3x" style="color: var(--primary);"></i>
-                <p style="margin-top: 15px;">Loading faculty profiles...</p>
+        <div id="faculty-grid" class="card-grid">
+            <div class="loader">
+                <div class="spinner" style="margin: 0 auto;"></div>
             </div>
         </div>
     </div>
 
-    <footer>
-        <div class="container">
-            <div class="footer-grid">
-                <div class="footer-about">
-                    <h3>SVES College</h3>
-                    <p>Establishing excellence in higher education since 1983. Reaccredited with 'A' Grade by NAAC.</p>
-                    <div class="social-icons" style="margin-top: 20px;">
-                        <a href="#" style="margin-right: 15px; font-size: 1.2rem;"><i class="fab fa-facebook"></i></a>
-                        <a href="#" style="margin-right: 15px; font-size: 1.2rem;"><i class="fab fa-twitter"></i></a>
-                        <a href="#" style="margin-right: 15px; font-size: 1.2rem;"><i class="fab fa-instagram"></i></a>
-                        <a href="#" style="margin-right: 15px; font-size: 1.2rem;"><i class="fab fa-linkedin"></i></a>
-                    </div>
-                </div>
-
-                <div class="footer-links">
-                    <h3>Quick Links</h3>
-                    <ul>
-                        <li><a href="index.html">Home</a></li>
-                        <li><a href="about.html">About Us</a></li>
-                        <li><a href="admissions.html">Admissions</a></li>
-                        <li><a href="student-corner.html">Student Corner</a></li>
-                        <li><a href="gallery.html">Gallery</a></li>
-                    </ul>
-                </div>
-
-                <div class="footer-links">
-                    <h3>Academics</h3>
-                    <ul>
-                        <li><a href="courses.html">Courses Offered</a></li>
-                        <li><a href="departments.html">Departments</a></li>
-                        <li><a href="faculty.html">Our Faculty</a></li>
-                        <li><a href="notes.html">Notes & Resources</a></li>
-                        <li><a href="placements.html">Placements</a></li>
-                    </ul>
-                </div>
-
-                <div class="footer-contact">
-                    <h3>Contact Us</h3>
-                    <p><i class="fas fa-map-marker-alt" style="color: var(--secondary); margin-right: 10px;"></i>
-                        Harugeri, Karnataka 591220</p>
-                    <p><i class="fas fa-phone"
-                            style="color: var(--secondary); margin-right: 10px; margin-top: 15px;"></i> +91 80507 86198
-                    </p>
-                    <p><i class="fas fa-envelope"
-                            style="color: var(--secondary); margin-right: 10px; margin-top: 15px;"></i>
-                        info@svescollege.in</p>
-                </div>
-            </div>
-
-            <div class="footer-bottom text-center">
-                <p>&copy; 2026 SVES College, Harugeri. All Rights Reserved. | <a href="admin/login.html"
-                        style="color: var(--secondary);">Admin Login</a></p>
-            </div>
-        </div>
-    </footer>
+    <footer id="main-site-footer"></footer>
 
     <script src="https://unpkg.com/aos@2.3.1/dist/aos.js"></script>
-    <script>AOS.init({ duration: 800, once: true });</script>
     <script src="assets/js/api.js"></script>
     <script src="assets/js/main.js"></script>
     <script>
-        const facultyContainer = document.getElementById('faculty-container');
         let allFaculty = [];
+        const grid = document.getElementById('faculty-grid');
 
-        async function loadFaculty() {
+        async function initFaculty() {
             try {
                 const response = await fetch(API_BASE_URL + '/faculty');
                 allFaculty = await response.json();
-                renderFaculty(allFaculty);
+
+                renderFaculty('All');
+
+                document.querySelectorAll('.filter-pill').forEach(pill => {
+                    pill.addEventListener('click', () => {
+                        document.querySelectorAll('.filter-pill').forEach(p => p.classList.remove('active'));
+                        pill.classList.add('active');
+                        renderFaculty(pill.dataset.dept);
+                    });
+                });
             } catch (error) {
                 console.error('Failed to load faculty:', error);
-                facultyContainer.innerHTML = '<div class="loading-container"><p style="color:red;">Error loading faculty members.</p></div>';
+                grid.innerHTML = '<div class="text-center">Error loading faculty data.</div>';
             }
         }
 
-        function renderFaculty(data) {
-            if (data.length === 0) {
-                facultyContainer.innerHTML = '<div class="loading-container"><p>No faculty members found in this category.</p></div>';
+        function renderFaculty(dept) {
+            const filtered = dept === 'All' ? allFaculty : allFaculty.filter(f => f.department === dept);
+
+            if (filtered.length === 0) {
+                grid.innerHTML = '<div class="text-center" style="grid-column: 1/-1;">No faculty members found for this department.</div>';
                 return;
             }
 
-            facultyContainer.innerHTML = data.map(f => `
-                <div class="faculty-card" data-aos="fade-up">
-                    <div class="faculty-img-container">
-                        ${f.image_path ?
-                    `<img src="${resolvePath(f.image_path)}" alt="${f.name}" class="faculty-img">` :
-                    '<i class="fas fa-user-circle fa-7x" style="color:#ddd;"></i>'}
-                    </div>
-                    <div class="faculty-info">
-                        <h3>${f.name}</h3>
-                        <span class="designation">${f.designation}</span>
-                        <p class="dept">Department of ${f.department}</p>
-                    </div>
-                </div>
-            `).join('');
+            grid.innerHTML = filtered.map(f => {
+                const statusClass = f.status === 'Available' ? 'status-available' :
+                    f.status === 'Busy' ? 'status-busy' : 'status-on-leave';
 
-            AOS.refresh();
+                const interactionText = f.status === 'Available' ?
+                    '<span style="color: #27ae60;"><i class="fas fa-check-circle"></i> Available Now</span>' :
+                    f.status === 'Busy' ?
+                        '<span style="color: #f39c12;"><i class="fas fa-clock"></i> In Lecture</span>' :
+                        '<span style="color: #e74c3c;"><i class="fas fa-calendar-times"></i> Not in Campus</span>';
+
+                return `
+                    <div class="faculty-card" data-aos="fade-up">
+                        <div class="status-badge ${statusClass}">
+                            <i class="fas fa-circle" style="font-size: 0.5rem;"></i> ${f.status || 'Available'}
+                        </div>
+                        <div class="faculty-img-box">
+                            <img src="${f.image_path || 'https://ui-avatars.com/api/?name=' + encodeURIComponent(f.name) + '&background=002347&color=fff'}" alt="${f.name}">
+                        </div>
+                        <div class="faculty-details">
+                            <h3>${f.name}</h3>
+                            <span class="designation">${f.designation}</span>
+                            <span class="dept">Dept of ${f.department}</span>
+                            <div class="interaction-info">
+                                ${interactionText}
+                            </div>
+                        </div>
+                    </div>
+                `;
+            }).join('');
         }
 
-        function filterFaculty(dept) {
-            // Update active state of buttons
-            document.querySelectorAll('.filter-btn').forEach(btn => {
-                btn.classList.toggle('active', btn.textContent === (dept === 'All' ? 'All Departments' : dept));
-            });
-
-            if (dept === 'All') {
-                renderFaculty(allFaculty);
-            } else {
-                const filtered = allFaculty.filter(f => f.department === dept);
-                renderFaculty(filtered);
-            }
-        }
-
-        document.addEventListener('DOMContentLoaded', loadFaculty);
+        document.addEventListener('DOMContentLoaded', initFaculty);
     </script>
 </body>
 

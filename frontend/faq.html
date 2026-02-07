@@ -1,0 +1,149 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="description"
+        content="Frequently Asked Questions - SVES College Harugeri. Find answers to common queries.">
+    <title>FAQ - SVES College Harugeri</title>
+
+    <!-- Google Fonts -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+
+    <!-- CSS Dependencies -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link href="https://unpkg.com/aos@2.3.1/dist/aos.css" rel="stylesheet">
+    <link rel="stylesheet" href="assets/css/style.css">
+
+    <!-- Favicon -->
+    <link rel="icon" type="image/png" href="assets/images/favicon.png">
+
+    <style>
+        .faq-container {
+            max-width: 900px;
+            margin: 0 auto;
+        }
+
+        .faq-item {
+            background: var(--white);
+            margin-bottom: 15px;
+            border-radius: var(--radius-sm);
+            box-shadow: var(--shadow-sm);
+            overflow: hidden;
+            border: 1px solid #eee;
+        }
+
+        .faq-question {
+            padding: 20px 25px;
+            cursor: pointer;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            font-weight: 600;
+            color: var(--primary);
+            transition: var(--transition);
+        }
+
+        .faq-question:hover {
+            background: var(--bg-light);
+        }
+
+        .faq-answer {
+            padding: 0 25px;
+            max-height: 0;
+            overflow: hidden;
+            transition: all 0.3s ease-out;
+            color: var(--text-light);
+            line-height: 1.8;
+            background: #fafafa;
+        }
+
+        .faq-item.active .faq-answer {
+            padding: 20px 25px;
+            max-height: 500px;
+        }
+
+        .faq-item.active .faq-question {
+            background: var(--primary);
+            color: var(--white);
+        }
+
+        .faq-item.active .faq-question i {
+            transform: rotate(180deg);
+        }
+    </style>
+</head>
+
+<body>
+    <header id="main-header"></header>
+
+    <section class="inner-page-header">
+        <div class="container" data-aos="fade-down">
+            <h1>Frequently Asked Questions</h1>
+            <p>Find answers to common queries about admissions, courses, and student life at SVES College.</p>
+        </div>
+    </section>
+
+    <section class="section-padding">
+        <div class="container">
+            <div class="faq-container" data-aos="fade-up">
+                <!-- FAQs will be loaded here by JavaScript -->
+            </div>
+
+            <div class="text-center" style="margin-top: 50px;" data-aos="fade-up">
+                <h3>Still have questions?</h3>
+                <p>Feel free to reach out to our support team.</p>
+                <a href="contact.html" class="btn btn-primary" style="margin-top: 20px;">Contact Us</a>
+            </div>
+        </div>
+    </section>
+
+    <footer id="main-site-footer"></footer>
+
+    <!-- JS Dependencies -->
+    <script src="https://unpkg.com/aos@2.3.1/dist/aos.js"></script>
+    <script src="assets/js/main.js"></script>
+
+    <script src="assets/js/api.js"></script>
+    <script>
+        async function loadFAQs() {
+            const container = document.querySelector('.faq-container');
+            container.innerHTML = '<div class="text-center" style="padding: 50px;"><div class="spinner"></div><p>Fetching latest answers...</p></div>';
+
+            try {
+                // Try fetching from API
+                const response = await fetch(API_BASE_URL + '/faqs');
+                const faqs = await response.json();
+
+                if (faqs && faqs.length > 0) {
+                    container.innerHTML = faqs.map(f => `
+                        <div class="faq-item" data-aos="fade-up">
+                            <div class="faq-question" role="button" tabindex="0" onclick="this.parentElement.classList.toggle('active')">
+                                ${f.question}
+                                <i class="fas fa-chevron-down"></i>
+                            </div>
+                            <div class="faq-answer">
+                                ${f.answer}
+                            </div>
+                        </div>
+                    `).join('');
+                } else {
+                    // Fallback to static if API is empty
+                    location.reload(); // Or show a default message
+                }
+            } catch (error) {
+                console.error('Failed to load FAQs:', error);
+                // Keep the static content if API fails (it's already there in HTML if we didn't clear it first)
+            }
+        }
+
+        document.addEventListener('DOMContentLoaded', () => {
+            loadFAQs();
+            // AOS initialization is usually in main.js
+        });
+    </script>
+</body>
+
+</html>

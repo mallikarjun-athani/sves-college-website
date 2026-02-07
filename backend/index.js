@@ -21,6 +21,9 @@ const galleryRoutes = require('./routes/gallery');
 const facultyRoutes = require('./routes/faculty');
 const dashboardRoutes = require('./routes/dashboard');
 const coursesRoutes = require('./routes/courses');
+const timetableRoutes = require('./routes/timetable');
+const showcaseRoutes = require('./routes/showcase');
+const faqRoutes = require('./routes/faqs');
 
 const app = express();
 const PORT = process.env.PORT || 3000;
@@ -47,9 +50,9 @@ app.use(helmet({
             ...helmet.contentSecurityPolicy.getDefaultDirectives(),
             "img-src": ["'self'", "data:", "*.supabase.co"],
             "script-src": ["'self'", "'unsafe-inline'", "https://unpkg.com", "https://cdnjs.cloudflare.com"],
-            "connect-src": ["'self'", "https://*.supabase.co", "https://*.vercel.app"],
+            "connect-src": ["'self'", "http://localhost:*", "http://127.0.0.1:*", "https://*.supabase.co", "https://*.vercel.app"],
             "style-src": ["'self'", "'unsafe-inline'", "https://fonts.googleapis.com", "https://cdnjs.cloudflare.com", "https://unpkg.com"],
-            "font-src": ["'self'", "https://fonts.gstatic.com", "https://cdnjs.cloudflare.com"],
+            "font-src": ["'self'", "https://fonts.gstatic.com", "https://cdnjs.cloudflare.com", "data:"],
         },
     },
 }));
@@ -128,6 +131,9 @@ app.use('/api/gallery', galleryRoutes);
 app.use('/api/faculty', facultyRoutes);
 app.use('/api/dashboard', dashboardRoutes);
 app.use('/api/courses', coursesRoutes);
+app.use('/api/timetable', timetableRoutes);
+app.use('/api/showcase', showcaseRoutes);
+app.use('/api/faqs', faqRoutes);
 
 // ============================================
 // HEALTH CHECK

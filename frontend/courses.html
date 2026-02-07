@@ -13,219 +13,24 @@
     <link rel="icon" type="image/png" href="assets/images/favicon.png">
 
     <style>
-        /* Header Dropdown Styling */
-        .dropdown-content {
-            display: none;
-            position: absolute;
-            top: 100%;
-            left: 0;
-            background: var(--white);
-            min-width: 200px;
-            box-shadow: var(--shadow-lg);
-            border-radius: var(--radius-sm);
-            padding: 10px 0;
-            z-index: 100;
-        }
-
-        .dropdown-content a {
-            color: var(--primary) !important;
-            padding: 10px 20px;
-            display: block;
-            font-size: 0.9rem;
-        }
-
-        .dropdown-content a:hover {
+        .breadcrumb {
             background: var(--bg-light);
-            color: var(--secondary) !important;
-        }
-
-        .dropdown:hover .dropdown-content {
-            display: block;
-        }
-
-        .mobile-menu-toggle {
-            display: none;
-            color: var(--white);
-            font-size: 1.5rem;
-            cursor: pointer;
-            transition: var(--transition);
-        }
-
-        .mobile-nav {
-            position: fixed;
-            top: 0;
-            right: -100%;
-            width: 80%;
-            max-width: 300px;
-            height: 100vh;
-            background: var(--white);
-            z-index: 2000;
-            padding: 30px;
-            box-shadow: -10px 0 30px rgba(0, 0, 0, 0.1);
-            transition: var(--transition);
-            display: flex;
-            flex-direction: column;
-        }
-
-        .mobile-nav.active {
-            right: 0;
-        }
-
-        .mobile-nav-header {
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            margin-bottom: 40px;
-        }
-
-        .mobile-nav-header img {
-            height: 40px;
-        }
-
-        #mobile-close {
-            font-size: 1.5rem;
-            color: var(--primary);
-            cursor: pointer;
-        }
-
-        .mobile-nav-links {
-            display: flex;
-            flex-direction: column;
-            gap: 15px;
-        }
-
-        .mobile-nav-links a {
-            font-size: 1.1rem;
-            font-weight: 500;
-            color: var(--primary);
-            padding: 10px 0;
-            border-bottom: 1px solid #eee;
-        }
-
-        .mobile-nav-links a:last-child {
-            border-bottom: none;
-        }
-
-        @media (max-width: 1024px) {
-            .nav-links {
-                display: none;
-            }
-
-            .mobile-menu-toggle {
-                display: block !important;
-            }
-        }
-
-        /* Header Dropdown Styling */
-        .dropdown-content {
-            display: none;
-            position: absolute;
-            top: 100%;
-            left: 0;
-            background: var(--white);
-            min-width: 200px;
-            box-shadow: var(--shadow-lg);
-            border-radius: var(--radius-sm);
-            padding: 10px 0;
-            z-index: 100;
-        }
-
-        .dropdown-content a {
-            color: var(--primary) !important;
-            padding: 10px 20px;
-            display: block;
+            padding: 15px 0;
             font-size: 0.9rem;
+            color: var(--text-light);
+            margin-top: 80px;
         }
 
-        .dropdown-content a:hover {
-            background: var(--bg-light);
-            color: var(--secondary) !important;
-        }
-
-        .dropdown:hover .dropdown-content {
-            display: block;
-        }
-
-        .mobile-menu-toggle {
-            display: none;
-            color: var(--white);
-            font-size: 1.5rem;
-            cursor: pointer;
-            transition: var(--transition);
-        }
-
-        .mobile-nav {
-            position: fixed;
-            top: 0;
-            right: -100%;
-            width: 80%;
-            max-width: 300px;
-            height: 100vh;
-            background: var(--white);
-            z-index: 2000;
-            padding: 30px;
-            box-shadow: -10px 0 30px rgba(0, 0, 0, 0.1);
-            transition: var(--transition);
-            display: flex;
-            flex-direction: column;
-        }
-
-        .mobile-nav.active {
-            right: 0;
-        }
-
-        .mobile-nav-header {
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            margin-bottom: 40px;
-        }
-
-        .mobile-nav-header img {
-            height: 40px;
-        }
-
-        #mobile-close {
-            font-size: 1.5rem;
+        .breadcrumb a {
             color: var(--primary);
-            cursor: pointer;
+            font-weight: 600;
         }
 
-        .mobile-nav-links {
-            display: flex;
-            flex-direction: column;
-            gap: 15px;
+        .breadcrumb i {
+            margin: 0 10px;
+            font-size: 0.7rem;
         }
 
-        .mobile-nav-links a {
-            font-size: 1.1rem;
-            font-weight: 500;
-            color: var(--primary);
-            padding: 10px 0;
-            border-bottom: 1px solid #eee;
-        }
-
-        .mobile-nav-links a:last-child {
-            border-bottom: none;
-        }
-
-        @media (max-width: 1024px) {
-            .nav-links {
-                display: none;
-            }
-
-            .mobile-menu-toggle {
-                display: block !important;
-            }
-        }
-
-        .courses-hero {
-            background: linear-gradient(rgba(0, 35, 71, 0.8), rgba(0, 35, 71, 0.8)), url('assets/images/courses-bg.jpg');
-            background-size: cover;
-            padding: 150px 0 80px;
-            color: var(--white);
-            text-align: center;
-        }
 
         .course-card {
             background: var(--white);
@@ -280,62 +85,11 @@
 </head>
 
 <body>
-    <header id="main-header">
-        <div class="container">
-            <div class="header-inner flex align-center justify-between">
-                <a href="index.html" class="logo flex align-center">
-                    <img src="assets/images/logo.png" alt="SVES Logo">
-                    <div class="logo-text" style="margin-left: 15px;">
-                        <h2 class="logo-title">SVES College</h2>
-                        <span class="logo-subtitle">Harugeri</span>
-                    </div>
-                </a>
+    <header id="main-header"></header>
 
-                <nav class="nav-links">
-                    <a href="index.html">Home</a>
-                    <a href="about.html">About Us</a>
-                    <div class="dropdown" style="display: inline-block; position: relative;">
-                        <a href="javascript:void(0)" class="active">Academics <i class="fas fa-chevron-down"
-                                style="font-size: 0.7rem;"></i></a>
-                        <div class="dropdown-content">
-                            <a href="departments.html">Departments</a>
-                            <a href="courses.html" class="active">Courses</a>
-                            <a href="faculty.html">Faculty</a>
-                        </div>
-                    </div>
-                    <a href="student-corner.html">Student Corner</a>
-                    <a href="notes.html">Notes & Resources</a>
-                    <a href="gallery.html">Gallery</a>
-                </nav>
-
-                <div class="mobile-menu-toggle" id="mobile-toggle">
-                    <i class="fas fa-bars"></i>
-                </div>
-            </div>
-        </div>
-
-        <!-- Mobile Navigation Drawer -->
-        <div class="mobile-nav" id="mobile-nav">
-            <div class="mobile-nav-header">
-                <img src="assets/images/logo.png" alt="SVES Logo">
-                <i class="fas fa-times" id="mobile-close"></i>
-            </div>
-            <div class="mobile-nav-links">
-                <a href="index.html">Home</a>
-                <a href="about.html">About Us</a>
-                <a href="departments.html">Departments</a>
-                <a href="courses.html">Courses</a>
-                <a href="faculty.html">Faculty</a>
-                <a href="student-corner.html">Student Corner</a>
-                <a href="notes.html">Notes & Resources</a>
-                <a href="gallery.html">Gallery</a>
-                <a href="placements.html">Placements</a>
-            </div>
-        </div>
-    </header>
-
-    <section class="courses-hero">
-        <div class="container" data-aos="fade-up">
+    <section class="inner-page-header"
+        style="background-image: linear-gradient(rgba(10, 25, 47, 0.9), rgba(10, 25, 47, 0.8)), url('assets/images/courses-bg.jpg');">
+        <div class="container" data-aos="fade-down">
             <h1>Undergraduate Programs</h1>
             <p>Shape your career with our diverse range of academic courses designed for the modern world.</p>
         </div>
@@ -347,8 +101,8 @@
             <div class="course-content">
                 <h3>Bachelor of Computer Applications (BCA)</h3>
                 <div class="course-meta">
-                    <span><i class="fas fa-calendar-alt"></i> Duration: 4 Years</span>
-                    <span><i class="fas fa-graduation-cap"></i> Eligibility: PU-II / 10+2</span>
+                    <span><i class="fas fa-calendar-alt"></i> Duration: 3 Years</span>
+                    <span><i class="fas fa-graduation-cap"></i> Eligibility: PU-II Science/Commerce</span>
                 </div>
                 <p>Focuses on computer science fundamentals, software development, web technologies, and database
                     management. Includes practical training in modern programming languages.</p>
@@ -361,7 +115,7 @@
                 <h3>Bachelor of Commerce (B.Com)</h3>
                 <div class="course-meta">
                     <span><i class="fas fa-calendar-alt"></i> Duration: 4 Years</span>
-                    <span><i class="fas fa-graduation-cap"></i> Eligibility: PU-II / 10+2</span>
+                    <span><i class="fas fa-graduation-cap"></i> Eligibility: PU-II Science/Commerce</span>
                 </div>
                 <p>A comprehensive program covering accounting, finance, taxation, business law, and management.
                     Prepares students for roles in banking, insurance, and corporate sectors.</p>
@@ -395,61 +149,7 @@
         </div>
     </div>
 
-    <footer>
-        <div class="container">
-            <div class="footer-grid">
-                <div class="footer-about">
-                    <h3>SVES B R Darur First Grade,College</h3>
-                    <p>Establishing excellence in higher education since 1983. Reaccredited with 'A' Grade by NAAC.</p>
-                    <div class="social-icons" style="margin-top: 20px;">
-                        <a href="#" style="margin-right: 15px; font-size: 1.2rem;"><i class="fab fa-facebook"></i></a>
-                        <a href="#" style="margin-right: 15px; font-size: 1.2rem;"><i class="fab fa-twitter"></i></a>
-                        <a href="#" style="margin-right: 15px; font-size: 1.2rem;"><i class="fab fa-instagram"></i></a>
-                        <a href="#" style="margin-right: 15px; font-size: 1.2rem;"><i class="fab fa-linkedin"></i></a>
-                    </div>
-                </div>
-
-                <div class="footer-links">
-                    <h3>Quick Links</h3>
-                    <ul>
-                        <li><a href="index.html">Home</a></li>
-                        <li><a href="about.html">About Us</a></li>
-                        <li><a href="admissions.html">Admissions</a></li>
-                        <li><a href="student-corner.html">Student Corner</a></li>
-                        <li><a href="gallery.html">Gallery</a></li>
-                    </ul>
-                </div>
-
-                <div class="footer-links">
-                    <h3>Academics</h3>
-                    <ul>
-                        <li><a href="courses.html">Courses Offered</a></li>
-                        <li><a href="departments.html">Departments</a></li>
-                        <li><a href="faculty.html">Our Faculty</a></li>
-                        <li><a href="notes.html">Notes & Resources</a></li>
-                        <li><a href="placements.html">Placements</a></li>
-                    </ul>
-                </div>
-
-                <div class="footer-contact">
-                    <h3>Contact Us</h3>
-                    <p><i class="fas fa-map-marker-alt" style="color: var(--secondary); margin-right: 10px;"></i>
-                        Harugeri, Karnataka 591220</p>
-                    <p><i class="fas fa-phone"
-                            style="color: var(--secondary); margin-right: 10px; margin-top: 15px;"></i> +91 80507 86198
-                    </p>
-                    <p><i class="fas fa-envelope"
-                            style="color: var(--secondary); margin-right: 10px; margin-top: 15px;"></i>
-                        info@svescollege.in</p>
-                </div>
-            </div>
-
-            <div class="footer-bottom text-center">
-                <p>&copy; 2026 SVES College, Harugeri. All Rights Reserved. | <a href="admin/login.html"
-                        style="color: var(--secondary);">Admin Login</a></p>
-            </div>
-        </div>
-    </footer>
+    <footer id="main-site-footer"></footer>
 
     <script src="https://unpkg.com/aos@2.3.1/dist/aos.js"></script>
     <script>AOS.init({ duration: 800, once: true });</script>

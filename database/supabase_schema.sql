@@ -31,16 +31,26 @@ CREATE TABLE IF NOT EXISTS courses (
     id SERIAL PRIMARY KEY,
     name VARCHAR(100) NOT NULL,
     description TEXT,
-    icon VARCHAR(50)
+    icon VARCHAR(50),
+    duration VARCHAR(50),
+    eligibility TEXT,
+    subjects TEXT,
+    career_options JSONB,
+    fee_estimate VARCHAR(50)
 );
 
--- Insert default courses
-INSERT INTO courses (id, name, description, icon) VALUES 
-    (1, 'BCA', 'Bachelor of Computer Applications', 'fa-laptop-code'),
-    (2, 'BA', 'Bachelor of Arts', 'fa-book'),
-    (3, 'B.Com', 'Bachelor of Commerce', 'fa-chart-line'),
-    (4, 'B.Sc', 'Bachelor of Science', 'fa-flask')
-ON CONFLICT (id) DO NOTHING;
+-- Insert default courses with full details for comparison
+INSERT INTO courses (id, name, description, icon, duration, eligibility, subjects, career_options, fee_estimate) VALUES 
+    (1, 'BCA', 'Bachelor of Computer Applications', 'fa-laptop-code', '3 Years (6 Sem)', 'PUC II / Class 12 (Science / Commerce with Math)', 'Programming in C/Java, Data Structures, DBMS, Web Development, AI Basics', '["Software Engineer", "Web Developer", "Systems Admin", "App Developer"]', '₹ 22,000'),
+    (2, 'BA', 'Bachelor of Arts', 'fa-book', '3 Years (6 Sem)', 'PUC II / Class 12 (Any Stream)', 'History, Political Science, Economics, Sociology, Rural Development', '["IAS/KAS Aspirant", "Professor", "Journalist", "Social Worker", "Legal Assistant"]', '₹ 8,500'),
+    (3, 'B.Com', 'Bachelor of Commerce', 'fa-chart-line', '3 Years (6 Sem)', 'PUC II / Class 12 (Any Stream)', 'Accountancy, Business Math, Auditing, GST, Income Tax, Financial Management', '["Chartered Accountant", "Financial Analyst", "Banker", "Tax Consultant"]', '₹ 12,800'),
+    (4, 'B.Sc', 'Bachelor of Science', 'fa-flask', '3 Years (6 Sem)', 'PUC II / Class 12 (Science PCM/CBZ)', 'Physics, Chemistry, mathematics, Botany, Zoology, Statistics', '["Researcher", "Lab Technician", "Professor", "Environmentalist", "Quality Analyst"]', '₹ 15,400')
+ON CONFLICT (id) DO UPDATE SET
+    duration = EXCLUDED.duration,
+    eligibility = EXCLUDED.eligibility,
+    subjects = EXCLUDED.subjects,
+    career_options = EXCLUDED.career_options,
+    fee_estimate = EXCLUDED.fee_estimate;
 
 -- ============================================
 -- ANNOUNCEMENTS TABLE
@@ -67,6 +77,14 @@ CREATE TABLE IF NOT EXISTS notes (
     file_path VARCHAR(255),
     upload_date TIMESTAMPTZ DEFAULT NOW()
 );
+
+-- Sample Data for Notes
+INSERT INTO notes (title, course_id, semester, subject, unit, file_path) VALUES
+    ('Data Structures Introduction', 1, 3, 'Data Structures', 'Unit 1', 'notes/sample-ds-unit1.pdf'),
+    ('Java Programming Basics', 1, 4, 'Java Programming', 'Unit 1', 'notes/sample-java-basics.pdf'),
+    ('Macro Economics Overview', 3, 2, 'Economics', 'General', 'notes/economics-overview.pdf'),
+    ('Business Management Principles', 3, 4, 'Management', 'Unit 2', 'notes/management-principles.pdf')
+ON CONFLICT DO NOTHING;
 
 -- Create index for faster filtering
 CREATE INDEX IF NOT EXISTS idx_notes_course ON notes(course_id);
@@ -98,8 +116,18 @@ CREATE TABLE IF NOT EXISTS faculty (
     designation VARCHAR(255) NOT NULL,
     department VARCHAR(255) NOT NULL,
     image_path VARCHAR(255),
+    status VARCHAR(50) DEFAULT 'Available',
     created_at TIMESTAMPTZ DEFAULT NOW()
 );
+
+-- Sample Data for Faculty
+INSERT INTO faculty (name, designation, department, status) VALUES
+    ('Dr. V.S. Kulkarni', 'Principal', 'Science', 'Available'),
+    ('Prof. S.B. Patil', 'HOD', 'BCA', 'Busy'),
+    ('Prof. M.A. Hiremath', 'Asst. Professor', 'BCA', 'On Leave'),
+    ('Dr. G.R. Deshpande', 'HOD', 'B.Com', 'Available'),
+    ('Prof. S.N. Nayak', 'Associate Professor', 'BA', 'Available')
+ON CONFLICT DO NOTHING;
 
 -- Create index for department filtering
 CREATE INDEX IF NOT EXISTS idx_faculty_department ON faculty(department);
@@ -150,3 +178,84 @@ CREATE POLICY "Deny public access to admin" ON admin
 
 -- Example storage policies (run in SQL editor or via Dashboard):
 -- INSERT INTO storage.buckets (id, name, public) VALUES ('uploads', 'uploads', true);
+
+-- ============================================
+-- TIMETABLE TABLE
+-- Stores class schedules
+-- ============================================
+CREATE TABLE IF NOT EXISTS timetable (
+    id SERIAL PRIMARY KEY,
+    course_id INT REFERENCES courses(id) ON DELETE CASCADE,
+    semester INT CHECK (semester >= 1 AND semester <= 6),
+    day_of_week VARCHAR(15) CHECK (day_of_week IN ('Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturday')),
+    start_time TIME NOT NULL,
+    end_time TIME NOT NULL,
+    subject VARCHAR(255) NOT NULL,
+    faculty_id INT REFERENCES faculty(id) ON DELETE SET NULL,
+    room_no VARCHAR(50),
+    created_at TIMESTAMPTZ DEFAULT NOW()
+);
+
+-- Sample Data for Timetable
+INSERT INTO timetable (course_id, semester, day_of_week, start_time, end_time, subject, room_no) VALUES
+    (1, 4, 'Monday', '09:30', '10:30', 'Java Programming', 'Lab 2'),
+    (1, 4, 'Monday', '10:30', '11:30', 'Software Engineering', 'R204'),
+    (1, 4, 'Tuesday', '09:30', '10:30', 'Entrepreneurship', 'R204'),
+    (1, 4, 'Wednesday', '11:30', '12:30', 'Data Mining', 'R201')
+ON CONFLICT DO NOTHING;
+
+-- Enable RLS for timetable
+ALTER TABLE timetable ENABLE ROW LEVEL SECURITY;
+CREATE POLICY "Allow public read access to timetable" ON timetable
+    FOR SELECT USING (true);
+
+-- ============================================
+-- SHOWCASE TABLE
+-- Stores student projects, papers, and portfolios
+-- ============================================
+CREATE TABLE IF NOT EXISTS showcase (
+    id SERIAL PRIMARY KEY,
+    title VARCHAR(255) NOT NULL,
+    category VARCHAR(50) CHECK (category IN ('Project', 'Research Paper', 'Portfolio')),
+    student_name VARCHAR(255),
+    description TEXT,
+    thumbnail_url VARCHAR(255),
+    content_url VARCHAR(255), -- Link to PDF or external site
+    gallery_images JSONB DEFAULT '[]', -- Array of image URLs for portfolios
+    created_at TIMESTAMPTZ DEFAULT NOW()
+);
+
+-- Sample Data for Showcase
+INSERT INTO showcase (title, category, student_name, description, thumbnail_url, content_url, gallery_images) VALUES
+    ('SVES Virtual Library System', 'Project', 'Final Year BCA Team', 'A digital transformation project for campus book management.', 'assets/images/project1.jpg', null, '["assets/images/project1-a.jpg", "assets/images/project1-b.jpg"]'),
+    ('AI in Rural Agriculture', 'Research Paper', 'Arjun M.', 'Analysis of AI implementation for local farmers.', 'assets/images/research1.jpg', 'assets/docs/research-agri.pdf', '[]'),
+    ('Modern Web Portfolio', 'Portfolio', 'Sneha K.', 'Full stack developer portfolio showcasing 15+ college projects.', 'assets/images/portfolio1.jpg', 'https://sneha-dev.example.com', '["assets/images/p1.jpg", "assets/images/p2.jpg", "assets/images/p3.jpg"]');
+
+-- Enable RLS for showcase
+ALTER TABLE showcase ENABLE ROW LEVEL SECURITY;
+CREATE POLICY "Allow public read access to showcase" ON showcase
+    FOR SELECT USING (true);
+
+-- ============================================
+-- FAQS TABLE
+-- Stores frequently asked questions
+-- ============================================
+CREATE TABLE IF NOT EXISTS faqs (
+    id SERIAL PRIMARY KEY,
+    question TEXT NOT NULL,
+    answer TEXT NOT NULL,
+    category VARCHAR(50) DEFAULT 'General',
+    priority INT DEFAULT 0,
+    created_at TIMESTAMPTZ DEFAULT NOW()
+);
+
+-- Sample Data for FAQs
+INSERT INTO faqs (question, answer, category, priority) VALUES
+    ('How do I apply for BCA?', 'You can apply online through our Admission portal or visit the campus with your PUC/12th marksheet.', 'Admissions', 1),
+    ('What are the college timings?', 'The regular classes run from 09:30 AM to 04:30 PM, Monday to Saturday.', 'General', 2),
+    ('Is there a hostel facility?', 'Yes, we provide separate hostel facilities for boys and girls with all basic amenities.', 'Facilities', 3);
+
+-- Enable RLS for faqs
+ALTER TABLE faqs ENABLE ROW LEVEL SECURITY;
+CREATE POLICY "Allow public read access to faqs" ON faqs
+    FOR SELECT USING (true);
