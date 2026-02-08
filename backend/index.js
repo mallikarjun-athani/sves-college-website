@@ -24,6 +24,7 @@ const coursesRoutes = require('./routes/courses');
 const timetableRoutes = require('./routes/timetable');
 const showcaseRoutes = require('./routes/showcase');
 const faqRoutes = require('./routes/faqs');
+const admissionsRoutes = require('./routes/admissions');
 
 const app = express();
 const PORT = process.env.PORT || 3000;
@@ -134,6 +135,7 @@ app.use('/api/courses', coursesRoutes);
 app.use('/api/timetable', timetableRoutes);
 app.use('/api/showcase', showcaseRoutes);
 app.use('/api/faqs', faqRoutes);
+app.use('/api/admissions', admissionsRoutes);
 
 // ============================================
 // HEALTH CHECK

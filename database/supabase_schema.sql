@@ -259,3 +259,32 @@ INSERT INTO faqs (question, answer, category, priority) VALUES
 ALTER TABLE faqs ENABLE ROW LEVEL SECURITY;
 CREATE POLICY "Allow public read access to faqs" ON faqs
     FOR SELECT USING (true);
+
+-- ============================================
+-- ADMISSION APPLICATIONS TABLE
+-- Stores online admission form submissions
+-- ============================================
+CREATE TABLE IF NOT EXISTS admission_applications (
+    id SERIAL PRIMARY KEY,
+    name VARCHAR(255) NOT NULL,
+    email VARCHAR(255) NOT NULL,
+    phone VARCHAR(20) NOT NULL,
+    course VARCHAR(100) NOT NULL,
+    academic_background TEXT,
+    status VARCHAR(20) DEFAULT 'pending' CHECK (status IN ('pending', 'contacted', 'admitted', 'rejected')),
+    admin_notes TEXT,
+    submitted_at TIMESTAMPTZ DEFAULT NOW(),
+    updated_at TIMESTAMPTZ DEFAULT NOW()
+);
+
+-- Create index on email for faster lookups
+CREATE INDEX IF NOT EXISTS idx_admission_email ON admission_applications(email);
+
+-- Create index on status for filtering
+CREATE INDEX IF NOT EXISTS idx_admission_status ON admission_applications(status);
+
+-- Enable RLS for admission_applications
+ALTER TABLE admission_applications ENABLE ROW LEVEL SECURITY;
+
+-- Policies are not required as the backend uses the service_role key for all operations.
+-- This ensures the table is not directly accessible via the public API.

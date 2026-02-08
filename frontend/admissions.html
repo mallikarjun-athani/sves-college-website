@@ -11,35 +11,641 @@
     <link href="https://unpkg.com/aos@2.3.1/dist/aos.css" rel="stylesheet">
     <link rel="stylesheet" href="assets/css/style.css">
     <style>
+        /* ===== Admissions Page Premium Styles ===== */
         .admissions-header {
-            background: linear-gradient(rgba(0, 35, 71, 0.95), rgba(0, 35, 71, 0.95)), url('assets/images/admissions-bg.jpg');
+            background: linear-gradient(135deg, rgba(10, 25, 47, 0.95) 0%, rgba(2, 12, 27, 0.9) 100%),
+                url('assets/images/campus-hero.png');
             background-size: cover;
-            padding: 150px 0 80px;
+            background-position: center;
+            background-attachment: fixed;
+            padding: 160px 0 100px;
             color: var(--white);
             text-align: center;
+            position: relative;
+            overflow: hidden;
         }
 
+        .admissions-header::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: radial-gradient(circle at 30% 50%, rgba(212, 175, 55, 0.1) 0%, transparent 50%);
+            pointer-events: none;
+        }
+
+        .admissions-header h1 {
+            font-size: clamp(2.5rem, 6vw, 4rem);
+            margin-bottom: 20px;
+            background: linear-gradient(to right, #ffffff, #d4af37);
+            -webkit-background-clip: text;
+            background-clip: text;
+            -webkit-text-fill-color: transparent;
+        }
+
+        .admissions-header p {
+            font-size: 1.15rem;
+            opacity: 0.9;
+            max-width: 600px;
+            margin: 0 auto;
+            color: var(--text-light);
+        }
+
+        /* ===== Smart Form Container ===== */
+        .smart-form {
+            background: linear-gradient(145deg, #ffffff 0%, #f8f9fc 100%);
+            padding: 50px;
+            border-radius: var(--radius-lg);
+            box-shadow: 0 25px 60px -15px rgba(10, 25, 47, 0.2),
+                0 0 0 1px rgba(0, 0, 0, 0.03);
+            margin-top: -60px;
+            position: relative;
+            z-index: 10;
+            border: 1px solid rgba(255, 255, 255, 0.8);
+        }
+
+        .smart-form::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            height: 5px;
+            background: linear-gradient(90deg, var(--primary), var(--secondary), var(--primary));
+            border-radius: var(--radius-lg) var(--radius-lg) 0 0;
+        }
+
+        /* ===== Auto-Fill Status Bar ===== */
         .form-status-bar {
-            background: #e8f5e9;
-            color: #2e7d32;
-            padding: 10px 20px;
-            border-radius: var(--radius-sm);
-            margin-bottom: 25px;
-            font-size: 0.85rem;
+            background: linear-gradient(135deg, #dcfce7 0%, #bbf7d0 100%);
+            color: #166534;
+            padding: 16px 24px;
+            border-radius: var(--radius-md);
+            margin-bottom: 30px;
+            font-size: 0.9rem;
             display: none;
+            align-items: center;
+            gap: 12px;
+            border: 1px solid #86efac;
+            animation: slideDown 0.4s ease;
+        }
+
+        .form-status-bar.active {
+            display: flex;
+        }
+
+        @keyframes slideDown {
+            from {
+                opacity: 0;
+                transform: translateY(-15px);
+            }
+
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        .form-status-bar i {
+            font-size: 1.3rem;
+            color: #22c55e;
+        }
+
+        /* ===== Section Title ===== */
+        .form-header {
+            margin-bottom: 40px;
+            position: relative;
+        }
+
+        .form-header h2 {
+            font-size: 1.8rem;
+            color: var(--primary);
+            margin-bottom: 10px;
+            display: flex;
+            align-items: center;
+            gap: 12px;
+        }
+
+        .form-header h2 i {
+            color: var(--secondary);
+            font-size: 1.5rem;
+        }
+
+        .form-header p {
+            color: var(--text-muted);
+            font-size: 1rem;
+            margin: 0;
+        }
+
+        /* ===== Form Grid Layout ===== */
+        .form-grid {
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            gap: 28px;
+        }
+
+        .form-group {
+            position: relative;
+        }
+
+        .form-group.full-width {
+            grid-column: span 2;
+        }
+
+        .form-group label {
+            display: block;
+            font-size: 0.85rem;
+            font-weight: 600;
+            color: var(--primary);
+            margin-bottom: 10px;
+            text-transform: uppercase;
+            letter-spacing: 0.8px;
+        }
+
+        .form-group label .required {
+            color: #ef4444;
+            margin-left: 3px;
+        }
+
+        /* ===== Form Controls ===== */
+        .form-control {
+            width: 100%;
+            padding: 16px 20px;
+            border: 2px solid #e2e8f0;
+            border-radius: var(--radius-md);
+            font-size: 1rem;
+            font-family: 'Inter', sans-serif;
+            color: var(--text-dark);
+            background: #ffffff;
+            transition: all 0.3s ease;
+        }
+
+        .form-control:hover {
+            border-color: #cbd5e1;
+        }
+
+        .form-control:focus {
+            outline: none;
+            border-color: var(--secondary);
+            box-shadow: 0 0 0 4px rgba(212, 175, 55, 0.15);
+        }
+
+        .form-control.filled {
+            background: linear-gradient(135deg, #fefce8 0%, #fef9c3 100%);
+            border-color: var(--secondary);
+        }
+
+        .form-control::placeholder {
+            color: #94a3b8;
+        }
+
+        .form-control.error {
+            border-color: #ef4444;
+            background: #fef2f2;
+        }
+
+        .form-control.success {
+            border-color: #22c55e;
+            background: #f0fdf4;
+        }
+
+        /* Text Area */
+        textarea.form-control {
+            min-height: 130px;
+            resize: vertical;
+        }
+
+        /* Select Dropdown */
+        select.form-control {
+            appearance: none;
+            background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='12' fill='%230a192f' viewBox='0 0 16 16'%3E%3Cpath d='M8 11L3 6h10l-5 5z'/%3E%3C/svg%3E");
+            background-repeat: no-repeat;
+            background-position: right 18px center;
+            cursor: pointer;
+        }
+
+        /* Error Message */
+        .error-message {
+            display: none;
+            color: #ef4444;
+            font-size: 0.8rem;
+            margin-top: 8px;
+            padding-left: 5px;
+        }
+
+        .error-message.visible {
+            display: flex;
+            align-items: center;
+            gap: 6px;
+            animation: shake 0.4s ease;
+        }
+
+        @keyframes shake {
+
+            0%,
+            100% {
+                transform: translateX(0);
+            }
+
+            25% {
+                transform: translateX(-5px);
+            }
+
+            75% {
+                transform: translateX(5px);
+            }
+        }
+
+        /* ===== Form Actions ===== */
+        .form-actions {
+            display: flex;
+            gap: 15px;
+            margin-top: 35px;
+            flex-wrap: wrap;
+        }
+
+        .btn-submit {
+            flex: 1;
+            min-width: 200px;
+            padding: 18px 32px;
+            font-size: 1.05rem;
+            font-weight: 700;
+            background: linear-gradient(135deg, var(--primary) 0%, var(--primary-light) 100%);
+            color: white;
+            border: none;
+            border-radius: var(--radius-md);
+            cursor: pointer;
+            transition: all 0.4s ease;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 10px;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+        }
+
+        .btn-submit:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 10px 30px rgba(10, 25, 47, 0.35);
+        }
+
+        .btn-submit:active {
+            transform: translateY(-1px);
+        }
+
+        .btn-submit.loading {
+            pointer-events: none;
+            opacity: 0.8;
+        }
+
+        .btn-submit .spinner {
+            width: 20px;
+            height: 20px;
+            border: 3px solid rgba(255, 255, 255, 0.3);
+            border-top-color: white;
+            border-radius: 50%;
+            animation: spin 0.8s linear infinite;
+            display: none;
+        }
+
+        .btn-submit.loading .spinner {
+            display: block;
+        }
+
+        .btn-submit.loading .btn-text {
+            display: none;
+        }
+
+        @keyframes spin {
+            to {
+                transform: rotate(360deg);
+            }
+        }
+
+        .btn-autofill {
+            padding: 18px 28px;
+            font-size: 0.95rem;
+            font-weight: 600;
+            background: linear-gradient(135deg, #f8fafc 0%, #e2e8f0 100%);
+            color: var(--primary);
+            border: 2px solid var(--secondary);
+            border-radius: var(--radius-md);
+            cursor: pointer;
+            transition: all 0.3s ease;
+            display: flex;
             align-items: center;
             gap: 10px;
         }
 
-        .smart-form {
+        .btn-autofill:hover {
+            background: var(--secondary);
+            color: var(--primary);
+            transform: translateY(-2px);
+            box-shadow: 0 8px 25px rgba(212, 175, 55, 0.35);
+        }
+
+        .btn-autofill i {
+            font-size: 1.1rem;
+        }
+
+        /* ===== Success Modal ===== */
+        .success-modal {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(10, 25, 47, 0.85);
+            display: none;
+            align-items: center;
+            justify-content: center;
+            z-index: 3000;
+            padding: 20px;
+            backdrop-filter: blur(5px);
+        }
+
+        .success-modal.active {
+            display: flex;
+            animation: fadeIn 0.3s ease;
+        }
+
+        @keyframes fadeIn {
+            from {
+                opacity: 0;
+            }
+
+            to {
+                opacity: 1;
+            }
+        }
+
+        .success-content {
             background: white;
-            padding: 40px;
+            padding: 50px 40px;
             border-radius: var(--radius-lg);
-            box-shadow: var(--shadow-lg);
-            border: 1px solid #eee;
-            margin-top: -50px;
+            text-align: center;
+            max-width: 450px;
+            width: 100%;
+            animation: scaleIn 0.4s ease;
             position: relative;
-            z-index: 10;
+        }
+
+        @keyframes scaleIn {
+            from {
+                opacity: 0;
+                transform: scale(0.8);
+            }
+
+            to {
+                opacity: 1;
+                transform: scale(1);
+            }
+        }
+
+        .success-icon {
+            width: 90px;
+            height: 90px;
+            background: linear-gradient(135deg, #22c55e 0%, #16a34a 100%);
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin: 0 auto 25px;
+            animation: bounceIn 0.6s ease;
+        }
+
+        @keyframes bounceIn {
+            0% {
+                transform: scale(0);
+            }
+
+            50% {
+                transform: scale(1.2);
+            }
+
+            100% {
+                transform: scale(1);
+            }
+        }
+
+        .success-icon i {
+            font-size: 2.5rem;
+            color: white;
+        }
+
+        .success-content h3 {
+            font-size: 1.8rem;
+            color: var(--primary);
+            margin-bottom: 15px;
+        }
+
+        .success-content p {
+            color: var(--text-muted);
+            font-size: 1rem;
+            margin-bottom: 30px;
+            line-height: 1.7;
+        }
+
+        .success-content .btn-close-modal {
+            padding: 14px 35px;
+            font-size: 1rem;
+            font-weight: 600;
+            background: var(--primary);
+            color: white;
+            border: none;
+            border-radius: var(--radius-md);
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+
+        .success-content .btn-close-modal:hover {
+            background: var(--primary-light);
+            transform: translateY(-2px);
+        }
+
+        /* ===== Eligibility Cards ===== */
+        .eligibility-section {
+            padding: 80px 0 100px;
+        }
+
+        .eligibility-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 30px;
+        }
+
+        .eligibility-card {
+            background: linear-gradient(145deg, #ffffff 0%, #f8f9fc 100%);
+            padding: 35px 30px;
+            border-radius: var(--radius-lg);
+            border: 1px solid rgba(0, 0, 0, 0.05);
+            box-shadow: 0 10px 30px -10px rgba(10, 25, 47, 0.1);
+            transition: all 0.4s ease;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .eligibility-card::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 4px;
+            height: 100%;
+            background: linear-gradient(180deg, var(--secondary), var(--primary));
+        }
+
+        .eligibility-card:hover {
+            transform: translateY(-8px);
+            box-shadow: 0 20px 45px -15px rgba(10, 25, 47, 0.2);
+        }
+
+        .eligibility-card h4 {
+            font-size: 1.3rem;
+            color: var(--primary);
+            margin-bottom: 20px;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .eligibility-card h4 i {
+            color: var(--secondary);
+        }
+
+        .eligibility-list {
+            list-style: none;
+            padding: 0;
+            margin: 0;
+        }
+
+        .eligibility-list li {
+            padding: 10px 0;
+            font-size: 0.95rem;
+            color: var(--text-dark);
+            display: flex;
+            align-items: flex-start;
+            gap: 12px;
+            line-height: 1.5;
+        }
+
+        .eligibility-list li i {
+            color: #22c55e;
+            font-size: 0.9rem;
+            margin-top: 3px;
+            flex-shrink: 0;
+        }
+
+        /* ===== Mobile Responsive Styles ===== */
+        @media (max-width: 768px) {
+            .admissions-header {
+                padding: 140px 0 80px;
+            }
+
+            .admissions-header h1 {
+                font-size: 2rem;
+            }
+
+            .admissions-header p {
+                font-size: 1rem;
+                padding: 0 15px;
+            }
+
+            .smart-form {
+                padding: 30px 20px;
+                margin-top: -40px;
+                margin-left: 10px;
+                margin-right: 10px;
+                border-radius: var(--radius-md);
+            }
+
+            .form-grid {
+                grid-template-columns: 1fr;
+                gap: 20px;
+            }
+
+            .form-group.full-width {
+                grid-column: span 1;
+            }
+
+            .form-header h2 {
+                font-size: 1.4rem;
+            }
+
+            .form-control {
+                padding: 14px 16px;
+                font-size: 16px;
+                /* Prevents zoom on iOS */
+            }
+
+            .form-actions {
+                flex-direction: column;
+            }
+
+            .btn-submit,
+            .btn-autofill {
+                width: 100%;
+                justify-content: center;
+            }
+
+            .eligibility-section {
+                padding: 60px 0 80px;
+            }
+
+            .eligibility-grid {
+                gap: 20px;
+            }
+
+            .eligibility-card {
+                padding: 28px 24px;
+            }
+
+            .success-content {
+                padding: 40px 25px;
+            }
+
+            .success-icon {
+                width: 70px;
+                height: 70px;
+            }
+
+            .success-icon i {
+                font-size: 2rem;
+            }
+
+            .success-content h3 {
+                font-size: 1.5rem;
+            }
+        }
+
+        @media (max-width: 480px) {
+            .smart-form {
+                padding: 25px 18px;
+            }
+
+            .form-status-bar {
+                padding: 14px 18px;
+                font-size: 0.85rem;
+            }
+
+            .form-header h2 {
+                font-size: 1.25rem;
+                flex-direction: column;
+                align-items: flex-start;
+                gap: 8px;
+            }
+
+            .form-group label {
+                font-size: 0.8rem;
+            }
+
+            .btn-submit,
+            .btn-autofill {
+                padding: 16px 24px;
+                font-size: 0.95rem;
+            }
         }
     </style>
 </head>
@@ -49,133 +655,394 @@
 
     <section class="admissions-header">
         <div class="container" data-aos="fade-up">
-            <h1>Start Your Future Today</h1>
-            <p>Seamless online admission process designed for the digital-first student.</p>
+            <h1><i class="fas fa-graduation-cap" style="margin-right: 15px;"></i>Start Your Future Today</h1>
+            <p>Seamless online admission process designed for the digital-first student. Apply now and take the first
+                step towards your dream career.</p>
         </div>
     </section>
 
-    <div class="container" style="padding-bottom: 100px;">
+    <div class="container" style="padding-bottom: 0;">
         <div class="smart-form" data-aos="fade-up">
+            <!-- Auto-fill Status Bar -->
             <div id="auto-fill-status" class="form-status-bar">
-                <i class="fas fa-magic"></i> <strong>Smart Fill Active:</strong> Basic details updated from your
-                registered profile to save you time.
+                <i class="fas fa-magic"></i>
+                <div>
+                    <strong>Smart Fill Active:</strong> Form has been auto-populated with sample data for demonstration.
+                </div>
             </div>
 
-            <div class="section-title" style="text-align: left;">
-                <h2>Online Inquiry & Application</h2>
+            <!-- Form Header -->
+            <div class="form-header">
+                <h2><i class="fas fa-file-alt"></i> Online Inquiry & Application</h2>
                 <p>Fill out the details below and our counseling team will get back to you within 24 hours.</p>
             </div>
 
-            <form id="admission-form">
-                <div class="grid" style="display: grid; grid-template-columns: 1fr 1fr; gap: 20px;">
+            <!-- Application Form -->
+            <form id="admission-form" novalidate>
+                <div class="form-grid">
                     <div class="form-group">
-                        <label>Full Name</label>
+                        <label for="stu-name">Full Name <span class="required">*</span></label>
                         <input type="text" id="stu-name" class="form-control" placeholder="Enter your full name"
                             required>
+                        <span class="error-message" id="name-error"><i class="fas fa-exclamation-circle"></i> Please
+                            enter your full name</span>
                     </div>
+
                     <div class="form-group">
-                        <label>Email Address</label>
-                        <input type="email" id="stu-email" class="form-control" placeholder="example@email.com"
+                        <label for="stu-email">Email Address <span class="required">*</span></label>
+                        <input type="email" id="stu-email" class="form-control" placeholder="yourname@email.com"
                             required>
+                        <span class="error-message" id="email-error"><i class="fas fa-exclamation-circle"></i> Please
+                            enter a valid email</span>
                     </div>
+
                     <div class="form-group">
-                        <label>Mobile Number</label>
-                        <input type="tel" id="stu-phone" class="form-control" placeholder="+91 XXXX XXX XXX" required>
+                        <label for="stu-phone">Mobile Number <span class="required">*</span></label>
+                        <input type="tel" id="stu-phone" class="form-control" placeholder="+91 98765 43210" required>
+                        <span class="error-message" id="phone-error"><i class="fas fa-exclamation-circle"></i> Please
+                            enter a valid phone number</span>
                     </div>
+
                     <div class="form-group">
-                        <label>Course Interested In</label>
-                        <select class="form-control" required>
+                        <label for="stu-course">Course Interested In <span class="required">*</span></label>
+                        <select id="stu-course" class="form-control" required>
                             <option value="">Select a Course</option>
                             <option value="bca">Bachelor of Computer Applications (BCA)</option>
                             <option value="bcom">Bachelor of Commerce (B.Com)</option>
                             <option value="ba">Bachelor of Arts (BA)</option>
                             <option value="bsc">Bachelor of Science (B.Sc)</option>
                         </select>
+                        <span class="error-message" id="course-error"><i class="fas fa-exclamation-circle"></i> Please
+                            select a course</span>
+                    </div>
+
+                    <div class="form-group full-width">
+                        <label for="stu-background">Academic Background</label>
+                        <textarea id="stu-background" class="form-control" rows="4"
+                            placeholder="Tell us about your PUC/Class 12 results, subjects studied, any achievements, or specific interests..."></textarea>
                     </div>
                 </div>
 
-                <div class="form-group" style="margin-top: 20px;">
-                    <label>Briefly tell us about your academic background</label>
-                    <textarea class="form-control" rows="4"
-                        placeholder="Mention your PUC/Class 12 results or any specific interests..."></textarea>
-                </div>
-
-                <div style="margin-top: 30px; display: flex; align-items: center; gap: 15px;">
-                    <button type="submit" class="btn btn-primary" style="flex: 1;">Submit Application</button>
-                    <button type="button" class="btn btn-outline" onclick="demoAutoFill()"
-                        style="color: var(--primary);">
-                        <i class="fas fa-magic"></i> Demo Auto-Fill (Feature 9)
+                <div class="form-actions">
+                    <button type="submit" class="btn-submit" id="submit-btn">
+                        <span class="btn-text"><i class="fas fa-paper-plane"></i> Submit Application</span>
+                        <span class="spinner"></span>
+                    </button>
+                    <button type="button" class="btn-autofill" onclick="demoAutoFill()">
+                        <i class="fas fa-magic"></i> Demo Auto-Fill
                     </button>
                 </div>
             </form>
         </div>
 
-        <!-- Eligibility Guide -->
-        <div class="section-padding" data-aos="fade-up">
+        <!-- Eligibility Guide Section -->
+        <section class="eligibility-section" data-aos="fade-up">
             <div class="section-title">
-                <h1>Ready to Join?</h1>
+                <h2><i class="fas fa-clipboard-check" style="margin-right: 12px; color: var(--secondary);"></i>Ready to
+                    Join?</h2>
                 <p>Check if you meet the eligibility criteria for your chosen course.</p>
             </div>
-            <div class="grid"
-                style="display: grid; grid-template-columns: repeat(auto-fit, minmax(280px, 1fr)); gap: 25px; margin-top: 40px;">
-                <div class="card">
-                    <h4>BCA / B.Com</h4>
-                    <ul style="list-style: none; padding: 0; margin-top: 15px; font-size: 0.9rem; line-height: 2;">
-                        <li><i class="fas fa-check-circle" style="color: var(--secondary);"></i> PU-II Science or
-                            Commerce</li>
-                        <li><i class="fas fa-check-circle" style="color: var(--secondary);"></i> Minimum 45% Aggregate
-                        </li>
-                        <li><i class="fas fa-check-circle" style="color: var(--secondary);"></i> Mathematics background
-                            preferred</li>
+
+            <div class="eligibility-grid">
+                <div class="eligibility-card" data-aos="fade-up" data-aos-delay="100">
+                    <h4><i class="fas fa-laptop-code"></i> BCA Program</h4>
+                    <ul class="eligibility-list">
+                        <li><i class="fas fa-check-circle"></i> PU-II / Class 12 (Science or Commerce)</li>
+                        <li><i class="fas fa-check-circle"></i> Minimum 45% aggregate marks</li>
+                        <li><i class="fas fa-check-circle"></i> Mathematics background preferred</li>
+                        <li><i class="fas fa-check-circle"></i> Basic computer knowledge beneficial</li>
                     </ul>
                 </div>
-                <div class="card">
-                    <h4>B.Sc / BA</h4>
-                    <ul style="list-style: none; padding: 0; margin-top: 15px; font-size: 0.9rem; line-height: 2;">
-                        <li><i class="fas fa-check-circle" style="color: var(--secondary);"></i> PU-II Science (for
-                            B.Sc)</li>
-                        <li><i class="fas fa-check-circle" style="color: var(--secondary);"></i> Any 10+2 stream (for
-                            BA)</li>
-                        <li><i class="fas fa-check-circle" style="color: var(--secondary);"></i> Passing certificates
-                            required</li>
+
+                <div class="eligibility-card" data-aos="fade-up" data-aos-delay="200">
+                    <h4><i class="fas fa-chart-line"></i> B.Com Program</h4>
+                    <ul class="eligibility-list">
+                        <li><i class="fas fa-check-circle"></i> PU-II / Class 12 (Any Stream)</li>
+                        <li><i class="fas fa-check-circle"></i> Minimum 45% aggregate marks</li>
+                        <li><i class="fas fa-check-circle"></i> Commerce background preferred</li>
+                        <li><i class="fas fa-check-circle"></i> Interest in finance and business</li>
+                    </ul>
+                </div>
+
+                <div class="eligibility-card" data-aos="fade-up" data-aos-delay="300">
+                    <h4><i class="fas fa-flask"></i> B.Sc / BA Programs</h4>
+                    <ul class="eligibility-list">
+                        <li><i class="fas fa-check-circle"></i> PU-II / Class 12 (Science for B.Sc)</li>
+                        <li><i class="fas fa-check-circle"></i> Any 10+2 stream accepted for BA</li>
+                        <li><i class="fas fa-check-circle"></i> Passing certificates required</li>
+                        <li><i class="fas fa-check-circle"></i> Transfer certificate mandatory</li>
                     </ul>
                 </div>
             </div>
+        </section>
+    </div>
+
+    <!-- Success Modal -->
+    <div class="success-modal" id="success-modal">
+        <div class="success-content">
+            <div class="success-icon">
+                <i class="fas fa-check"></i>
+            </div>
+            <h3>Application Submitted!</h3>
+            <p>Thank you for your interest in SVES College. Our counseling team will contact you within 24 hours to
+                guide you through the admission process.</p>
+            <button class="btn-close-modal" onclick="closeModal()">
+                <i class="fas fa-thumbs-up" style="margin-right: 8px;"></i> Got it!
+            </button>
         </div>
     </div>
 
     <footer id="main-site-footer"></footer>
 
     <script src="https://unpkg.com/aos@2.3.1/dist/aos.js"></script>
+    <script src="assets/js/api.js"></script>
     <script src="assets/js/main.js"></script>
     <script>
-        function demoAutoFill() {
-            // Simulated login data for Feature 9: Smart Forms with Auto-Fill
-            const userData = {
-                name: "Mallikarjun Athani",
-                email: "mallikarjun@example.com",
-                phone: "+91 80507 86198"
-            };
+        // ===== Form Elements =====
+        const form = document.getElementById('admission-form');
+        const submitBtn = document.getElementById('submit-btn');
+        const successModal = document.getElementById('success-modal');
 
-            document.getElementById('stu-name').value = userData.name;
-            document.getElementById('stu-email').value = userData.email;
-            document.getElementById('stu-phone').value = userData.phone;
+        // Input fields
+        const nameInput = document.getElementById('stu-name');
+        const emailInput = document.getElementById('stu-email');
+        const phoneInput = document.getElementById('stu-phone');
+        const courseSelect = document.getElementById('stu-course');
+        const backgroundInput = document.getElementById('stu-background');
 
-            const statusBar = document.getElementById('auto-fill-status');
-            statusBar.style.display = 'flex';
+        // Error messages
+        const nameError = document.getElementById('name-error');
+        const emailError = document.getElementById('email-error');
+        const phoneError = document.getElementById('phone-error');
+        const courseError = document.getElementById('course-error');
 
-            // Highlight effect
-            const inputs = [document.getElementById('stu-name'), document.getElementById('stu-email'), document.getElementById('stu-phone')];
-            inputs.forEach(input => {
-                input.style.backgroundColor = '#e8f5e9';
-                setTimeout(() => input.style.backgroundColor = 'white', 2000);
-            });
+        // ===== Validation Functions =====
+        function validateName() {
+            const value = nameInput.value.trim();
+            if (value.length < 2) {
+                showError(nameInput, nameError);
+                return false;
+            }
+            showSuccess(nameInput, nameError);
+            return true;
         }
 
-        document.getElementById('admission-form').onsubmit = (e) => {
+        function validateEmail() {
+            const value = emailInput.value.trim();
+            const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+            if (!emailRegex.test(value)) {
+                showError(emailInput, emailError);
+                return false;
+            }
+            showSuccess(emailInput, emailError);
+            return true;
+        }
+
+        function validatePhone() {
+            const value = phoneInput.value.trim().replace(/[\s\-\+]/g, '');
+            // Allow 10-12 digits (with or without country code)
+            if (value.length < 10 || !/^\d+$/.test(value)) {
+                showError(phoneInput, phoneError);
+                return false;
+            }
+            showSuccess(phoneInput, phoneError);
+            return true;
+        }
+
+        function validateCourse() {
+            if (!courseSelect.value) {
+                showError(courseSelect, courseError);
+                return false;
+            }
+            showSuccess(courseSelect, courseError);
+            return true;
+        }
+
+        function showError(input, errorElement) {
+            input.classList.remove('success', 'filled');
+            input.classList.add('error');
+            errorElement.classList.add('visible');
+        }
+
+        function showSuccess(input, errorElement) {
+            input.classList.remove('error');
+            input.classList.add('success');
+            errorElement.classList.remove('visible');
+        }
+
+        // ===== Real-time Validation =====
+        nameInput.addEventListener('blur', validateName);
+        emailInput.addEventListener('blur', validateEmail);
+        phoneInput.addEventListener('blur', validatePhone);
+        courseSelect.addEventListener('change', validateCourse);
+
+        // ===== Form Submit Handler =====
+        form.addEventListener('submit', async (e) => {
             e.preventDefault();
-            alert('Application submitted successfully! Our team will contact you soon.');
-        };
+
+            // Validate all fields
+            const isNameValid = validateName();
+            const isEmailValid = validateEmail();
+            const isPhoneValid = validatePhone();
+            const isCourseValid = validateCourse();
+
+            if (!isNameValid || !isEmailValid || !isPhoneValid || !isCourseValid) {
+                // Scroll to first error
+                const firstError = form.querySelector('.form-control.error');
+                if (firstError) {
+                    firstError.focus();
+                    firstError.scrollIntoView({ behavior: 'smooth', block: 'center' });
+                }
+                return;
+            }
+
+            // Show loading state
+            submitBtn.classList.add('loading');
+            submitBtn.disabled = true;
+
+            try {
+                // Prepare form data
+                const formData = {
+                    name: nameInput.value.trim(),
+                    email: emailInput.value.trim(),
+                    phone: phoneInput.value.trim(),
+                    course: courseSelect.value,
+                    academic_background: backgroundInput.value.trim()
+                };
+
+                // Submit to API
+                const response = await fetch(API_BASE_URL + '/admissions', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json'
+                    },
+                    body: JSON.stringify(formData)
+                });
+
+                const result = await response.json();
+
+                if (!response.ok) {
+                    throw new Error(result.error || 'Failed to submit application');
+                }
+
+                // Update success modal with application ID
+                const modalMsg = document.querySelector('.success-content p');
+                if (modalMsg && result.applicationId) {
+                    modalMsg.innerHTML = `Thank you for your interest in SVES College! Your application has been submitted successfully.<br><br><strong>Application ID: #${result.applicationId}</strong><br><br>Our counseling team will contact you within 24 hours to guide you through the admission process.`;
+                }
+
+                // Show success modal
+                successModal.classList.add('active');
+                document.body.style.overflow = 'hidden';
+
+                // Reset form
+                form.reset();
+                document.querySelectorAll('.form-control').forEach(input => {
+                    input.classList.remove('success', 'filled', 'error');
+                });
+                document.getElementById('auto-fill-status').classList.remove('active');
+
+            } catch (error) {
+                console.error('Submission error:', error);
+                alert('Error: ' + error.message + '\n\nPlease try again or contact the college directly.');
+            } finally {
+                // Hide loading
+                submitBtn.classList.remove('loading');
+                submitBtn.disabled = false;
+            }
+        });
+
+        // ===== Close Modal =====
+        function closeModal() {
+            successModal.classList.remove('active');
+            document.body.style.overflow = '';
+            // Scroll back to form
+            const formSection = document.querySelector('.smart-form');
+            if (formSection) {
+                formSection.scrollIntoView({ behavior: 'smooth', block: 'start' });
+            }
+        }
+
+        // Close on backdrop click
+        successModal.addEventListener('click', (e) => {
+            if (e.target === successModal) {
+                closeModal();
+            }
+        });
+
+        // Close on Escape key
+        document.addEventListener('keydown', (e) => {
+            if (e.key === 'Escape' && successModal.classList.contains('active')) {
+                closeModal();
+            }
+        });
+
+        // ===== Demo Auto-Fill Function =====
+        function demoAutoFill() {
+            // Sample student data
+            const sampleData = {
+                name: "Mallikarjun Athani",
+                email: "mallikarjun.athani@example.com",
+                phone: "+91 80507 86198",
+                course: "bca",
+                background: "I completed my PUC II in Science stream with 85% aggregate from Government PU College, Harugeri. I have studied Physics, Chemistry, Mathematics, and Computer Science. I am passionate about programming and have built a few small projects using HTML, CSS, and JavaScript. I am interested in pursuing BCA to build a strong foundation in computer applications and software development."
+            };
+
+            // Animate each field with a delay
+            const fields = [
+                { input: nameInput, value: sampleData.name },
+                { input: emailInput, value: sampleData.email },
+                { input: phoneInput, value: sampleData.phone },
+                { input: courseSelect, value: sampleData.course },
+                { input: backgroundInput, value: sampleData.background }
+            ];
+
+            fields.forEach((field, index) => {
+                setTimeout(() => {
+                    // Set value
+                    field.input.value = field.value;
+
+                    // Add visual feedback
+                    field.input.classList.add('filled');
+
+                    // Animate highlight
+                    field.input.style.animation = 'none';
+                    field.input.offsetHeight; // Trigger reflow
+                    field.input.style.animation = 'highlightFill 0.6s ease';
+
+                    // Remove filled class after animation for proper styling
+                    setTimeout(() => {
+                        field.input.classList.remove('error');
+                        field.input.classList.add('success');
+                    }, 300);
+                }, index * 200);
+            });
+
+            // Show status bar
+            setTimeout(() => {
+                const statusBar = document.getElementById('auto-fill-status');
+                statusBar.classList.add('active');
+
+                // Scroll to form for visibility
+                statusBar.scrollIntoView({ behavior: 'smooth', block: 'center' });
+            }, fields.length * 200 + 200);
+        }
+
+        // Add keyframe animation for auto-fill highlight
+        const style = document.createElement('style');
+        style.textContent = `
+            @keyframes highlightFill {
+                0% { 
+                    background-color: rgba(212, 175, 55, 0.4);
+                    transform: scale(1.02);
+                }
+                100% { 
+                    background-color: transparent;
+                    transform: scale(1);
+                }
+            }
+        `;
+        document.head.appendChild(style);
     </script>
 </body>
 
