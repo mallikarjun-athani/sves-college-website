@@ -1,0 +1,312 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Manage Admissions | Admin Panel</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link rel="stylesheet" href="../assets/css/style.css">
+    <style>
+        :root {
+            --sidebar-width: 260px;
+        }
+
+        body {
+            background: #f4f7f6;
+            display: flex;
+            margin: 0;
+        }
+
+        .sidebar {
+            width: var(--sidebar-width);
+            background: var(--primary);
+            color: white;
+            height: 100vh;
+            position: fixed;
+            padding-top: 30px;
+        }
+
+        .main-content {
+            margin-left: var(--sidebar-width);
+            flex: 1;
+            padding: 40px;
+            min-height: 100vh;
+        }
+
+        .sidebar-brand {
+            padding: 0 30px 40px;
+            border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+            margin-bottom: 30px;
+        }
+
+        .sidebar-menu a {
+            display: flex;
+            align-items: center;
+            padding: 15px 30px;
+            color: rgba(255, 255, 255, 0.7);
+            font-weight: 500;
+            text-decoration: none;
+            transition: var(--transition);
+        }
+
+        .sidebar-menu a i {
+            margin-right: 15px;
+            width: 20px;
+        }
+
+        .sidebar-menu a:hover,
+        .sidebar-menu a.active {
+            background: rgba(255, 255, 255, 0.05);
+            color: var(--secondary);
+            border-left: 4px solid var(--secondary);
+        }
+
+        .header-bar {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 40px;
+        }
+
+        .admissions-table {
+            width: 100%;
+            background: white;
+            border-radius: var(--radius-md);
+            box-shadow: var(--shadow-sm);
+            border-collapse: collapse;
+            overflow: hidden;
+        }
+
+        .admissions-table th,
+        .admissions-table td {
+            padding: 15px 20px;
+            text-align: left;
+            border-bottom: 1px solid #eee;
+        }
+
+        .admissions-table th {
+            background: #f8f9fa;
+            color: var(--primary);
+            font-weight: 600;
+        }
+
+        .status-badge {
+            padding: 5px 12px;
+            border-radius: 20px;
+            font-size: 0.8rem;
+            font-weight: 600;
+            text-transform: uppercase;
+        }
+
+        .status-pending {
+            background: #fff3cd;
+            color: #856404;
+        }
+
+        .status-contacted {
+            background: #d1ecf1;
+            color: #0c5460;
+        }
+
+        .status-admitted {
+            background: #d4edda;
+            color: #155724;
+        }
+
+        .status-rejected {
+            background: #f8d7da;
+            color: #721c24;
+        }
+
+        .view-btn {
+            color: var(--primary);
+            cursor: pointer;
+            transition: var(--transition);
+        }
+
+        .view-btn:hover {
+            color: var(--secondary);
+        }
+
+        /* Modal for details */
+        .details-modal {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0, 0, 0, 0.5);
+            display: none;
+            justify-content: center;
+            align-items: center;
+            z-index: 1000;
+        }
+
+        .details-content {
+            background: white;
+            padding: 40px;
+            border-radius: var(--radius-lg);
+            width: 90%;
+            max-width: 600px;
+            position: relative;
+        }
+
+        .close-modal {
+            position: absolute;
+            top: 20px;
+            right: 20px;
+            cursor: pointer;
+            font-size: 1.2rem;
+        }
+
+        .detail-item {
+            margin-bottom: 15px;
+            display: flex;
+            border-bottom: 1px solid #eee;
+            padding-bottom: 5px;
+        }
+
+        .detail-label {
+            font-weight: 600;
+            width: 150px;
+            color: var(--text-light);
+        }
+    </style>
+</head>
+
+<body>
+    <div class="sidebar">
+        <div class="sidebar-brand">
+            <h2>SVES Admin</h2>
+        </div>
+        <div class="sidebar-menu">
+            <a href="dashboard.html"><i class="fas fa-home"></i> Dashboard</a>
+            <a href="manage-notes.html"><i class="fas fa-file-alt"></i> Manage Notes</a>
+            <a href="manage-gallery.html"><i class="fas fa-images"></i> Manage Gallery</a>
+            <a href="manage-announcements.html"><i class="fas fa-bullhorn"></i> Announcements</a>
+            <a href="manage-faculty.html"><i class="fas fa-user-tie"></i> Faculty</a>
+            <a href="manage-admissions.html" class="active"><i class="fas fa-user-graduate"></i> Admissions</a>
+            <a href="#" id="logout-btn" style="margin-top: 50px; color: #ff6b6b;"><i class="fas fa-sign-out-alt"></i>
+                Logout</a>
+        </div>
+    </div>
+
+    <div class="main-content">
+        <div class="header-bar">
+            <h1>Manage Admissions</h1>
+            <button onclick="loadAdmissions()" class="btn btn-outline btn-sm"><i class="fas fa-sync"></i>
+                Refresh</button>
+        </div>
+
+        <table class="admissions-table">
+            <thead>
+                <tr>
+                    <th>Date</th>
+                    <th>Name</th>
+                    <th>Course</th>
+                    <th>Phone</th>
+                    <th>Status</th>
+                    <th>Action</th>
+                </tr>
+            </thead>
+            <tbody id="admissions-body">
+                <tr>
+                    <td colspan="6" style="text-align: center; padding: 40px;">Loading applications...</td>
+                </tr>
+            </tbody>
+        </table>
+    </div>
+
+    <!-- Details Modal -->
+    <div class="details-modal" id="detailsModal">
+        <div class="details-content">
+            <i class="fas fa-times close-modal" onclick="closeModal()"></i>
+            <h2 id="modal-title" style="margin-bottom: 25px; color: var(--primary);">Application Details</h2>
+            <div id="modal-body"></div>
+
+            <div style="margin-top: 30px; display: flex; gap: 10px;">
+                <button onclick="updateStatus('contacted')" class="btn btn-secondary btn-sm">Mark as Contacted</button>
+                <button onclick="updateStatus('admitted')" class="btn btn-primary btn-sm">Mark as Admitted</button>
+                <button onclick="updateStatus('rejected')" class="btn btn-outline btn-sm"
+                    style="color: red; border-color: red;">Reject</button>
+            </div>
+        </div>
+    </div>
+
+    <script src="../assets/js/api.js"></script>
+    <script>
+        // Check auth
+        if (!isLoggedIn()) window.location.href = 'login.html';
+
+        let currentId = null;
+
+        async function loadAdmissions() {
+            try {
+                const admissions = await apiGet('/admissions');
+                const tbody = document.getElementById('admissions-body');
+
+                if (admissions.length === 0) {
+                    tbody.innerHTML = '<tr><td colspan="6" style="text-align: center; padding: 40px;">No applications found.</td></tr>';
+                    return;
+                }
+
+                tbody.innerHTML = admissions.map(app => `
+                    <tr>
+                        <td>${new Date(app.created_at).toLocaleDateString()}</td>
+                        <td>${app.full_name}</td>
+                        <td>${app.course_interest}</td>
+                        <td>${app.phone}</td>
+                        <td><span class="status-badge status-${app.status}">${app.status}</span></td>
+                        <td>
+                            <i class="fas fa-eye view-btn" onclick='showDetails(${JSON.stringify(app)})'></i>
+                        </td>
+                    </tr>
+                `).join('');
+            } catch (error) {
+                console.error('Failed to load admissions:', error);
+            }
+        }
+
+        function showDetails(app) {
+            currentId = app.id;
+            const body = document.getElementById('modal-body');
+            body.innerHTML = `
+                <div class="detail-item"><div class="detail-label">Email:</div><div>${app.email}</div></div>
+                <div class="detail-item"><div class="detail-label">Phone:</div><div>${app.phone}</div></div>
+                <div class="detail-item"><div class="detail-label">Qualification:</div><div>${app.previous_qualification}</div></div>
+                <div class="detail-item"><div class="detail-label">Address:</div><div>${app.address || 'N/A'}</div></div>
+                <div class="detail-item"><div class="detail-label">Message:</div><div>${app.message || 'No message'}</div></div>
+                <div class="detail-item"><div class="detail-label">Applied On:</div><div>${new Date(app.created_at).toLocaleString()}</div></div>
+            `;
+            document.getElementById('detailsModal').style.display = 'flex';
+        }
+
+        function closeModal() {
+            document.getElementById('detailsModal').style.display = 'none';
+        }
+
+        async function updateStatus(status) {
+            if (!currentId) return;
+            try {
+                await apiPatch(`/admissions/${currentId}/status`, { status });
+                alert('Status updated!');
+                closeModal();
+                loadAdmissions();
+            } catch (error) {
+                console.error('Update failed:', error);
+                alert('Failed to update status.');
+            }
+        }
+
+        document.getElementById('logout-btn').addEventListener('click', (e) => {
+            e.preventDefault();
+            localStorage.clear();
+            window.location.href = '../index.html';
+        });
+
+        document.addEventListener('DOMContentLoaded', loadAdmissions);
+    </script>
+</body>
+
+</html>
