@@ -9,18 +9,20 @@ const authMiddleware = require('../middleware/auth');
 router.get('/stats', authMiddleware, async (req, res) => {
     try {
         // Get counts from all tables
-        const [notesResult, galleryResult, announcementsResult, facultyResult] = await Promise.all([
+        const [notesResult, galleryResult, announcementsResult, facultyResult, admissionsResult] = await Promise.all([
             supabaseAdmin.from('notes').select('id', { count: 'exact', head: true }),
             supabaseAdmin.from('gallery').select('id', { count: 'exact', head: true }),
             supabaseAdmin.from('announcements').select('id', { count: 'exact', head: true }),
-            supabaseAdmin.from('faculty').select('id', { count: 'exact', head: true })
+            supabaseAdmin.from('faculty').select('id', { count: 'exact', head: true }),
+            supabaseAdmin.from('admissions').select('id', { count: 'exact', head: true })
         ]);
 
         res.json({
             notes: notesResult.count || 0,
             gallery: galleryResult.count || 0,
             announcements: announcementsResult.count || 0,
-            faculty: facultyResult.count || 0
+            faculty: facultyResult.count || 0,
+            admissions: admissionsResult.count || 0
         });
     } catch (error) {
         console.error('Get dashboard stats error:', error);

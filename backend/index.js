@@ -21,6 +21,7 @@ const galleryRoutes = require('./routes/gallery');
 const facultyRoutes = require('./routes/faculty');
 const dashboardRoutes = require('./routes/dashboard');
 const coursesRoutes = require('./routes/courses');
+const admissionsRoutes = require('./routes/admissions');
 
 const app = express();
 const PORT = process.env.PORT || 3000;
@@ -128,6 +129,7 @@ app.use('/api/gallery', galleryRoutes);
 app.use('/api/faculty', facultyRoutes);
 app.use('/api/dashboard', dashboardRoutes);
 app.use('/api/courses', coursesRoutes);
+app.use('/api/admissions', admissionsRoutes);
 
 // ============================================
 // HEALTH CHECK

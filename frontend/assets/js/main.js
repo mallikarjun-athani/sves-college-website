@@ -122,3 +122,28 @@ function highlightActiveLink() {
 
 // Initialize on DOM load
 document.addEventListener('DOMContentLoaded', initCommonUI);
+
+// Global Admission Handler
+function handleApplyNow(event) {
+    const isAdmissionsPage = window.location.pathname.includes('admissions.html');
+
+    if (isAdmissionsPage) {
+        // Only prevent default and open modal if we are on the admissions page
+        if (typeof openAdmissionModal === 'function') {
+            if (event) event.preventDefault();
+            openAdmissionModal();
+
+            // Close mobile nav if open
+            const mobileNav = document.getElementById('mobile-nav');
+            if (mobileNav) mobileNav.classList.remove('active');
+        }
+    }
+}
+
+// CSP-compliant event delegation for "Apply Now" buttons
+document.addEventListener('click', function (e) {
+    const target = e.target.closest('.apply-now-trigger');
+    if (target) {
+        handleApplyNow(e);
+    }
+});

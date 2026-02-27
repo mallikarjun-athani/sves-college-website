@@ -1,0 +1,664 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="description"
+        content="Compare undergraduate courses at SVES College side by side. Duration, eligibility, career options, and more.">
+    <title>Course Comparison Tool - SVES College Harugeri</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link href="https://unpkg.com/aos@2.3.1/dist/aos.css" rel="stylesheet">
+    <link rel="stylesheet" href="assets/css/style.css">
+    <style>
+        /* ===== Course Comparison Styles ===== */
+        .comparison-container {
+            margin-top: -60px;
+            position: relative;
+            z-index: 10;
+            padding-bottom: 40px;
+        }
+
+        .comparison-card {
+            background: var(--white);
+            border-radius: var(--radius-lg);
+            box-shadow: var(--shadow-lg);
+            overflow: hidden;
+            border: 1px solid rgba(0, 0, 0, 0.05);
+            position: relative;
+        }
+
+        .comparison-header {
+            display: grid;
+            grid-template-columns: 220px 1fr 1fr;
+            background: linear-gradient(135deg, var(--primary) 0%, var(--primary-light) 100%);
+            color: white;
+        }
+
+        .header-cell {
+            padding: 28px 24px;
+            text-align: center;
+            border-right: 1px solid rgba(255, 255, 255, 0.1);
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            gap: 8px;
+        }
+
+        .header-cell:first-child {
+            background: rgba(0, 0, 0, 0.15);
+            text-align: left;
+            font-weight: 700;
+            font-size: 1.1rem;
+        }
+
+        .header-cell:last-child {
+            border-right: none;
+        }
+
+        .header-cell label {
+            font-size: 0.75rem;
+            text-transform: uppercase;
+            letter-spacing: 1.5px;
+            opacity: 0.85;
+            font-weight: 600;
+        }
+
+        .header-cell select {
+            width: 100%;
+            padding: 14px 16px;
+            border-radius: var(--radius-md);
+            border: 2px solid rgba(255, 255, 255, 0.2);
+            background: rgba(255, 255, 255, 0.1);
+            color: white;
+            font-weight: 600;
+            font-size: 1rem;
+            cursor: pointer;
+            transition: var(--transition);
+            appearance: none;
+            background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='12' fill='white' viewBox='0 0 16 16'%3E%3Cpath d='M8 11L3 6h10l-5 5z'/%3E%3C/svg%3E");
+            background-repeat: no-repeat;
+            background-position: right 14px center;
+        }
+
+        .header-cell select:hover,
+        .header-cell select:focus {
+            background: rgba(255, 255, 255, 0.2);
+            border-color: var(--secondary);
+            outline: none;
+        }
+
+        .header-cell select option {
+            color: var(--primary);
+            background: white;
+            padding: 12px;
+        }
+
+        .comparison-row {
+            display: grid;
+            grid-template-columns: 220px 1fr 1fr;
+            transition: all 0.3s ease;
+            border-bottom: 1px solid rgba(0, 0, 0, 0.05);
+        }
+
+        .comparison-row:last-child {
+            border-bottom: none;
+        }
+
+        .comparison-row:nth-child(even) {
+            background: linear-gradient(90deg, #f8f9fa 0%, #ffffff 50%, #f8f9fa 100%);
+        }
+
+        .comparison-row:hover {
+            background: rgba(212, 175, 55, 0.05);
+            transform: scale(1.002);
+        }
+
+        .data-cell {
+            padding: 22px 24px;
+            border-right: 1px solid rgba(0, 0, 0, 0.04);
+            color: var(--text-dark);
+            line-height: 1.7;
+            font-size: 0.95rem;
+            transition: all 0.3s ease;
+        }
+
+        .data-cell:last-child {
+            border-right: none;
+        }
+
+        .data-cell.updating {
+            animation: pulse-update 0.5s ease;
+        }
+
+        @keyframes pulse-update {
+            0% {
+                background: rgba(212, 175, 55, 0.2);
+            }
+
+            100% {
+                background: transparent;
+            }
+        }
+
+        .label-cell {
+            padding: 22px 24px;
+            font-weight: 700;
+            color: var(--primary);
+            border-right: 1px solid rgba(0, 0, 0, 0.06);
+            background: linear-gradient(90deg, rgba(10, 25, 47, 0.03) 0%, rgba(10, 25, 47, 0.01) 100%);
+            display: flex;
+            align-items: center;
+            gap: 14px;
+            font-size: 0.95rem;
+        }
+
+        .label-cell i {
+            color: var(--secondary);
+            width: 22px;
+            font-size: 1.1rem;
+        }
+
+        .career-badge {
+            display: inline-block;
+            background: linear-gradient(135deg, rgba(212, 175, 55, 0.15) 0%, rgba(212, 175, 55, 0.08) 100%);
+            color: var(--secondary-dark);
+            padding: 6px 14px;
+            border-radius: 25px;
+            font-size: 0.8rem;
+            margin: 4px 6px 4px 0;
+            font-weight: 600;
+            border: 1px solid rgba(212, 175, 55, 0.25);
+            transition: all 0.3s ease;
+        }
+
+        .career-badge:hover {
+            background: var(--secondary);
+            color: var(--primary);
+            transform: translateY(-2px);
+            box-shadow: 0 4px 12px rgba(212, 175, 55, 0.3);
+        }
+
+        .loading-overlay {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(255, 255, 255, 0.9);
+            display: none;
+            align-items: center;
+            justify-content: center;
+            z-index: 100;
+            border-radius: var(--radius-lg);
+            backdrop-filter: blur(5px);
+        }
+
+        .loading-overlay.active {
+            display: flex;
+        }
+
+        .spinner {
+            width: 50px;
+            height: 50px;
+            border: 4px solid rgba(212, 175, 55, 0.2);
+            border-top: 4px solid var(--secondary);
+            border-radius: 50%;
+            animation: spin 0.8s linear infinite;
+        }
+
+        @keyframes spin {
+            0% {
+                transform: rotate(0deg);
+            }
+
+            100% {
+                transform: rotate(360deg);
+            }
+        }
+
+        /* CTA Box */
+        .cta-box {
+            background: linear-gradient(135deg, var(--bg-light) 0%, #ffffff 100%);
+            padding: 50px 40px;
+            border-radius: var(--radius-lg);
+            border: 2px dashed var(--secondary);
+            text-align: center;
+            transition: all 0.4s ease;
+        }
+
+        .cta-box:hover {
+            border-style: solid;
+            box-shadow: 0 15px 40px rgba(212, 175, 55, 0.15);
+            transform: translateY(-5px);
+        }
+
+        .cta-box h3 {
+            color: var(--primary);
+            margin-bottom: 15px;
+            font-size: 1.6rem;
+        }
+
+        .cta-box p {
+            margin-bottom: 28px;
+            color: var(--text-muted);
+            font-size: 1.05rem;
+        }
+
+        /* ===== Mobile Responsive Styles ===== */
+        @media (max-width: 992px) {
+
+            .comparison-header,
+            .comparison-row {
+                grid-template-columns: 180px 1fr 1fr;
+            }
+
+            .header-cell {
+                padding: 22px 18px;
+            }
+
+            .label-cell,
+            .data-cell {
+                padding: 18px 16px;
+            }
+        }
+
+        @media (max-width: 768px) {
+            .comparison-container {
+                margin-top: -40px;
+                padding: 0 10px 40px;
+            }
+
+            .comparison-header {
+                display: flex;
+                flex-direction: column;
+            }
+
+            .header-cell {
+                border-right: none;
+                border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+                padding: 20px;
+            }
+
+            .header-cell:first-child {
+                text-align: center;
+                padding: 25px 20px;
+            }
+
+            .header-cell:last-child {
+                border-bottom: none;
+            }
+
+            .comparison-row {
+                display: flex;
+                flex-direction: column;
+                border-bottom: 2px solid rgba(212, 175, 55, 0.2);
+            }
+
+            .comparison-row:last-child {
+                border-bottom: none;
+            }
+
+            .label-cell {
+                background: linear-gradient(135deg, var(--primary) 0%, var(--primary-light) 100%);
+                color: white;
+                border-right: none;
+                border-bottom: none;
+                justify-content: center;
+                padding: 16px 20px;
+                font-size: 1rem;
+            }
+
+            .label-cell i {
+                color: var(--secondary);
+            }
+
+            .data-cell {
+                border-right: none;
+                padding: 18px 20px;
+                text-align: center;
+                position: relative;
+            }
+
+            .data-cell:first-of-type {
+                border-bottom: 1px solid rgba(0, 0, 0, 0.08);
+            }
+
+            .data-cell::before {
+                content: attr(data-course-label);
+                display: block;
+                font-size: 0.7rem;
+                text-transform: uppercase;
+                letter-spacing: 1.2px;
+                color: var(--secondary-dark);
+                font-weight: 700;
+                margin-bottom: 8px;
+                opacity: 0.9;
+            }
+
+            .career-badge {
+                font-size: 0.75rem;
+                padding: 5px 12px;
+                margin: 3px;
+            }
+
+            .cta-box {
+                padding: 35px 25px;
+                margin: 0 10px;
+            }
+
+            .cta-box h3 {
+                font-size: 1.35rem;
+            }
+
+            .cta-box p {
+                font-size: 0.95rem;
+            }
+        }
+
+        @media (max-width: 480px) {
+            .comparison-container {
+                padding: 0 5px 30px;
+            }
+
+            .header-cell {
+                padding: 16px;
+            }
+
+            .header-cell select {
+                padding: 12px 14px;
+                font-size: 0.95rem;
+            }
+
+            .label-cell,
+            .data-cell {
+                padding: 14px 16px;
+            }
+
+            .data-cell {
+                font-size: 0.9rem;
+            }
+
+            .cta-box {
+                padding: 28px 20px;
+            }
+        }
+    </style>
+</head>
+
+<body>
+    <header id="main-header"></header>
+
+    <section class="inner-page-header">
+        <div class="container" data-aos="fade-down">
+            <h1>Course Comparison Tool</h1>
+            <p>Side-by-side analysis of academic programs to help you choose the best career path.</p>
+        </div>
+    </section>
+
+    <div class="container comparison-container">
+        <div class="comparison-card" data-aos="fade-up">
+            <div id="loading" class="loading-overlay">
+                <div class="spinner"></div>
+            </div>
+
+            <!-- Header Row -->
+            <div class="comparison-header">
+                <div class="header-cell">
+                    <span><i class="fas fa-balance-scale" style="margin-right: 8px;"></i>Compare</span>
+                    <small style="font-weight: 400; opacity: 0.75; font-size: 0.8rem;">Select courses to compare</small>
+                </div>
+                <div class="header-cell">
+                    <label>Course A</label>
+                    <select id="course1" aria-label="Select first course for comparison"></select>
+                </div>
+                <div class="header-cell">
+                    <label>Course B</label>
+                    <select id="course2" aria-label="Select second course for comparison"></select>
+                </div>
+            </div>
+
+            <!-- Data Rows -->
+            <div id="comparison-rows">
+                <div class="comparison-row">
+                    <div class="label-cell"><i class="fas fa-clock"></i> Duration</div>
+                    <div class="data-cell" id="c1-duration" data-course-label="Course A">--</div>
+                    <div class="data-cell" id="c2-duration" data-course-label="Course B">--</div>
+                </div>
+                <div class="comparison-row">
+                    <div class="label-cell"><i class="fas fa-graduation-cap"></i> Eligibility</div>
+                    <div class="data-cell" id="c1-eligibility" data-course-label="Course A">--</div>
+                    <div class="data-cell" id="c2-eligibility" data-course-label="Course B">--</div>
+                </div>
+                <div class="comparison-row">
+                    <div class="label-cell"><i class="fas fa-book"></i> Key Subjects</div>
+                    <div class="data-cell" id="c1-subjects" data-course-label="Course A">--</div>
+                    <div class="data-cell" id="c2-subjects" data-course-label="Course B">--</div>
+                </div>
+                <div class="comparison-row">
+                    <div class="label-cell"><i class="fas fa-briefcase"></i> Career Paths</div>
+                    <div class="data-cell" id="c1-career" data-course-label="Course A">--</div>
+                    <div class="data-cell" id="c2-career" data-course-label="Course B">--</div>
+                </div>
+                <div class="comparison-row">
+                    <div class="label-cell"><i class="fas fa-rupee-sign"></i> Approx. Fees</div>
+                    <div class="data-cell" id="c1-fee" data-course-label="Course A">--</div>
+                    <div class="data-cell" id="c2-fee" data-course-label="Course B">--</div>
+                </div>
+            </div>
+        </div>
+
+        <div class="text-center" style="margin: 60px 0;">
+            <div class="cta-box" data-aos="fade-up" data-aos-delay="200">
+                <h3><i class="fas fa-rocket" style="margin-right: 10px; color: var(--secondary);"></i>Ready to start
+                    your journey?</h3>
+                <p>Enroll today in your chosen program and shape your future with SVES College.</p>
+                <a href="admissions.html" class="btn btn-primary">
+                    <i class="fas fa-arrow-right" style="margin-right: 8px;"></i>Proceed to Admission
+                </a>
+            </div>
+        </div>
+    </div>
+
+    <footer id="main-site-footer"></footer>
+
+    <script src="https://unpkg.com/aos@2.3.1/dist/aos.js"></script>
+    <script src="assets/js/api.js"></script>
+    <script src="assets/js/main.js"></script>
+    <script>
+        // ===== Fallback Course Data (Used if API doesn't return comparison fields) =====
+        const FALLBACK_COURSE_DATA = {
+            1: { // BCA
+                name: 'BCA',
+                duration: '3 Years (6 Semesters)',
+                eligibility: 'PUC II / Class 12 (Science/Commerce with Mathematics)',
+                subjects: 'Programming in C/Java, Data Structures, DBMS, Web Development, AI & Machine Learning Basics',
+                career_options: ['Software Engineer', 'Web Developer', 'Systems Admin', 'App Developer', 'Data Analyst'],
+                fee_estimate: '₹ 22,000 / Year'
+            },
+            2: { // BA
+                name: 'BA',
+                duration: '3 Years (6 Semesters)',
+                eligibility: 'PUC II / Class 12 (Any Stream)',
+                subjects: 'History, Political Science, Economics, Sociology, Rural Development, Kannada/English Literature',
+                career_options: ['IAS/KAS Aspirant', 'Professor', 'Journalist', 'Social Worker', 'Legal Assistant'],
+                fee_estimate: '₹ 8,500 / Year'
+            },
+            3: { // B.Com
+                name: 'B.Com',
+                duration: '3 Years (6 Semesters)',
+                eligibility: 'PUC II / Class 12 (Commerce/Any Stream)',
+                subjects: 'Accountancy, Business Mathematics, Auditing, GST, Income Tax, Financial Management',
+                career_options: ['Chartered Accountant', 'Financial Analyst', 'Banker', 'Tax Consultant', 'Company Secretary'],
+                fee_estimate: '₹ 12,800 / Year'
+            },
+            4: { // B.Sc
+                name: 'B.Sc',
+                duration: '3 Years (6 Semesters)',
+                eligibility: 'PUC II / Class 12 (Science - PCM/CBZ)',
+                subjects: 'Physics, Chemistry, Mathematics, Botany, Zoology, Statistics, Computer Science',
+                career_options: ['Researcher', 'Lab Technician', 'Professor', 'Environmentalist', 'Quality Analyst'],
+                fee_estimate: '₹ 15,400 / Year'
+            }
+        };
+
+        let allCourses = [];
+        const loading = document.getElementById('loading');
+
+        // ===== Initialize Comparison Tool =====
+        async function initComparison() {
+            loading.classList.add('active');
+
+            try {
+                // Try to fetch from API
+                const response = await fetch(API_BASE_URL + '/courses');
+                const apiCourses = await response.json();
+
+                if (apiCourses && apiCourses.length > 0) {
+                    // Merge API data with fallback data
+                    allCourses = apiCourses.map(course => {
+                        const fallback = FALLBACK_COURSE_DATA[course.id] || {};
+                        return {
+                            ...fallback,
+                            ...course,
+                            // Ensure comparison fields exist (prefer API, fallback to local)
+                            duration: course.duration || fallback.duration || '3 Years',
+                            eligibility: course.eligibility || fallback.eligibility || 'Contact office for details',
+                            subjects: course.subjects || fallback.subjects || 'See syllabus',
+                            career_options: course.career_options || fallback.career_options || ['Various Career Options'],
+                            fee_estimate: course.fee_estimate || fallback.fee_estimate || 'Contact office'
+                        };
+                    });
+                } else {
+                    // Use fallback data if API returns no courses
+                    allCourses = Object.entries(FALLBACK_COURSE_DATA).map(([id, data]) => ({
+                        id: parseInt(id),
+                        ...data
+                    }));
+                }
+            } catch (error) {
+                console.warn('API fetch failed, using fallback data:', error);
+                // Use fallback data on error
+                allCourses = Object.entries(FALLBACK_COURSE_DATA).map(([id, data]) => ({
+                    id: parseInt(id),
+                    ...data
+                }));
+            }
+
+            // Populate dropdowns
+            const s1 = document.getElementById('course1');
+            const s2 = document.getElementById('course2');
+
+            const options = allCourses.map(c => `<option value="${c.id}">${c.name}</option>`).join('');
+            s1.innerHTML = options;
+            s2.innerHTML = options;
+
+            // Set defaults: BCA (1) and B.Com (3)
+            s1.value = allCourses[0]?.id || '';
+            s2.value = allCourses.find(c => c.id === 3)?.id || allCourses[1]?.id || '';
+
+            // Initial comparison
+            updateComparison();
+
+            // Add event listeners with animation
+            s1.addEventListener('change', () => {
+                updateCourseLabels();
+                animateUpdate('c1');
+                updateComparison();
+            });
+
+            s2.addEventListener('change', () => {
+                updateCourseLabels();
+                animateUpdate('c2');
+                updateComparison();
+            });
+
+            // Update mobile labels
+            updateCourseLabels();
+
+            loading.classList.remove('active');
+        }
+
+        // ===== Update Course Labels for Mobile =====
+        function updateCourseLabels() {
+            const course1Name = document.getElementById('course1').selectedOptions[0]?.text || 'Course A';
+            const course2Name = document.getElementById('course2').selectedOptions[0]?.text || 'Course B';
+
+            document.querySelectorAll('[id^="c1-"]').forEach(el => {
+                el.setAttribute('data-course-label', course1Name);
+            });
+            document.querySelectorAll('[id^="c2-"]').forEach(el => {
+                el.setAttribute('data-course-label', course2Name);
+            });
+        }
+
+        // ===== Animate Update Effect =====
+        function animateUpdate(prefix) {
+            const cells = document.querySelectorAll(`[id^="${prefix}-"]`);
+            cells.forEach(cell => {
+                cell.classList.add('updating');
+                setTimeout(() => cell.classList.remove('updating'), 500);
+            });
+        }
+
+        // ===== Update Comparison Data =====
+        function updateComparison() {
+            const id1 = parseInt(document.getElementById('course1').value);
+            const id2 = parseInt(document.getElementById('course2').value);
+
+            const course1 = allCourses.find(c => c.id === id1);
+            const course2 = allCourses.find(c => c.id === id2);
+
+            if (!course1 || !course2) {
+                console.error('Could not find selected courses');
+                return;
+            }
+
+            updateCourseColumn('c1', course1);
+            updateCourseColumn('c2', course2);
+        }
+
+        // ===== Update Single Course Column =====
+        function updateCourseColumn(prefix, data) {
+            // Duration
+            document.getElementById(`${prefix}-duration`).innerText = data.duration || '3 Years';
+
+            // Eligibility
+            document.getElementById(`${prefix}-eligibility`).innerText = data.eligibility || 'Contact office';
+
+            // Subjects
+            document.getElementById(`${prefix}-subjects`).innerText = data.subjects || 'See syllabus';
+
+            // Fee
+            document.getElementById(`${prefix}-fee`).innerText = data.fee_estimate || 'Contact office';
+
+            // Career Options (handle array, string, or JSON)
+            let careers = data.career_options;
+
+            // Parse if it's a JSON string
+            if (typeof careers === 'string') {
+                try {
+                    careers = JSON.parse(careers);
+                } catch (e) {
+                    careers = careers.split(',').map(c => c.trim());
+                }
+            }
+
+            // Ensure it's an array
+            if (!Array.isArray(careers)) {
+                careers = careers ? [careers] : ['Various Career Options'];
+            }
+
+            // Render career badges
+            const careerContainer = document.getElementById(`${prefix}-career`);
+            careerContainer.innerHTML = careers.map(career =>
+                `<span class="career-badge">${career}</span>`
+            ).join('');
+        }
+
+        // ===== Initialize on DOM Load =====
+        document.addEventListener('DOMContentLoaded', initComparison);
+    </script>
+</body>
+
+</html>

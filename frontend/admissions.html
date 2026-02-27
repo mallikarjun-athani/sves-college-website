@@ -124,38 +124,210 @@
             text-align: center;
         }
 
-        .process-steps {
-            display: flex;
-            justify-content: space-between;
-            margin-top: 50px;
-            gap: 20px;
-            flex-wrap: wrap;
+        /* Online Admission Features Grid */
+        .feature-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+            gap: 25px;
+            margin: 50px 0;
         }
 
-        .step {
-            flex: 1;
-            min-width: 200px;
-            text-align: center;
-            position: relative;
+        .feature-card {
+            background: var(--white);
+            padding: 30px;
+            border-radius: var(--radius-lg);
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.05);
+            transition: all 0.3s ease;
+            border-bottom: 4px solid transparent;
+            text-align: left;
         }
 
-        .step-number {
-            width: 50px;
-            height: 50px;
-            background: var(--secondary);
+        .feature-card:hover {
+            transform: translateY(-10px);
+            box-shadow: 0 15px 35px rgba(0, 0, 0, 0.1);
+            border-bottom: 4px solid var(--secondary);
+        }
+
+        .feature-icon {
+            width: 60px;
+            height: 60px;
+            background: var(--bg-light);
             color: var(--primary);
             border-radius: 50%;
             display: flex;
             align-items: center;
             justify-content: center;
-            font-weight: 700;
-            font-size: 1.2rem;
-            margin: 0 auto 20px;
+            font-size: 1.5rem;
+            margin-bottom: 20px;
+            transition: all 0.3s ease;
         }
 
-        .step h4 {
+        .feature-card:hover .feature-icon {
+            background: var(--secondary);
             color: var(--primary);
-            margin-bottom: 10px;
+        }
+
+        .feature-card h3 {
+            color: var(--primary);
+            margin-bottom: 12px;
+            font-size: 1.25rem;
+        }
+
+        .feature-card p {
+            color: var(--text-light);
+            font-size: 0.95rem;
+            line-height: 1.6;
+            margin: 0;
+        }
+
+        .apply-now-hero {
+            background: var(--primary);
+            color: var(--white);
+            padding: 60px 40px;
+            border-radius: var(--radius-lg);
+            text-align: center;
+            margin-top: 40px;
+            box-shadow: var(--shadow-lg);
+        }
+
+        .apply-now-hero h2 {
+            font-size: 2.5rem;
+            margin-bottom: 20px;
+        }
+
+        /* Modal Styles */
+        .modal-overlay {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0, 0, 0, 0.7);
+            backdrop-filter: blur(5px);
+            display: none;
+            justify-content: center;
+            align-items: center;
+            z-index: 3000;
+        }
+
+        .modal-content {
+            background: var(--white);
+            width: 90%;
+            max-width: 600px;
+            max-height: 90vh;
+            border-radius: var(--radius-lg);
+            position: relative;
+            padding: 40px;
+            overflow-y: auto;
+            animation: modalFadeIn 0.3s ease-out;
+            box-shadow: var(--shadow-xl);
+        }
+
+        @keyframes modalFadeIn {
+            from {
+                opacity: 0;
+                transform: translateY(20px);
+            }
+
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        .modal-close {
+            position: absolute;
+            top: 15px;
+            right: 15px;
+            width: 32px;
+            height: 32px;
+            background: #f1f5f9;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 1.1rem;
+            color: var(--primary);
+            cursor: pointer;
+            transition: var(--transition);
+            z-index: 10;
+        }
+
+        .modal-close:hover {
+            background: #e2e8f0;
+            color: var(--primary);
+            transform: rotate(90deg);
+        }
+
+        .modal-header-custom {
+            text-align: center;
+            margin-bottom: 25px;
+            padding-bottom: 15px;
+            border-bottom: 2px solid #f1f5f9;
+        }
+
+        .modal-header-custom h2 {
+            color: var(--primary);
+            font-size: 1.6rem;
+            margin-bottom: 5px;
+        }
+
+        .modal-header-custom p {
+            color: var(--text-light);
+            font-size: 0.95rem;
+            margin: 0;
+        }
+
+        /* Form Styles */
+        .admission-form {
+            display: grid;
+            gap: 20px;
+        }
+
+        .form-group {
+            display: flex;
+            flex-direction: column;
+            gap: 8px;
+        }
+
+        .form-group label {
+            font-weight: 600;
+            color: var(--primary);
+            font-size: 0.9rem;
+        }
+
+        .form-group input,
+        .form-group select,
+        .form-group textarea {
+            padding: 12px 15px;
+            border: 1px solid #ddd;
+            border-radius: var(--radius-sm);
+            font-family: inherit;
+            transition: var(--transition);
+        }
+
+        .form-group input:focus,
+        .form-group select:focus,
+        .form-group textarea:focus {
+            outline: none;
+            border-color: var(--primary);
+            box-shadow: 0 0 0 3px rgba(0, 35, 71, 0.1);
+        }
+
+        .form-row {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 20px;
+        }
+
+        @media (max-width: 600px) {
+            .form-row {
+                grid-template-columns: 1fr;
+            }
+
+            .modal-content {
+                padding: 25px;
+            }
         }
 
         .eligibility-box {
@@ -213,6 +385,8 @@
                     <a href="student-corner.html">Student Corner</a>
                     <a href="notes.html">Notes & Resources</a>
                     <a href="gallery.html">Gallery</a>
+                    <a href="javascript:void(0)" class="btn btn-secondary apply-now-trigger"
+                        style="padding: 8px 20px; color: var(--primary) !important; margin-left: 10px;">Apply Now</a>
                 </nav>
 
                 <div class="mobile-menu-toggle" id="mobile-toggle">
@@ -237,9 +411,8 @@
                 <a href="notes.html">Notes & Resources</a>
                 <a href="gallery.html">Gallery</a>
                 <a href="placements.html">Placements</a>
-                <a href="admissions.html" class="btn btn-secondary active"
-                    style="margin-top: 20px; text-align: center;">Apply
-                    Now</a>
+                <a href="javascript:void(0)" class="btn btn-secondary apply-now-trigger"
+                    style="margin-top: 20px; text-align: center;">Apply Now</a>
             </div>
         </div>
     </header>
@@ -252,64 +425,89 @@
     </section>
 
     <div class="container section-padding">
-        <h2 class="section-title">Admission Process</h2>
-        <div class="process-steps">
-            <div class="step" data-aos="fade-up">
-                <div class="step-number">01</div>
-                <h4>Enquiry</h4>
-                <p>Visit the campus or call us to get information about the courses.</p>
-            </div>
-            <div class="step" data-aos="fade-up" data-aos-delay="100">
-                <div class="step-number">02</div>
-                <h4>Registration</h4>
-                <p>Fill out the application form and submit required documents.</p>
-            </div>
-            <div class="step" data-aos="fade-up" data-aos-delay="200">
-                <div class="step-number">03</div>
-                <h4>Counseling</h4>
-                <p>Meet our expert counselors to discuss your career path.</p>
-            </div>
-            <div class="step" data-aos="fade-up" data-aos-delay="300">
-                <div class="step-number">04</div>
-                <h4>Finalize</h4>
-                <p>Pay the admission fee and complete the enrollment process.</p>
-            </div>
+        <div class="section-title">
+            <h2>Online Admission</h2>
+            <p style="color: var(--text-light); font-size: 1.1rem;">Simple and quick application process for perspective
+                students.</p>
         </div>
 
-        <div class="eligibility-box" data-aos="fade-up">
-            <h3>Eligibility Criteria</h3>
-            <table class="eligibility-table">
-                <thead>
-                    <tr>
-                        <th>Course</th>
-                        <th>Minimum Requirement</th>
-                        <th>Documents Needed</th>
-                    </tr>
-                </thead>
-                <tbody>
-                    <tr>
-                        <td>BCA</td>
-                        <td>PU-II Science/Commerce</td>
-                        <td>Marksheet, TC, Photos, Aadhar</td>
-                    </tr>
-                    <tr>
-                        <td>B.Com</td>
-                        <td>PU-II Science/Commerce</td>
-                        <td>Marksheet, TC, Photos, Aadhar</td>
-                    </tr>
-                    <tr>
-                        <td>B.Sc</td>
-                        <td>PU-II Science</td>
-                        <td>Marksheet, TC, Photos, Aadhar</td>
-                    </tr>
-                    <tr>
-                        <td>BA</td>
-                        <td>PU-II / 10+2 (Any stream)</td>
-                        <td>Marksheet, TC, Photos, Aadhar</td>
-                    </tr>
-                </tbody>
-            </table>
+        <div class="feature-grid">
+            <!-- 1. Easy Registration -->
+            <div class="feature-card" data-aos="fade-up">
+                <div class="feature-icon"><i class="fas fa-user-plus"></i></div>
+                <h3>Easy Registration</h3>
+                <p>Create your account in seconds with minimal information required to get started.</p>
+            </div>
+
+            <!-- 2. Fill Application Form -->
+            <div class="feature-card" data-aos="fade-up" data-aos-delay="100">
+                <div class="feature-icon"><i class="fas fa-file-signature"></i></div>
+                <h3>Fill Application Form</h3>
+                <p>Complete your personal and academic details through our intuitive online interface.</p>
+            </div>
+
+            <!-- 3. Upload Documents -->
+            <div class="feature-card" data-aos="fade-up" data-aos-delay="200">
+                <div class="feature-icon"><i class="fas fa-cloud-upload-alt"></i></div>
+                <h3>Upload Required Documents</h3>
+                <p>Securely submit scans of your marks cards, TC, and photos from any device.</p>
+            </div>
+
+            <!-- 4. Course Selection -->
+            <div class="feature-card" data-aos="fade-up" data-aos-delay="300">
+                <div class="feature-icon"><i class="fas fa-book-reader"></i></div>
+                <h3>Course Selection</h3>
+                <p>Choose your preferred program from our BA, B.Com, B.Sc, and BCA offerings.</p>
+            </div>
+
+            <!-- Removed extra 3 cards as requested -->
         </div>
+
+        <div class="apply-now-hero" data-aos="zoom-in">
+            <h2>Ready to Start Your Future?</h2>
+            <p style="margin-bottom: 30px; opacity: 0.9;">Take the first step towards academic excellence at SVES
+                College Harugeri.</p>
+            <button class="btn btn-secondary btn-lg apply-now-trigger"
+                style="padding: 15px 40px; font-size: 1.2rem; border: none; cursor: pointer;">Start Application
+                Form</button>
+        </div>
+
+    </div>
+
+    <div class="eligibility-box" data-aos="fade-up">
+        <h3>Eligibility Criteria</h3>
+        <table class="eligibility-table">
+            <thead>
+                <tr>
+                    <th>Course</th>
+                    <th>Minimum Requirement</th>
+                    <th>Documents Needed</th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr>
+                    <td>BCA</td>
+                    <td>PU-II Science/Commerce</td>
+                    <td>Marksheet, TC, Photos, Aadhar</td>
+                </tr>
+                <tr>
+                    <td>B.Com</td>
+                    <td>PU-II Science/Commerce</td>
+                    <td>Marksheet, TC, Photos, Aadhar</td>
+                </tr>
+                <tr>
+                    <td>B.Sc</td>
+                    <td>PU-II Science</td>
+                    <td>Marksheet, TC, Photos, Aadhar</td>
+                </tr>
+                <tr>
+                    <td>BA</td>
+                    <td>PU-II / 10+2 (Any stream)</td>
+                    <td>Marksheet, TC, Photos, Aadhar</td>
+                </tr>
+            </tbody>
+        </table>
+    </div>
     </div>
 
     <footer>
@@ -368,9 +566,147 @@
         </div>
     </footer>
 
+    <!-- Admission Form Modal -->
+    <div class="modal-overlay" id="admissionModal">
+        <div class="modal-content">
+            <i class="fas fa-times modal-close" id="closeAdmissionModal"></i>
+            <div class="modal-header-custom">
+                <h2>Admission Form 2026-27</h2>
+                <p>Please fill out the details below to apply</p>
+            </div>
+
+            <form id="admissionForm" class="admission-form">
+                <div class="form-group">
+                    <label for="full_name">Full Name *</label>
+                    <input type="text" id="full_name" required placeholder="Enter your full name">
+                </div>
+
+                <div class="form-row">
+                    <div class="form-group">
+                        <label for="email">Email Address *</label>
+                        <input type="email" id="email" required placeholder="your.name@example.com">
+                    </div>
+                    <div class="form-group">
+                        <label for="phone">Phone Number *</label>
+                        <input type="tel" id="phone" required placeholder="+91 XXXXX XXXXX">
+                    </div>
+                </div>
+
+                <div class="form-row">
+                    <div class="form-group">
+                        <label for="course_interest">Course Interested In *</label>
+                        <select id="course_interest" required>
+                            <option value="" disabled selected>Select a course</option>
+                            <option value="BCA">Bachelor of Computer Applications (BCA)</option>
+                            <option value="B.Com">Bachelor of Commerce (B.Com)</option>
+                            <option value="B.Sc">Bachelor of Science (B.Sc)</option>
+                            <option value="BA">Bachelor of Arts (BA)</option>
+                        </select>
+                    </div>
+                    <div class="form-group">
+                        <label for="previous_qualification">Previous Qualification *</label>
+                        <input type="text" id="previous_qualification" required placeholder="e.g. PU-II Science">
+                    </div>
+                </div>
+
+                <div class="form-group">
+                    <label for="address">Postal Address</label>
+                    <textarea id="address" rows="2" placeholder="Your full address"></textarea>
+                </div>
+
+                <div class="form-group">
+                    <label for="message">Anything else you want to tell us?</label>
+                    <textarea id="message" rows="3" placeholder="Tell us about yourself..."></textarea>
+                </div>
+
+                <button type="submit" class="btn btn-primary" id="submitBtn"
+                    style="padding: 15px; font-size: 1.1rem; border: none; cursor: pointer;">
+                    <i class="fas fa-save" style="margin-right: 10px;"></i> Save & Apply
+                </button>
+            </form>
+        </div>
+    </div>
+
     <script src="https://unpkg.com/aos@2.3.1/dist/aos.js"></script>
     <script>AOS.init({ duration: 800, once: true });</script>
     <script src="assets/js/main.js"></script>
-</body>
+    <script src="assets/js/api.js"></script>
+    <script>
+        const modal = document.getElementById('admissionModal');
+        const form = document.getElementById('admissionForm');
+        const submitBtn = document.getElementById('submitBtn');
+        const closeBtn = document.getElementById('closeAdmissionModal');
+
+        function openAdmissionModal() {
+            if (modal) {
+                modal.style.display = 'flex';
+                document.body.style.overflow = 'hidden'; // Prevent scroll
+            }
+        }
+
+        function closeAdmissionModal() {
+            if (modal) {
+                modal.style.display = 'none';
+                document.body.style.overflow = 'auto'; // Re-enable scroll
+            }
+        }
+
+        // Event Listeners for Modal
+        if (closeBtn) {
+            closeBtn.addEventListener('click', closeAdmissionModal);
+        }
+
+        // Close on outside click
+        window.addEventListener('click', function (event) {
+            if (event.target == modal) {
+                closeAdmissionModal();
+            }
+        });
+
+        if (form) {
+            form.addEventListener('submit', async (e) => {
+                e.preventDefault();
+
+                submitBtn.disabled = true;
+                submitBtn.innerHTML = '<i class="fas fa-spinner fa-spin"></i> Submitting...';
+
+                const formData = {
+                    full_name: document.getElementById('full_name').value,
+                    email: document.getElementById('email').value,
+                    phone: document.getElementById('phone').value,
+                    course_interest: document.getElementById('course_interest').value,
+                    previous_qualification: document.getElementById('previous_qualification').value,
+                    address: document.getElementById('address').value,
+                    message: document.getElementById('message').value
+                };
+
+                try {
+                    const response = await fetch(API_BASE_URL + '/admissions', {
+                        method: 'POST',
+                        headers: {
+                            'Content-Type': 'application/json'
+                        },
+                        body: JSON.stringify(formData)
+                    });
+
+                    const result = await response.json();
+
+                    if (response.ok) {
+                        alert('Success! Your application has been submitted. We will contact you soon.');
+                        form.reset();
+                        closeAdmissionModal();
+                    } else {
+                        alert('Error: ' + (result.error || 'Failed to submit application'));
+                    }
+                } catch (error) {
+                    console.error('Submission error:', error);
+                    alert('Connection error. Please try again later.');
+                } finally {
+                    submitBtn.disabled = false;
+                    submitBtn.innerHTML = '<i class="fas fa-save" style="margin-right: 10px;"></i> Save & Apply';
+                }
+            });
+        }
+    </script>
 
 </html>
