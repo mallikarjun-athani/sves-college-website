@@ -4,234 +4,263 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Manage Announcements | Admin Panel</title>
+    <title>Manage Announcements | SVES Admin</title>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
-    <link rel="stylesheet" href="../assets/css/style.css">
     <link rel="stylesheet" href="../assets/css/style.css">
     <link rel="stylesheet" href="../assets/css/admin.css">
     <style>
-        .admin-table {
-            width: 100%;
-            border-collapse: collapse;
+        .announcement-card {
             background: white;
-            border-radius: 8px;
-            overflow: hidden;
-            box-shadow: var(--shadow-sm);
-        }
-
-        .admin-table th,
-        .admin-table td {
-            padding: 15px;
-            text-align: left;
-            border-bottom: 1px solid #eee;
-        }
-
-        .admin-table th {
-            background: #fafafa;
-            font-weight: 600;
-            color: var(--primary);
-        }
-
-        .upload-form {
-            background: white;
-            padding: 30px;
-            border-radius: 8px;
-            margin-bottom: 40px;
-            box-shadow: var(--shadow-sm);
-        }
-
-        .form-group {
-            margin-bottom: 15px;
-        }
-
-        .form-group label {
-            display: block;
-            margin-bottom: 8px;
-            font-weight: 600;
-        }
-
-        .form-group input {
-            width: 100%;
-            padding: 10px;
-            border: 1px solid #ddd;
-            border-radius: 4px;
-            box-sizing: border-box;
-        }
-
-        .alert {
-            padding: 15px;
-            background: #d4edda;
-            color: #155724;
-            border-radius: 4px;
+            padding: 25px;
+            border-radius: var(--radius-md);
             margin-bottom: 20px;
-            display: none;
+            box-shadow: var(--shadow-sm);
+            border-left: 5px solid var(--secondary);
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            transition: var(--transition);
         }
 
-        .alert.error {
-            background: #f8d7da;
-            color: #721c24;
+        .announcement-card:hover {
+            transform: translateY(-3px);
+            box-shadow: var(--shadow-md);
+        }
+
+        .announcement-info {
+            flex: 1;
+        }
+
+        .announcement-info h3 {
+            margin-bottom: 8px;
+            color: var(--primary);
+            font-size: 1.25rem;
+        }
+
+        .announcement-info p {
+            font-size: 0.95rem;
+            color: #555;
+            margin-bottom: 12px;
+            line-height: 1.5;
+        }
+
+        .announcement-info .date-pill {
+            display: inline-flex;
+            align-items: center;
+            gap: 6px;
+            font-size: 0.75rem;
+            color: var(--secondary-dark);
+            font-weight: 700;
+            text-transform: uppercase;
+            background: rgba(212, 175, 55, 0.1);
+            padding: 4px 10px;
+            border-radius: 4px;
+            margin-bottom: 10px;
+        }
+
+        .announcement-actions {
+            display: flex;
+            gap: 12px;
+            margin-left: 20px;
+        }
+
+        @media (max-width: 768px) {
+            .announcement-card {
+                flex-direction: column;
+                align-items: flex-start;
+            }
+
+            .announcement-actions {
+                margin-left: 0;
+                margin-top: 20px;
+                width: 100%;
+                justify-content: flex-end;
+            }
         }
     </style>
 </head>
-</head>
 
 <body>
-    <div class="sidebar">
-        <div class="sidebar-brand">
-            <h2>SVES Admin</h2>
-        </div>
-        <div class="sidebar-menu">
-            <a href="dashboard.html"><i class="fas fa-home"></i> Dashboard</a>
-            <a href="manage-notes.html"><i class="fas fa-file-alt"></i> Manage Notes</a>
-            <a href="manage-gallery.html"><i class="fas fa-images"></i> Manage Gallery</a>
-            <a href="manage-announcements.html" class="active"><i class="fas fa-bullhorn"></i> Announcements</a>
-            <a href="manage-faculty.html"><i class="fas fa-user-tie"></i> Faculty</a>
-            <a href="manage-alumni.html"><i class="fas fa-user-graduate"></i> Alumni Stories</a>
-            <a href="manage-faq.html"><i class="fas fa-question-circle"></i> FAQ Manager</a>
-            <a href="manage-downloads.html"><i class="fas fa-download"></i> Downloads</a>
-            <a href="#" id="logout-btn" style="margin-top: 50px; color: #ff6b6b;"><i class="fas fa-sign-out-alt"></i>
-                Logout</a>
+    <div class="admin-layout">
+        <div class="sidebar" id="admin-sidebar"></div>
+
+        <div class="main-content">
+            <header class="header-bar">
+                <h1>Broadcast Announcements</h1>
+                <div class="admin-profile flex align-center">
+                    <span>Welcome, <strong>Admin</strong></span>
+                    <i class="fas fa-user-circle" style="margin-left: 15px; font-size: 1.5rem;"></i>
+                </div>
+            </header>
+
+            <div class="admin-body">
+                <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 30px;">
+                    <div>
+                        <p style="color: var(--text-muted); margin: 0;">Publish news, alerts, and updates to the campus
+                            community.</p>
+                    </div>
+                    <button class="btn btn-primary" onclick="openAddModal()">
+                        <i class="fas fa-plus"></i> New Announcement
+                    </button>
+                </div>
+
+                <div id="ann-list">
+                    <div class="text-center" style="padding: 50px;">
+                        <i class="fas fa-spinner fa-spin" style="font-size: 2rem; color: var(--secondary);"></i>
+                        <p style="margin-top: 15px; color: var(--text-muted);">Fetching announcements...</p>
+                    </div>
+                </div>
+            </div>
+
+            <footer class="admin-footer">
+                <p>&copy; 2026 SVES Admin Portal. | <a href="../index.html">Back to Website</a></p>
+            </footer>
         </div>
     </div>
 
-    <div class="main-content">
-        <header class="header-bar">
-            <h1>Manage Announcements</h1>
-            <div class="admin-profile flex align-center">
-                <span>Welcome, <strong>Admin</strong></span>
-                <i class="fas fa-user-circle" style="margin-left: 15px; font-size: 1.5rem;"></i>
-            </div>
-        </header>
-
-        <div class="admin-body">
-
-            <div class="alert" id="alert"></div>
-
-            <div class="upload-form">
-                <h3>Add New Announcement</h3>
-                <form id="add-form">
-                    <div class="form-group" style="margin-top: 20px;">
-                        <label>Announcement Title</label>
-                        <input type="text" name="title" id="title" required placeholder="Enter announcement text">
+    <!-- Modal -->
+    <div class="modal" id="ann-modal">
+        <div class="modal-content">
+            <h2 id="modal-title" style="margin-bottom: 25px; color: var(--primary);">Add Announcement</h2>
+            <form id="ann-form">
+                <input type="hidden" id="ann-id">
+                <div class="form-group">
+                    <label>Title</label>
+                    <input type="text" id="ann-title" required placeholder="e.g., Annual Sports Day 2026">
+                </div>
+                <div class="form-group">
+                    <label>Description</label>
+                    <textarea id="ann-description" rows="4"
+                        placeholder="Enter full announcement details here..."></textarea>
+                </div>
+                <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 20px;">
+                    <div class="form-group">
+                        <label>Display Date</label>
+                        <input type="date" id="ann-date">
                     </div>
                     <div class="form-group">
-                        <label>Link (Optional)</label>
-                        <input type="text" name="link" id="link"
-                            placeholder="Enter link if any (e.g. notices/exam-time-table.pdf)">
+                        <label>Action Link (Optional)</label>
+                        <input type="url" id="ann-link" placeholder="https://...">
                     </div>
-                    <button type="submit" class="btn btn-primary">Add Announcement</button>
-                </form>
-            </div>
-
-            <h3>Active Announcements</h3>
-            <table class="admin-table">
-                <thead>
-                    <tr>
-                        <th>Title</th>
-                        <th>Link</th>
-                        <th>Date</th>
-                        <th>Action</th>
-                    </tr>
-                </thead>
-                <tbody id="announcements-list">
-                    <tr>
-                        <td colspan="4" style="text-align: center;">Loading...</td>
-                    </tr>
-                </tbody>
-            </table>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-outline" onclick="closeModal()">Cancel</button>
+                    <button type="submit" class="btn btn-primary" id="save-btn">Publish Now</button>
+                </div>
+            </form>
         </div>
-
-        <footer class="admin-footer">
-            <p>&copy; 2026 SVES Admin Portal. All Rights Reserved. | <a href="../index.html">Back to Website</a></p>
-        </footer>
     </div>
 
-    <script src="../assets/js/api.js?v=1.1"></script>
+    <script src="../assets/js/api.js"></script>
+    <script src="../assets/js/main.js"></script>
     <script>
         if (!isLoggedIn()) window.location.href = 'login.html';
 
-        // CSP-compliant logout handler
-        document.addEventListener('DOMContentLoaded', function () {
-            var logoutBtn = document.getElementById('logout-btn');
-            if (logoutBtn) {
-                logoutBtn.addEventListener('click', function (e) {
-                    e.preventDefault();
-                    localStorage.clear();
-                    window.location.href = '../index.html';
-                });
-            }
-        });
-
-        const alertEl = document.getElementById('alert');
-        const listEl = document.getElementById('announcements-list');
-
-        function showAlert(message, isError = false) {
-            alertEl.textContent = message;
-            alertEl.className = 'alert' + (isError ? ' error' : '');
-            alertEl.style.display = 'block';
-            setTimeout(() => alertEl.style.display = 'none', 3000);
-        }
-
         async function loadAnnouncements() {
+            const list = document.getElementById('ann-list');
             try {
-                const data = await apiGet('/announcements');
-                if (data.length === 0) {
-                    listEl.innerHTML = '<tr><td colspan="4" style="text-align: center;">No announcements found.</td></tr>';
+                const items = await apiGet('/announcements');
+                if (items.length === 0) {
+                    list.innerHTML = `
+                        <div style="text-align: center; padding: 60px; background: white; border-radius: 12px; box-shadow: var(--shadow-sm);">
+                            <i class="fas fa-bullhorn" style="font-size: 3rem; color: #eee; margin-bottom: 20px;"></i>
+                            <p style="color: var(--text-muted);">No announcements published yet. Start by adding one!</p>
+                        </div>
+                    `;
                     return;
                 }
-                listEl.innerHTML = data.map(a => `
-                    <tr>
-                        <td>${a.title}</td>
-                        <td>${a.link ? `<a href="${a.link}" target="_blank">View Link</a>` : 'No Link'}</td>
-                        <td>${formatDate(a.created_at)}</td>
-                        <td>
-                            <a href="#" class="delete-btn" data-id="${a.id}" style="color: #d9534f;"><i class="fas fa-trash"></i></a>
-                        </td>
-                    </tr>
+
+                list.innerHTML = items.map(item => `
+                    <div class="announcement-card">
+                        <div class="announcement-info">
+                            <div class="date-pill">
+                                <i class="far fa-calendar-alt"></i> 
+                                ${item.announcement_date ? new Date(item.announcement_date).toLocaleDateString(undefined, { dateStyle: 'medium' }) : new Date(item.created_at).toLocaleDateString(undefined, { dateStyle: 'medium' })}
+                            </div>
+                            <h3>${item.title}</h3>
+                            <p>${item.description || 'No additional details provided.'}</p>
+                            ${item.link ? `
+                                <a href="${item.link}" target="_blank" style="color: var(--secondary-dark); font-weight: 700; font-size: 0.85rem; text-decoration: none; display: inline-flex; align-items: center; gap: 5px;">
+                                    View Reference <i class="fas fa-external-link-alt" style="font-size: 0.7rem;"></i>
+                                </a>
+                            ` : ''}
+                        </div>
+                        <div class="action-btns">
+                            <button class="btn-icon" title="Edit Announcement" onclick='openEditModal(${JSON.stringify(item)})'>
+                                <i class="fas fa-edit"></i>
+                            </button>
+                            <button class="btn-icon delete" title="Delete Announcement" onclick="deleteAnn(${item.id})">
+                                <i class="fas fa-trash-alt"></i>
+                            </button>
+                        </div>
+                    </div>
                 `).join('');
             } catch (error) {
-                listEl.innerHTML = '<tr><td colspan="4" style="text-align: center; color: red;">Failed to load</td></tr>';
+                list.innerHTML = '<div class="text-center" style="color: #dc2626; padding: 40px;">Failed to load announcements. Please check your connection.</div>';
             }
         }
 
-        // Event delegation for delete buttons
-        listEl.addEventListener('click', function (e) {
-            // Traverse up to find the anchor tag if icon was clicked
-            const btn = e.target.closest('.delete-btn');
-            if (btn) {
-                e.preventDefault();
-                const id = btn.getAttribute('data-id');
-                deleteAnnouncement(id);
+        function openAddModal() {
+            document.getElementById('modal-title').textContent = 'New Announcement';
+            document.getElementById('ann-form').reset();
+            document.getElementById('ann-id').value = '';
+            document.getElementById('save-btn').textContent = 'Publish Now';
+            document.getElementById('ann-modal').classList.add('active');
+        }
+
+        function openEditModal(item) {
+            document.getElementById('modal-title').textContent = 'Edit Announcement';
+            document.getElementById('ann-id').value = item.id;
+            document.getElementById('ann-title').value = item.title;
+            document.getElementById('ann-description').value = item.description || '';
+            document.getElementById('ann-date').value = item.announcement_date || '';
+            document.getElementById('ann-link').value = item.link || '';
+            document.getElementById('save-btn').textContent = 'Update Announcement';
+            document.getElementById('ann-modal').classList.add('active');
+        }
+
+        function closeModal() { document.getElementById('ann-modal').classList.remove('active'); }
+
+        document.getElementById('ann-form').addEventListener('submit', async (e) => {
+            e.preventDefault();
+            const id = document.getElementById('ann-id').value;
+            const saveBtn = document.getElementById('save-btn');
+            const originalText = saveBtn.textContent;
+
+            saveBtn.disabled = true;
+            saveBtn.textContent = 'Processing...';
+
+            const payload = {
+                title: document.getElementById('ann-title').value,
+                description: document.getElementById('ann-description').value,
+                announcement_date: document.getElementById('ann-date').value,
+                link: document.getElementById('ann-link').value
+            };
+
+            try {
+                if (id) await apiPut(`/announcements/${id}`, payload);
+                else await apiPost('/announcements', payload);
+                closeModal();
+                loadAnnouncements();
+            } catch (error) {
+                alert('Action failed: ' + error.message);
+            } finally {
+                saveBtn.disabled = false;
+                saveBtn.textContent = originalText;
             }
         });
 
-        async function deleteAnnouncement(id) {
-            if (!confirm('Are you sure?')) return;
+        async function deleteAnn(id) {
+            if (!confirm('Are you sure you want to delete this announcement? This action cannot be undone.')) return;
             try {
                 await apiDelete(`/announcements/${id}`);
-                showAlert('Announcement deleted successfully');
                 loadAnnouncements();
             } catch (error) {
-                showAlert('Failed to delete', true);
+                alert('Delete failed: ' + error.message);
             }
         }
 
-        document.getElementById('add-form').addEventListener('submit', async (e) => {
-            e.preventDefault();
-            const title = document.getElementById('title').value;
-            const link = document.getElementById('link').value;
-
-            try {
-                await apiPost('/announcements', { title, link });
-                showAlert('Announcement added successfully!');
-                document.getElementById('add-form').reset();
-                loadAnnouncements();
-            } catch (error) {
-                showAlert('Failed to add announcement', true);
-            }
-        });
-
-        document.addEventListener('DOMContentLoaded', loadAnnouncements);
+        window.onload = loadAnnouncements;
     </script>
 </body>
 

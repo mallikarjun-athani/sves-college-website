@@ -1,123 +1,371 @@
 /**
- * SVES College Website - API Configuration
- * This file provides the base URL and helper functions for API calls
+ * SVES College Website - Frontend API Helper
+ * 
+ * This file contains the API base configuration and helper functions
+ * for interacting with the Node.js backend.
  */
 
-// API Base URL - Uses Railway in production and localhost in development
-const API_BASE_URL = window.location.hostname === 'localhost' || window.location.hostname === '127.0.0.1'
-    ? 'http://localhost:3000/api'
-    : 'https://sves-college-harugeri.up.railway.app/api';
+// API Base URL - Intelligent detection for local vs production
+const getApiBaseUrl = () => {
+    const { hostname, port, protocol } = window.location;
 
-// Auth token management
-const AUTH_TOKEN_KEY = 'sves_admin_token';
+    // If we're on localhost
+    if (hostname === 'localhost' || hostname === '127.0.0.1') {
+        // If the current port is 3000, we can use relative path
+        if (port === '3000') return '/api';
+        // Otherwise, explicitly point to the backend on 3000
+        return 'http://localhost:3000/api';
+    }
 
+    // For Vercel/Railway or other production environments
+    if (hostname.includes('vercel.app') || hostname.includes('railway') || hostname.includes('github.io')) {
+        return 'https://sves-college-backend.railway.app/api';
+    }
+
+    // Default to relative if same origin
+    return '/api';
+};
+
+const API_BASE_URL = getApiBaseUrl();
+// API Base URL - Intelligent detection for local vs production
+
+/**
+ * Authentication Helpers
+ */
+
+// Token Keys
+const TOKEN_KEY = 'sves_admin_token';
+const ADMIN_KEY = 'sves_admin_data';
+
+/**
+ * Get the stored JWT token
+ */
 function getToken() {
-    return localStorage.getItem(AUTH_TOKEN_KEY);
+    return localStorage.getItem(TOKEN_KEY);
 }
 
-function setToken(token) {
-    localStorage.setItem(AUTH_TOKEN_KEY, token);
+/**
+ * Set the JWT token and admin data
+ */
+function setToken(token, adminData = null) {
+    if (token) localStorage.setItem(TOKEN_KEY, token);
+    if (adminData) {
+        localStorage.setItem(ADMIN_KEY, JSON.stringify(adminData));
+    }
 }
 
-function removeToken() {
-    localStorage.removeItem(AUTH_TOKEN_KEY);
-}
-
+/**
+ * Check if the user is logged in (client-side only)
+ */
 function isLoggedIn() {
     return !!getToken();
 }
 
-function logout() {
-    console.log("Logging out...");
-    alert("Signing out. Redirecting to home page...");
-    localStorage.clear();
-    window.location.href = "../index.html";
+/**
+ * Verify token with the backend
+ */
+async function verifyToken() {
+    const token = getToken();
+    if (!token) return false;
+
+    try {
+        const response = await fetch(`${API_BASE_URL}/auth/verify`, {
+            method: 'GET',
+            headers: {
+                'Authorization': `Bearer ${token}`
+            }
+        });
+        return response.ok;
+    } catch (error) {
+        console.error('Token verification failed:', error);
+        return false;
+    }
 }
 
-window.logout = logout;
+/**
+ * Logout the user
+ */
+function logout() {
+    localStorage.removeItem(TOKEN_KEY);
+    localStorage.removeItem(ADMIN_KEY);
 
-// API helper with authentication
-async function apiCall(endpoint, options = {}) {
+    // Use relative path for logout based on current location
+    if (window.location.pathname.includes('/admin/')) {
+        window.location.href = 'login.html';
+    } else {
+        window.location.href = 'admin/login.html';
+    }
+}
+
+/**
+ * API Request Helpers
+ */
+
+/**
+ * Generic GET request
+ */
+async function apiGet(endpoint) {
     const token = getToken();
-
     const headers = {
-        ...options.headers
+        'Content-Type': 'application/json'
     };
 
-    // Add auth header if token exists and not explicitly set
-    if (token && !headers['Authorization']) {
+    if (token) {
         headers['Authorization'] = `Bearer ${token}`;
     }
 
-    // Add JSON content type for non-FormData requests
-    if (!(options.body instanceof FormData) && !headers['Content-Type']) {
-        headers['Content-Type'] = 'application/json';
-    }
+    try {
+        const response = await fetch(`${API_BASE_URL}${endpoint}`, {
+            method: 'GET',
+            headers
+        });
 
-    const response = await fetch(`${API_BASE_URL}${endpoint}`, {
-        ...options,
-        headers
-    });
-
-    // Handle 401 Unauthorized
-    if (response.status === 401) {
-        removeToken();
-        if (window.location.pathname.includes('/admin/')) {
-            window.location.href = 'login.html';
+        if (response.status === 401) {
+            // Only logout if we're in the admin section
+            if (window.location.pathname.includes('/admin/') && !window.location.pathname.includes('login.html')) {
+                logout();
+            }
+            throw new Error('Unauthorized access');
         }
-        throw new Error('Unauthorized');
+
+        const data = await response.json();
+
+        if (!response.ok) {
+            throw new Error(data.error || data.message || 'API request failed');
+        }
+
+        return data;
+    } catch (error) {
+        console.error(`❌ API GET Error (${endpoint}):`, error);
+        throw error;
+    }
+}
+
+/**
+ * Generic POST request
+ */
+async function apiPost(endpoint, body = {}) {
+    const token = getToken();
+    const headers = {
+        'Content-Type': 'application/json'
+    };
+
+    if (token) {
+        headers['Authorization'] = `Bearer ${token}`;
     }
 
-    return response;
+    try {
+        const response = await fetch(`${API_BASE_URL}${endpoint}`, {
+            method: 'POST',
+            headers,
+            body: JSON.stringify(body)
+        });
+
+        if (response.status === 401 && endpoint !== '/auth/login') {
+            if (window.location.pathname.includes('/admin/')) logout();
+            throw new Error('Session expired');
+        }
+
+        const data = await response.json();
+
+        if (!response.ok) {
+            if (data.errors) {
+                throw new Error(data.errors.map(err => err.msg).join(', '));
+            }
+            throw new Error(data.error || data.message || 'API request failed');
+        }
+
+        return data;
+    } catch (error) {
+        console.error(`❌ API POST Error (${endpoint}):`, error);
+        throw error;
+    }
 }
 
-// Convenience methods
-async function apiGet(endpoint) {
-    const response = await apiCall(endpoint);
-    return response.json();
+/**
+ * Generic PUT request
+ */
+async function apiPut(endpoint, body = {}) {
+    const token = getToken();
+    const headers = {
+        'Content-Type': 'application/json'
+    };
+
+    if (token) {
+        headers['Authorization'] = `Bearer ${token}`;
+    }
+
+    try {
+        const response = await fetch(`${API_BASE_URL}${endpoint}`, {
+            method: 'PUT',
+            headers,
+            body: JSON.stringify(body)
+        });
+
+        if (response.status === 401) {
+            if (window.location.pathname.includes('/admin/')) logout();
+            throw new Error('Session expired');
+        }
+
+        const data = await response.json();
+
+        if (!response.ok) {
+            if (data.errors) {
+                throw new Error(data.errors.map(err => err.msg).join(', '));
+            }
+            throw new Error(data.error || data.message || 'API request failed');
+        }
+
+        return data;
+    } catch (error) {
+        console.error(`❌ API PUT Error (${endpoint}):`, error);
+        throw error;
+    }
 }
 
-async function apiPost(endpoint, data) {
-    const isFormData = data instanceof FormData;
-    const response = await apiCall(endpoint, {
-        method: 'POST',
-        body: isFormData ? data : JSON.stringify(data)
-    });
-    return response.json();
-}
-
+/**
+ * Generic DELETE request
+ */
 async function apiDelete(endpoint) {
-    const response = await apiCall(endpoint, {
-        method: 'DELETE'
-    });
-    return response.json();
-}
+    const token = getToken();
+    const headers = {
+        'Content-Type': 'application/json'
+    };
 
-async function apiPut(endpoint, data) {
-    const isFormData = data instanceof FormData;
-    const response = await apiCall(endpoint, {
-        method: 'PUT',
-        body: isFormData ? data : JSON.stringify(data)
-    });
-    return response.json();
-}
-
-// Date formatting helper
-function formatDate(dateString) {
-    const options = { day: '2-digit', month: 'short', year: 'numeric' };
-    return new Date(dateString).toLocaleDateString('en-IN', options);
-}
-
-// Helper to resolve paths (handles absolute URLs from Supabase and relative paths)
-function resolvePath(path) {
-    if (!path) return '';
-    if (path.startsWith('http')) return path;
-
-    // Check if we are in admin folder
-    const isAdmin = window.location.pathname.includes('/admin/');
-    if (isAdmin) {
-        return `../../${path}`;
+    if (token) {
+        headers['Authorization'] = `Bearer ${token}`;
     }
-    // For root level pages (index, notes, etc.)
-    return path;
+
+    try {
+        const response = await fetch(`${API_BASE_URL}${endpoint}`, {
+            method: 'DELETE',
+            headers
+        });
+
+        if (response.status === 401) {
+            if (window.location.pathname.includes('/admin/')) logout();
+            throw new Error('Session expired');
+        }
+
+        const data = await response.json();
+
+        if (!response.ok) {
+            throw new Error(data.error || data.message || 'API request failed');
+        }
+
+        return data;
+    } catch (error) {
+        console.error(`❌ API DELETE Error (${endpoint}):`, error);
+        throw error;
+    }
+}
+
+/**
+ * Generic PATCH request
+ */
+async function apiPatch(endpoint, body = {}) {
+    const token = getToken();
+    const headers = {
+        'Content-Type': 'application/json'
+    };
+
+    if (token) {
+        headers['Authorization'] = `Bearer ${token}`;
+    }
+
+    try {
+        const response = await fetch(`${API_BASE_URL}${endpoint}`, {
+            method: 'PATCH',
+            headers,
+            body: JSON.stringify(body)
+        });
+
+        if (response.status === 401) {
+            if (window.location.pathname.includes('/admin/')) logout();
+            throw new Error('Session expired');
+        }
+
+        const data = await response.json();
+
+        if (!response.ok) {
+            throw new Error(data.error || data.message || 'API request failed');
+        }
+
+        return data;
+    } catch (error) {
+        console.error(`❌ API PATCH Error (${endpoint}):`, error);
+        throw error;
+    }
+}
+
+/**
+ * Multipart/Form-Data Request (for file uploads) - POST
+ */
+async function apiPostFormData(endpoint, formData) {
+    const token = getToken();
+    const headers = {};
+
+    if (token) {
+        headers['Authorization'] = `Bearer ${token}`;
+    }
+
+    try {
+        const response = await fetch(`${API_BASE_URL}${endpoint}`, {
+            method: 'POST',
+            headers,
+            body: formData
+        });
+
+        if (response.status === 401) {
+            if (window.location.pathname.includes('/admin/')) logout();
+            throw new Error('Session expired');
+        }
+
+        const data = await response.json();
+
+        if (!response.ok) {
+            throw new Error(data.error || data.message || 'API request failed');
+        }
+
+        return data;
+    } catch (error) {
+        console.error(`❌ API Form POST Error (${endpoint}):`, error);
+        throw error;
+    }
+}
+
+/**
+ * Multipart/Form-Data Request (for file updates) - PUT
+ */
+async function apiPutFormData(endpoint, formData) {
+    const token = getToken();
+    const headers = {};
+
+    if (token) {
+        headers['Authorization'] = `Bearer ${token}`;
+    }
+
+    try {
+        const response = await fetch(`${API_BASE_URL}${endpoint}`, {
+            method: 'PUT',
+            headers,
+            body: formData
+        });
+
+        if (response.status === 401) {
+            if (window.location.pathname.includes('/admin/')) logout();
+            throw new Error('Session expired');
+        }
+
+        const data = await response.json();
+
+        if (!response.ok) {
+            throw new Error(data.error || data.message || 'API request failed');
+        }
+
+        return data;
+    } catch (error) {
+        console.error(`❌ API Form PUT Error (${endpoint}):`, error);
+        throw error;
+    }
 }

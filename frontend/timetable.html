@@ -274,11 +274,12 @@
             const semester = document.getElementById('tt-semester').value;
             const grid = document.getElementById('schedule-grid');
 
+            if (!courseId) return;
+
             grid.innerHTML = '<div style="text-align:center; padding:50px;"><div class="spinner" style="margin:0 auto;"></div></div>';
 
             try {
-                const response = await fetch(`${API_BASE_URL}/timetable?course_id=${courseId}&semester=${semester}&day=${selectedDay}`);
-                const data = await response.json();
+                const data = await apiGet(`/timetable?course_id=${courseId}&semester=${semester}&day=${selectedDay}`);
 
                 if (!data || data.length === 0) {
                     grid.innerHTML = `
@@ -310,7 +311,8 @@
                 `).join('');
 
             } catch (error) {
-                grid.innerHTML = '<div class="empty-state"><p>Error loading schedule. Please try again.</p></div>';
+                console.error('Load timetable error:', error);
+                grid.innerHTML = `<div class="empty-state"><p>Error: ${error.message || 'Failed to load schedule'}</p></div>`;
             }
         }
 

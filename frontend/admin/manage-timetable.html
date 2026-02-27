@@ -1,0 +1,301 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Set Timetable | SVES Admin</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link rel="stylesheet" href="../assets/css/style.css">
+    <link rel="stylesheet" href="../assets/css/admin.css">
+    <style>
+        .timetable-controls {
+            display: flex;
+            gap: 20px;
+            background: white;
+            padding: 25px;
+            border-radius: var(--radius-md);
+            box-shadow: var(--shadow-sm);
+            margin-bottom: 30px;
+            align-items: flex-end;
+            flex-wrap: wrap;
+        }
+
+        .day-group {
+            margin-bottom: 40px;
+        }
+
+        .day-header {
+            background: var(--primary);
+            color: white;
+            padding: 12px 25px;
+            border-radius: 8px 8px 0 0;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .day-header h3 {
+            margin: 0;
+            font-size: 1.1rem;
+            letter-spacing: 1px;
+            text-transform: uppercase;
+        }
+
+        .slots-container {
+            background: white;
+            border: 1px solid #eef2f6;
+            border-radius: 0 0 8px 8px;
+            overflow: hidden;
+        }
+
+        .timetable-row {
+            display: grid;
+            grid-template-columns: 150px 1fr 150px 120px;
+            padding: 15px 25px;
+            border-bottom: 1px solid #f1f5f9;
+            align-items: center;
+        }
+
+        .timetable-row:last-child {
+            border-bottom: none;
+        }
+
+        .timetable-row:hover {
+            background: #f8fafc;
+        }
+
+        .time-slot {
+            font-weight: 700;
+            color: var(--secondary-dark);
+        }
+
+        .subject-slot {
+            font-weight: 600;
+            color: var(--primary);
+        }
+
+        .room-slot {
+            color: #64748b;
+            font-size: 0.9rem;
+        }
+
+        .empty-day {
+            padding: 30px;
+            text-align: center;
+            color: #94a3b8;
+            font-style: italic;
+        }
+    </style>
+</head>
+
+<body>
+    <div class="admin-layout">
+        <div class="sidebar" id="admin-sidebar"></div>
+
+        <div class="main-content">
+            <header class="header-bar">
+                <h1>Set Timetable</h1>
+                <div class="admin-profile flex align-center">
+                    <span>Welcome, <strong>Admin</strong></span>
+                    <i class="fas fa-user-circle" style="margin-left: 15px; font-size: 1.5rem;"></i>
+                </div>
+            </header>
+
+            <div class="admin-body">
+                <div class="timetable-controls">
+                    <div class="form-group" style="flex: 2; min-width: 200px;">
+                        <label>Selected Course</label>
+                        <select id="filter-course" onchange="loadTimetable()"></select>
+                    </div>
+                    <div class="form-group" style="flex: 1; min-width: 150px;">
+                        <label>Semester</label>
+                        <select id="filter-semester" onchange="loadTimetable()">
+                            <option value="1">Semester 1</option>
+                            <option value="2">Semester 2</option>
+                            <option value="3">Semester 3</option>
+                            <option value="4">Semester 4</option>
+                            <option value="5">Semester 5</option>
+                            <option value="6">Semester 6</option>
+                            <option value="7">Semester 7</option>
+                            <option value="8">Semester 8</option>
+                        </select>
+                    </div>
+                    <button class="btn btn-primary" onclick="openAddModal()">
+                        <i class="fas fa-plus"></i> Add Entry
+                    </button>
+                </div>
+
+                <div id="timetable-display">
+                    <!-- Sorted by Days -->
+                </div>
+            </div>
+
+            <footer class="admin-footer">
+                <p>&copy; 2026 SVES Admin Portal. | <a href="../index.html">Back to Website</a></p>
+            </footer>
+        </div>
+    </div>
+
+    <!-- Modal -->
+    <div class="modal" id="entry-modal">
+        <div class="modal-content">
+            <h2 id="modal-title" style="margin-bottom: 25px; color: var(--primary);">Add Timetable Entry</h2>
+            <form id="entry-form">
+                <input type="hidden" id="entry-id">
+                <div class="form-group">
+                    <label>Day of the Week</label>
+                    <select id="entry-day" required>
+                        <option value="Monday">Monday</option>
+                        <option value="Tuesday">Tuesday</option>
+                        <option value="Wednesday">Wednesday</option>
+                        <option value="Thursday">Thursday</option>
+                        <option value="Friday">Friday</option>
+                        <option value="Saturday">Saturday</option>
+                    </select>
+                </div>
+                <div class="form-group">
+                    <label>Subject / Class Name</label>
+                    <input type="text" id="entry-subject" required placeholder="e.g. Advanced Java Programming">
+                </div>
+                <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 20px;">
+                    <div class="form-group">
+                        <label>Start Time</label>
+                        <input type="time" id="entry-start" required>
+                    </div>
+                    <div class="form-group">
+                        <label>End Time</label>
+                        <input type="time" id="entry-end" required>
+                    </div>
+                </div>
+                <div class="form-group">
+                    <label>Room Number / Hall</label>
+                    <input type="text" id="entry-room" placeholder="e.g. LAB-01 or LH-402">
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-outline" onclick="closeModal()">Cancel</button>
+                    <button type="submit" class="btn btn-primary" id="save-btn">Save Entry</button>
+                </div>
+            </form>
+        </div>
+    </div>
+
+    <script src="../assets/js/api.js"></script>
+    <script src="../assets/js/main.js"></script>
+    <script>
+        if (!isLoggedIn()) window.location.href = 'login.html';
+
+        let courses = [];
+        const daysOfWeek = ['Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturday'];
+
+        async function initPage() {
+            try {
+                courses = await apiGet('/courses');
+                document.getElementById('filter-course').innerHTML = courses.map(c => `<option value="${c.id}">${c.name}</option>`).join('');
+                loadTimetable();
+            } catch (error) { console.error(error); }
+        }
+
+        async function loadTimetable() {
+            const courseId = document.getElementById('filter-course').value;
+            const semester = document.getElementById('filter-semester').value;
+            const display = document.getElementById('timetable-display');
+
+            if (!courseId) return;
+
+            display.innerHTML = '<div class="text-center" style="padding: 50px;"><i class="fas fa-spinner fa-spin" style="font-size: 2rem; color: var(--secondary);"></i></div>';
+
+            try {
+                const data = await apiGet(`/timetable?course_id=${courseId}&semester=${semester}`);
+
+                let html = '';
+                daysOfWeek.forEach(day => {
+                    const daySlots = data.filter(d => d.day_of_week === day);
+                    daySlots.sort((a, b) => a.start_time.localeCompare(b.start_time));
+
+                    html += `
+                        <div class="day-group">
+                            <div class="day-header">
+                                <h3>${day}</h3>
+                                <small>${daySlots.length} Slots</small>
+                            </div>
+                            <div class="slots-container">
+                                ${daySlots.length === 0 ? '<div class="empty-day">No classes scheduled for this day</div>' : daySlots.map(slot => `
+                                    <div class="timetable-row">
+                                        <div class="time-slot">${slot.start_time.substring(0, 5)} - ${slot.end_time.substring(0, 5)}</div>
+                                        <div class="subject-slot">${slot.subject}</div>
+                                        <div class="room-slot"><i class="fas fa-map-marker-alt"></i> ${slot.room_no || 'TBA'}</div>
+                                        <div class="action-btns">
+                                            <button class="btn-icon" title="Edit Entry" onclick='openEditModal(${JSON.stringify(slot)})'>
+                                                <i class="fas fa-edit"></i>
+                                            </button>
+                                            <button class="btn-icon delete" title="Delete Entry" onclick="deleteEntry(${slot.id})">
+                                                <i class="fas fa-trash-alt"></i>
+                                            </button>
+                                        </div>
+                                    </div>
+                                `).join('')}
+                            </div>
+                        </div>
+                    `;
+                });
+                display.innerHTML = html;
+            } catch (error) {
+                display.innerHTML = '<p class="text-center" style="color: red;">Failed to load timetable.</p>';
+            }
+        }
+
+        function openAddModal() {
+            document.getElementById('modal-title').textContent = 'Add Timetable Entry';
+            document.getElementById('entry-form').reset();
+            document.getElementById('entry-id').value = '';
+            document.getElementById('entry-modal').classList.add('active');
+        }
+
+        function openEditModal(item) {
+            document.getElementById('modal-title').textContent = 'Edit Entry';
+            document.getElementById('entry-id').value = item.id;
+            document.getElementById('entry-day').value = item.day_of_week;
+            document.getElementById('entry-subject').value = item.subject;
+            document.getElementById('entry-start').value = item.start_time.substring(0, 5);
+            document.getElementById('entry-end').value = item.end_time.substring(0, 5);
+            document.getElementById('entry-room').value = item.room_no || '';
+            document.getElementById('entry-modal').classList.add('active');
+        }
+
+        function closeModal() { document.getElementById('entry-modal').classList.remove('active'); }
+
+        document.getElementById('entry-form').addEventListener('submit', async (e) => {
+            e.preventDefault();
+            const id = document.getElementById('entry-id').value;
+            const payload = {
+                course_id: document.getElementById('filter-course').value,
+                semester: document.getElementById('filter-semester').value,
+                day_of_week: document.getElementById('entry-day').value,
+                subject: document.getElementById('entry-subject').value,
+                start_time: document.getElementById('entry-start').value,
+                end_time: document.getElementById('entry-end').value,
+                room_no: document.getElementById('entry-room').value
+            };
+
+            try {
+                if (id) await apiPut(`/timetable/${id}`, payload);
+                else await apiPost('/timetable', payload);
+                closeModal();
+                loadTimetable();
+            } catch (error) { alert('Save failed'); }
+        });
+
+        async function deleteEntry(id) {
+            if (!confirm('Delete this entry?')) return;
+            try {
+                await apiDelete(`/timetable/${id}`);
+                loadTimetable();
+            } catch (error) { alert('Delete failed'); }
+        }
+
+        window.onload = initPage;
+    </script>
+</body>
+
+</html>

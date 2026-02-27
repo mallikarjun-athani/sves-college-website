@@ -4,181 +4,341 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Dashboard | Admin Panel</title>
+    <title>Dashboard | SVES Admin</title>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <link rel="stylesheet" href="../assets/css/style.css">
-    <link rel="stylesheet" href="../assets/css/style.css">
     <link rel="stylesheet" href="../assets/css/admin.css">
+    <style>
+        .welcome-card {
+            background: linear-gradient(135deg, var(--primary) 0%, var(--primary-dark) 100%);
+            color: white;
+            padding: 40px;
+            border-radius: var(--radius-lg);
+            margin-bottom: 30px;
+            position: relative;
+            overflow: hidden;
+            box-shadow: var(--shadow-lg);
+        }
+
+        .welcome-card::after {
+            content: "\f19d";
+            font-family: "Font Awesome 5 Free";
+            font-weight: 900;
+            position: absolute;
+            right: -20px;
+            bottom: -20px;
+            font-size: 15rem;
+            opacity: 0.05;
+            transform: rotate(-15deg);
+        }
+
+        .welcome-card h2 {
+            font-size: 2.2rem;
+            margin-bottom: 10px;
+        }
+
+        .welcome-card p {
+            color: rgba(255, 255, 255, 0.7);
+            font-size: 1.1rem;
+            max-width: 600px;
+        }
+
+        .activity-grid {
+            display: grid;
+            grid-template-columns: 2fr 1fr;
+            gap: 30px;
+        }
+
+        @media (max-width: 992px) {
+            .activity-grid {
+                grid-template-columns: 1fr;
+            }
+        }
+
+        .activity-card {
+            background: white;
+            padding: 25px;
+            border-radius: var(--radius-md);
+            box-shadow: var(--shadow-sm);
+        }
+
+        .activity-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 20px;
+            padding-bottom: 15px;
+            border-bottom: 1px solid #f1f5f9;
+        }
+
+        .activity-header h3 {
+            font-size: 1.1rem;
+            color: var(--primary);
+        }
+
+        .activity-item {
+            display: flex;
+            align-items: center;
+            padding: 12px 0;
+            border-bottom: 1px solid #f8fafc;
+        }
+
+        .activity-item:last-child {
+            border-bottom: none;
+        }
+
+        .activity-icon {
+            width: 40px;
+            height: 40px;
+            border-radius: 10px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin-right: 15px;
+            font-size: 1rem;
+        }
+
+        .icon-note {
+            background: #eff6ff;
+            color: #2563eb;
+        }
+
+        .icon-ann {
+            background: #fffbeb;
+            color: #d97706;
+        }
+
+        .icon-adm {
+            background: #f0fdf4;
+            color: #16a34a;
+        }
+
+        .icon-story {
+            background: #fdf2f8;
+            color: #db2777;
+        }
+
+        .activity-info h4 {
+            font-size: 0.95rem;
+            color: var(--primary);
+            margin-bottom: 2px;
+        }
+
+        .activity-info span {
+            font-size: 0.8rem;
+            color: var(--text-muted);
+        }
+
+        .quick-action-btn {
+            display: flex;
+            align-items: center;
+            padding: 15px;
+            background: white;
+            border-radius: 10px;
+            margin-bottom: 15px;
+            text-decoration: none;
+            color: var(--primary);
+            font-weight: 600;
+            transition: 0.3s;
+            border: 1px solid #f1f5f9;
+        }
+
+        .quick-action-btn:hover {
+            background: var(--bg-light);
+            transform: translateX(5px);
+            border-color: var(--secondary);
+        }
+
+        .quick-action-btn i {
+            width: 35px;
+            height: 35px;
+            background: #f8fafc;
+            border-radius: 8px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin-right: 15px;
+            color: var(--secondary-dark);
+        }
+    </style>
 </head>
 
 <body>
-    <div class="sidebar">
-        <div class="sidebar-brand">
-            <h2>SVES Admin</h2>
-        </div>
-        <div class="sidebar-menu">
-            <a href="dashboard.html" class="active"><i class="fas fa-home"></i> Dashboard</a>
-            <a href="manage-notes.html"><i class="fas fa-file-alt"></i> Manage Notes</a>
-            <a href="manage-gallery.html"><i class="fas fa-images"></i> Manage Gallery</a>
-            <a href="manage-announcements.html"><i class="fas fa-bullhorn"></i> Announcements</a>
-            <a href="manage-faculty.html"><i class="fas fa-user-tie"></i> Faculty</a>
-            <a href="manage-alumni.html"><i class="fas fa-user-graduate"></i> Alumni Stories</a>
-            <a href="manage-faq.html"><i class="fas fa-question-circle"></i> FAQ Manager</a>
-            <a href="manage-downloads.html"><i class="fas fa-download"></i> Downloads</a>
-            <a href="manage-admissions.html"><i class="fas fa-user-plus"></i> Admissions</a>
-            <a href="#" id="logout-btn" style="margin-top: 50px; color: #ff6b6b;"><i class="fas fa-sign-out-alt"></i>
-                Logout</a>
-        </div>
-    </div>
+    <div class="admin-layout">
+        <div class="sidebar" id="admin-sidebar"></div>
 
-    <div class="main-content">
-        <header class="header-bar">
-            <h1>Dashboard Overview</h1>
-            <div class="admin-profile flex align-center">
-                <span>Welcome, <strong>Admin</strong></span>
-                <i class="fas fa-user-circle" style="margin-left: 15px; font-size: 1.5rem;"></i>
-            </div>
-        </header>
+        <div class="main-content">
+            <header class="header-bar">
+                <h1>Control Panel</h1>
+                <div class="admin-profile flex align-center" id="profile-area">
+                    <span id="welcome-user">Welcome, <strong>Admin</strong></span>
+                    <i class="fas fa-user-circle" style="margin-left: 15px; font-size: 1.5rem;"></i>
+                </div>
+            </header>
 
-        <div class="admin-body">
-            <div class="card-grid" id="stats-container">
-                <div class="stat-card">
-                    <div>
-                        <h3>Study Notes</h3>
-                        <p class="stat-val" id="stat-notes">-</p>
-                    </div>
-                    <i class="fas fa-file-pdf" style="font-size: 2.5rem; color: #eee;"></i>
+            <div class="admin-body">
+                <div class="welcome-card">
+                    <h2>Good Day, Administrator</h2>
+                    <p>Welcome back to the SVES College Management Portal. Here's a snapshot of what's happening across
+                        the campus today.</p>
                 </div>
-                <div class="stat-card">
-                    <div>
-                        <h3>Gallery Photos</h3>
-                        <p class="stat-val" id="stat-gallery">-</p>
-                    </div>
-                    <i class="fas fa-camera" style="font-size: 2.5rem; color: #eee;"></i>
-                </div>
-                <div class="stat-card">
-                    <div>
-                        <h3>Announcements</h3>
-                        <p class="stat-val" id="stat-announcements">-</p>
-                    </div>
-                    <i class="fas fa-comment-dots" style="font-size: 2.5rem; color: #eee;"></i>
-                </div>
-                <div class="stat-card">
-                    <div>
-                        <h3>Faculty Members</h3>
-                        <p class="stat-val" id="stat-faculty">-</p>
-                    </div>
-                    <i class="fas fa-user-tie" style="font-size: 2.5rem; color: #eee;"></i>
-                </div>
-            </div>
 
-            <div class="flex" style="gap: 30px; margin-top: 50px; flex-wrap: wrap;">
-                <!-- Visitor Analytics Mock -->
-                <div
-                    style="flex: 2; min-width: 300px; background: white; padding: 30px; border-radius: var(--radius-md); box-shadow: var(--shadow-sm);">
-                    <div class="flex justify-between align-center" style="margin-bottom: 20px;">
-                        <h2>Visitor Analytics</h2>
-                        <select style="padding: 5px; border-radius: 4px; border: 1px solid #ddd;">
-                            <option>Last 30 Days</option>
-                            <option>Last 7 Days</option>
-                        </select>
-                    </div>
-                    <div
-                        style="height: 250px; background: #f9f9f9; border: 1px dashed #ddd; border-radius: 10px; display: flex; align-items: center; justify-content: center; position: relative;">
-                        <div
-                            style="position: absolute; bottom: 40px; left: 40px; right: 40px; top: 40px; display: flex; align-items: flex-end; gap: 10px;">
-                            <div style="flex: 1; height: 40%; background: var(--primary); border-radius: 4px 4px 0 0;">
-                            </div>
-                            <div
-                                style="flex: 1; height: 65%; background: var(--secondary); border-radius: 4px 4px 0 0;">
-                            </div>
-                            <div style="flex: 1; height: 50%; background: var(--primary); border-radius: 4px 4px 0 0;">
-                            </div>
-                            <div
-                                style="flex: 1; height: 85%; background: var(--secondary); border-radius: 4px 4px 0 0;">
-                            </div>
-                            <div style="flex: 1; height: 45%; background: var(--primary); border-radius: 4px 4px 0 0;">
-                            </div>
-                            <div style="flex: 1; height: 30%; background: var(--primary); border-radius: 4px 4px 0 0;">
-                            </div>
-                            <div
-                                style="flex: 1; height: 75%; background: var(--secondary); border-radius: 4px 4px 0 0;">
-                            </div>
-                        </div>
-                        <p
-                            style="color: var(--text-muted); z-index: 2; background: rgba(255,255,255,0.8); padding: 5px 15px; border-radius: 20px;">
-                            Monthly Traffic Growth</p>
-                    </div>
-                    <div class="flex justify-between" style="margin-top: 20px;">
+                <div class="card-grid">
+                    <div class="stat-card">
                         <div>
-                            <p style="color: var(--text-muted); font-size: 0.9rem;">Total Visits</p>
-                            <h4 style="font-size: 1.5rem;">24,850</h4>
+                            <h3>Study Notes</h3>
+                            <p class="stat-val" id="stat-notes">0</p>
                         </div>
+                        <i class="fas fa-file-alt" style="font-size: 2rem; color: #eff6ff;"></i>
+                    </div>
+                    <div class="stat-card">
                         <div>
-                            <p style="color: var(--text-muted); font-size: 0.9rem;">Popular Page</p>
-                            <h4 style="font-size: 1.5rem; color: var(--secondary);">/notes</h4>
+                            <h3>Active Gallery</h3>
+                            <p class="stat-val" id="stat-gallery">0</p>
                         </div>
+                        <i class="fas fa-images" style="font-size: 2rem; color: #fdf2f2;"></i>
+                    </div>
+                    <div class="stat-card">
                         <div>
-                            <p style="color: var(--text-muted); font-size: 0.9rem;">Avg. Time</p>
-                            <h4 style="font-size: 1.5rem;">4m 32s</h4>
+                            <h3>Admissions</h3>
+                            <p class="stat-val" id="stat-admissions">0</p>
                         </div>
+                        <i class="fas fa-user-plus" style="font-size: 2rem; color: #f0fdf4;"></i>
+                    </div>
+                    <div class="stat-card">
+                        <div>
+                            <h3>Downloads</h3>
+                            <p class="stat-val" id="stat-downloads">0</p>
+                        </div>
+                        <i class="fas fa-download" style="font-size: 2rem; color: #fffbeb;"></i>
                     </div>
                 </div>
 
-                <!-- Quick Actions -->
-                <div
-                    style="flex: 1; min-width: 250px; background: white; padding: 30px; border-radius: var(--radius-md); box-shadow: var(--shadow-sm);">
-                    <h2>Quick Actions</h2>
-                    <div class="flex" style="gap: 10px; margin-top: 20px; flex-direction: column;">
-                        <a href="manage-notes.html" class="btn btn-primary" style="width: 100%; border-radius: 8px;"><i
-                                class="fas fa-plus"></i> Upload Note</a>
-                        <a href="manage-gallery.html" class="btn btn-secondary"
-                            style="width: 100%; border-radius: 8px;"><i class="fas fa-plus"></i> Add Image</a>
-                        <a href="manage-announcements.html" class="btn btn-outline"
-                            style="width: 100%; border-radius: 8px;"><i class="fas fa-plus"></i> New Alert</a>
+                <div class="activity-grid">
+                    <div class="activity-card">
+                        <div class="activity-header">
+                            <h3>Recent Campus Activity</h3>
+                            <a href="manage-announcements.html" class="btn btn-outline"
+                                style="padding: 5px 15px; font-size: 0.8rem;">View All</a>
+                        </div>
+                        <div id="recent-list">
+                            <!-- Loaded via JS -->
+                            <p class="text-center" style="padding: 30px;">Analyzing recent data...</p>
+                        </div>
+                    </div>
+
+                    <div>
+                        <div class="activity-card" style="margin-bottom: 30px;">
+                            <div class="activity-header">
+                                <h3>Quick Management</h3>
+                            </div>
+                            <a href="manage-notes.html" class="quick-action-btn"><i class="fas fa-file-upload"></i>
+                                Upload Notes</a>
+                            <a href="manage-timetable.html" class="quick-action-btn"><i class="fas fa-calendar-alt"></i>
+                                Set Timetable</a>
+                            <a href="manage-announcements.html" class="quick-action-btn"><i class="fas fa-bullhorn"></i>
+                                Broadcast News</a>
+                            <a href="manage-gallery.html" class="quick-action-btn"><i class="fas fa-images"></i> Update
+                                Gallery</a>
+                        </div>
+
+                        <div class="activity-card">
+                            <div class="activity-header">
+                                <h3>System Health</h3>
+                            </div>
+                            <div style="display: flex; align-items: center; gap: 10px; margin-bottom: 15px;">
+                                <div style="width: 10px; height: 10px; background: #16a34a; border-radius: 50%;"></div>
+                                <span style="font-size: 0.9rem; font-weight: 600;">Server Operational</span>
+                            </div>
+                            <div style="display: flex; align-items: center; gap: 10px;">
+                                <div style="width: 10px; height: 10px; background: #16a34a; border-radius: 50%;"></div>
+                                <span style="font-size: 0.9rem; font-weight: 600;">Database Connected</span>
+                            </div>
+                        </div>
                     </div>
                 </div>
             </div>
-        </div>
 
-        <footer class="admin-footer">
-            <p>&copy; 2026 SVES Admin Portal. All Rights Reserved. | <a href="../index.html">Back to Website</a></p>
-        </footer>
+            <footer class="admin-footer">
+                <p>&copy; 2026 SVES Admin Portal. All Rights Reserved.</p>
+            </footer>
+        </div>
     </div>
 
     <script src="../assets/js/api.js"></script>
+    <script src="../assets/js/main.js"></script>
     <script>
-        // Check authentication
-        if (!isLoggedIn()) {
-            window.location.href = 'login.html';
-        }
+        if (!isLoggedIn()) window.location.href = 'login.html';
 
-        // CSP-compliant logout handler
-        document.addEventListener('DOMContentLoaded', function () {
-            var logoutBtn = document.getElementById('logout-btn');
-            if (logoutBtn) {
-                logoutBtn.addEventListener('click', function (e) {
-                    e.preventDefault();
-                    localStorage.clear();
-                    window.location.href = '../index.html';
-                });
-            }
-        });
-
-        // Load dashboard stats
-        async function loadStats() {
+        async function loadDashboardData() {
             try {
                 const stats = await apiGet('/dashboard/stats');
-                document.getElementById('stat-notes').textContent = stats.notes;
-                document.getElementById('stat-gallery').textContent = stats.gallery;
-                document.getElementById('stat-announcements').textContent = stats.announcements;
-                document.getElementById('stat-faculty').textContent = stats.faculty;
+                document.getElementById('stat-notes').textContent = stats.notes || 0;
+                document.getElementById('stat-gallery').textContent = stats.gallery || 0;
+                document.getElementById('stat-admissions').textContent = stats.admissions || 0;
+                document.getElementById('stat-downloads').textContent = stats.downloads || 0;
+
+                const recent = await apiGet('/dashboard/recent');
+                const list = document.getElementById('recent-list');
+
+                // Merge and sort activities
+                const activities = [];
+                if (recent.recentNotes) {
+                    recent.recentNotes.forEach(n => activities.push({
+                        title: n.title,
+                        type: 'note',
+                        date: n.upload_date
+                    }));
+                }
+                if (recent.recentAnnouncements) {
+                    recent.recentAnnouncements.forEach(a => activities.push({
+                        title: a.title,
+                        type: 'announcement',
+                        date: a.created_at
+                    }));
+                }
+                if (recent.recentStories) {
+                    recent.recentStories.forEach(s => activities.push({
+                        title: s.title,
+                        type: 'story',
+                        date: s.created_at
+                    }));
+                }
+                if (recent.recentAdmissions) {
+                    recent.recentAdmissions.forEach(adm => activities.push({
+                        title: `Applied: ${adm.name}`,
+                        type: 'admission',
+                        date: adm.submitted_at
+                    }));
+                }
+
+                activities.sort((a, b) => new Date(b.date) - new Date(a.date));
+                const displayItems = activities.slice(0, 8);
+
+                if (displayItems.length === 0) {
+                    list.innerHTML = '<p class="text-center" style="padding: 20px;">No recent activity recorded.</p>';
+                    return;
+                }
+
+                list.innerHTML = displayItems.map(item => `
+                    <div class="activity-item">
+                        <div class="activity-icon ${item.type === 'note' ? 'icon-note' : (item.type === 'announcement' ? 'icon-ann' : (item.type === 'story' ? 'icon-story' : 'icon-adm'))}">
+                            <i class="${item.type === 'note' ? 'fas fa-file-alt' : (item.type === 'announcement' ? 'fas fa-bullhorn' : (item.type === 'story' ? 'fas fa-book-open' : 'fas fa-user-plus'))}"></i>
+                        </div>
+                        <div class="activity-info">
+                            <h4>${item.title}</h4>
+                            <span>${item.type.charAt(0).toUpperCase() + item.type.slice(1)} &bull; ${new Date(item.date).toLocaleDateString()}</span>
+                        </div>
+                    </div>
+                `).join('');
             } catch (error) {
-                console.error('Failed to load stats:', error);
+                console.error('Dashboard Load Error:', error);
+                const list = document.getElementById('recent-list');
+                if (list) list.innerHTML = `<p class="text-center" style="color:red; padding:20px;">Error: ${error.message}</p>`;
             }
         }
 
-        document.addEventListener('DOMContentLoaded', loadStats);
+        window.onload = loadDashboardData;
     </script>
 </body>
 

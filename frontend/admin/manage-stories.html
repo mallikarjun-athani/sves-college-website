@@ -1,0 +1,302 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Campus Stories | SVES Admin</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link rel="stylesheet" href="../assets/css/style.css">
+    <link rel="stylesheet" href="../assets/css/admin.css">
+    <style>
+        .stories-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(350px, 1fr));
+            gap: 25px;
+            margin-top: 30px;
+        }
+
+        .story-card {
+            background: white;
+            border-radius: var(--radius-md);
+            overflow: hidden;
+            box-shadow: var(--shadow-sm);
+            transition: var(--transition);
+            border: 1px solid #eee;
+            display: flex;
+            flex-direction: column;
+        }
+
+        .story-card:hover {
+            transform: translateY(-5px);
+            box-shadow: var(--shadow-md);
+        }
+
+        .story-img-container {
+            width: 100%;
+            height: 200px;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .story-img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+            transition: 0.5s ease;
+        }
+
+        .story-card:hover .story-img {
+            transform: scale(1.1);
+        }
+
+        .story-cat-badge {
+            position: absolute;
+            top: 15px;
+            left: 15px;
+            background: var(--secondary);
+            color: var(--primary);
+            padding: 4px 12px;
+            border-radius: 4px;
+            font-size: 0.7rem;
+            font-weight: 800;
+            text-transform: uppercase;
+            z-index: 2;
+        }
+
+        .story-content {
+            padding: 20px;
+            flex: 1;
+        }
+
+        .story-title {
+            font-size: 1.2rem;
+            color: var(--primary);
+            margin-bottom: 10px;
+            font-weight: 700;
+            line-height: 1.4;
+        }
+
+        .story-summary {
+            font-size: 0.9rem;
+            color: #64748b;
+            line-height: 1.6;
+            margin-bottom: 15px;
+            display: -webkit-box;
+            -webkit-line-clamp: 3;
+            line-clamp: 3;
+            -webkit-box-orient: vertical;
+            overflow: hidden;
+        }
+
+        .story-meta {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            font-size: 0.8rem;
+            color: var(--text-muted);
+            border-top: 1px solid #f1f5f9;
+            padding-top: 15px;
+        }
+
+        .story-footer {
+            padding: 15px 20px;
+            background: #f8fafc;
+            border-top: 1px solid #eee;
+            display: flex;
+            justify-content: flex-end;
+            gap: 10px;
+        }
+    </style>
+</head>
+
+<body>
+    <div class="admin-layout">
+        <div class="sidebar" id="admin-sidebar"></div>
+
+        <div class="main-content">
+            <header class="header-bar">
+                <h1>Campus Stories</h1>
+                <div class="admin-profile flex align-center">
+                    <span>Welcome, <strong>Admin</strong></span>
+                    <i class="fas fa-user-circle" style="margin-left: 15px; font-size: 1.5rem;"></i>
+                </div>
+            </header>
+
+            <div class="admin-body">
+                <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 30px;">
+                    <div>
+                        <p style="color: var(--text-muted); margin: 0;">Publish highlights and blog posts about student
+                            life.</p>
+                    </div>
+                    <button class="btn btn-primary" onclick="openAddModal()">
+                        <i class="fas fa-plus"></i> Write Story
+                    </button>
+                </div>
+
+                <div id="stories-container" class="stories-grid">
+                    <div class="text-center" style="grid-column: 1/-1; padding: 60px;">
+                        <i class="fas fa-spinner fa-spin" style="font-size: 2rem; color: var(--secondary);"></i>
+                        <p style="margin-top: 15px; color: var(--text-muted);">Fetching stories...</p>
+                    </div>
+                </div>
+            </div>
+
+            <footer class="admin-footer">
+                <p>&copy; 2026 SVES Admin Portal. | <a href="../index.html">Back to Website</a></p>
+            </footer>
+        </div>
+    </div>
+
+    <!-- Modal -->
+    <div class="modal" id="story-modal">
+        <div class="modal-content">
+            <h2 id="modal-title" style="margin-bottom: 25px; color: var(--primary);">Write New Story</h2>
+            <form id="story-form">
+                <input type="hidden" id="story-id">
+                <div class="form-group">
+                    <label>Title</label>
+                    <input type="text" id="story-title" required placeholder="e.g. Highlights of Tech Fest 2026">
+                </div>
+                <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 20px;">
+                    <div class="form-group">
+                        <label>Category</label>
+                        <select id="story-category" required>
+                            <option value="Events">Events</option>
+                            <option value="Campus Life">Campus Life</option>
+                            <option value="Academic">Academic</option>
+                            <option value="Placement">Placement</option>
+                            <option value="Sports">Sports</option>
+                        </select>
+                    </div>
+                    <div class="form-group">
+                        <label>Author</label>
+                        <input type="text" id="story-author" required placeholder="name or department">
+                    </div>
+                </div>
+                <div class="form-group">
+                    <label>Featured Image</label>
+                    <input type="file" id="story-image" accept="image/*">
+                    <p style="font-size: 0.75rem; color: var(--text-muted); margin-top: 5px;">Leave empty when editing
+                        to keep current photo.</p>
+                </div>
+                <div class="form-group">
+                    <label>Content</label>
+                    <textarea id="story-content" rows="8" required
+                        placeholder="Write the full story details here..."></textarea>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-outline" onclick="closeModal()">Cancel</button>
+                    <button type="submit" class="btn btn-primary" id="save-btn">Publish Story</button>
+                </div>
+            </form>
+        </div>
+    </div>
+
+    <script src="../assets/js/api.js"></script>
+    <script src="../assets/js/main.js"></script>
+    <script>
+        if (!isLoggedIn()) window.location.href = 'login.html';
+
+        async function loadStories() {
+            const container = document.getElementById('stories-container');
+            try {
+                const stories = await apiGet('/stories');
+                if (stories.length === 0) {
+                    container.innerHTML = '<div style="grid-column: 1/-1; text-align: center; padding: 60px;">No stories published yet.</div>';
+                    return;
+                }
+
+                container.innerHTML = stories.map(story => `
+                    <div class="story-card">
+                        <div class="story-img-container">
+                            <span class="story-cat-badge">${story.category}</span>
+                            <img src="${story.image_path || '../assets/images/placeholder-story.png'}" class="story-img" alt="${story.title}">
+                        </div>
+                        <div class="story-content">
+                            <h3 class="story-title">${story.title}</h3>
+                            <div class="story-summary">${story.content}</div>
+                            <div class="story-meta">
+                                <span><i class="far fa-user"></i> By ${story.author}</span>
+                                <span><i class="far fa-calendar"></i> ${new Date(story.created_at).toLocaleDateString()}</span>
+                            </div>
+                        </div>
+                        <div class="story-footer">
+                            <div class="action-btns">
+                                <button class="btn-icon" title="Edit Story" onclick='openEditModal(${JSON.stringify(story)})'>
+                                    <i class="fas fa-edit"></i>
+                                </button>
+                                <button class="btn-icon delete" title="Delete Story" onclick="deleteStory(${story.id})">
+                                    <i class="fas fa-trash-alt"></i>
+                                </button>
+                            </div>
+                        </div>
+                    </div>
+                `).join('');
+            } catch (error) {
+                container.innerHTML = '<p class="text-center" style="grid-column: 1/-1; color: red;">Failed to load stories.</p>';
+            }
+        }
+
+        function openAddModal() {
+            document.getElementById('modal-title').textContent = 'Write New Story';
+            document.getElementById('story-form').reset();
+            document.getElementById('story-id').value = '';
+            document.getElementById('story-image').required = true;
+            document.getElementById('story-modal').classList.add('active');
+        }
+
+        function openEditModal(story) {
+            document.getElementById('modal-title').textContent = 'Edit Story';
+            document.getElementById('story-id').value = story.id;
+            document.getElementById('story-title').value = story.title;
+            document.getElementById('story-category').value = story.category;
+            document.getElementById('story-author').value = story.author;
+            document.getElementById('story-content').value = story.content;
+            document.getElementById('story-image').required = false;
+            document.getElementById('story-modal').classList.add('active');
+        }
+
+        function closeModal() { document.getElementById('story-modal').classList.remove('active'); }
+
+        document.getElementById('story-form').addEventListener('submit', async (e) => {
+            e.preventDefault();
+            const id = document.getElementById('story-id').value;
+            const btn = document.getElementById('save-btn');
+            btn.disabled = true;
+            btn.textContent = 'Processing...';
+
+            const formData = new FormData();
+            formData.append('title', document.getElementById('story-title').value);
+            formData.append('category', document.getElementById('story-category').value);
+            formData.append('author', document.getElementById('story-author').value);
+            formData.append('content', document.getElementById('story-content').value);
+
+            const file = document.getElementById('story-image').files[0];
+            if (file) formData.append('image', file);
+
+            try {
+                if (id) await apiPutFormData(`/stories/${id}`, formData);
+                else await apiPostFormData('/stories', formData);
+                closeModal();
+                loadStories();
+            } catch (error) { alert('Action failed'); }
+            finally {
+                btn.disabled = false;
+                btn.textContent = 'Publish Story';
+            }
+        });
+
+        async function deleteStory(id) {
+            if (!confirm('Permanent delete?')) return;
+            try {
+                await apiDelete(`/stories/${id}`);
+                loadStories();
+            } catch (error) { alert('Delete failed'); }
+        }
+
+        window.onload = loadStories;
+    </script>
+</body>
+
+</html>

@@ -4,267 +4,326 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Manage Notes | Admin Panel</title>
+    <title>Manage Study Notes | SVES Admin</title>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
-    <link rel="stylesheet" href="../assets/css/style.css">
     <link rel="stylesheet" href="../assets/css/style.css">
     <link rel="stylesheet" href="../assets/css/admin.css">
     <style>
-        .admin-table {
-            width: 100%;
-            border-collapse: collapse;
+        .notes-table-container {
             background: white;
-            border-radius: 8px;
+            border-radius: var(--radius-md);
+            box-shadow: var(--shadow-sm);
             overflow: hidden;
-            box-shadow: var(--shadow-sm);
+            margin-top: 30px;
         }
 
-        .admin-table th,
-        .admin-table td {
-            padding: 15px;
-            text-align: left;
-            border-bottom: 1px solid #eee;
-        }
-
-        .admin-table th {
-            background: #fafafa;
+        .pdf-link {
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+            color: #ef4444;
             font-weight: 600;
-            color: var(--primary);
+            text-decoration: none;
+            transition: 0.2s;
         }
 
-        .upload-form {
-            background: white;
-            padding: 30px;
-            border-radius: 8px;
-            margin-bottom: 40px;
-            box-shadow: var(--shadow-sm);
+        .pdf-link:hover {
+            color: #b91c1c;
+            transform: translateX(3px);
         }
 
-        .form-grid {
-            display: grid;
-            grid-template-columns: 1fr 1fr;
-            gap: 20px;
-        }
-
-        .form-group {
-            margin-bottom: 15px;
-        }
-
-        .form-group label {
-            display: block;
-            margin-bottom: 8px;
-            font-weight: 600;
-        }
-
-        .form-group input,
-        .form-group select {
-            width: 100%;
-            padding: 10px;
-            border: 1px solid #ddd;
+        .sem-badge {
+            background: #f1f5f9;
+            color: #475569;
+            padding: 2px 8px;
             border-radius: 4px;
-            box-sizing: border-box;
+            font-size: 0.75rem;
+            font-weight: 700;
         }
 
-        .alert {
-            padding: 15px;
-            background: #d4edda;
-            color: #155724;
+        .unit-pill {
+            background: #f0fdf4;
+            color: #166534;
+            padding: 2px 8px;
             border-radius: 4px;
-            margin-bottom: 20px;
-            display: none;
-        }
-
-        .alert.error {
-            background: #f8d7da;
-            color: #721c24;
+            font-size: 0.75rem;
+            font-weight: 700;
         }
     </style>
 </head>
-</head>
 
 <body>
-    <div class="sidebar">
-        <div class="sidebar-brand">
-            <h2>SVES Admin</h2>
-        </div>
-        <div class="sidebar-menu">
-            <a href="dashboard.html"><i class="fas fa-home"></i> Dashboard</a>
-            <a href="manage-notes.html" class="active"><i class="fas fa-file-alt"></i> Manage Notes</a>
-            <a href="manage-gallery.html"><i class="fas fa-images"></i> Manage Gallery</a>
-            <a href="manage-announcements.html"><i class="fas fa-bullhorn"></i> Announcements</a>
-            <a href="manage-faculty.html"><i class="fas fa-user-tie"></i> Faculty</a>
-            <a href="manage-alumni.html"><i class="fas fa-user-graduate"></i> Alumni Stories</a>
-            <a href="manage-faq.html"><i class="fas fa-question-circle"></i> FAQ Manager</a>
-            <a href="manage-downloads.html"><i class="fas fa-download"></i> Downloads</a>
-            <a href="#" id="logout-btn" style="margin-top: 50px; color: #ff6b6b;"><i class="fas fa-sign-out-alt"></i>
-                Logout</a>
+    <div class="admin-layout">
+        <div class="sidebar" id="admin-sidebar"></div>
+
+        <div class="main-content">
+            <header class="header-bar">
+                <h1>Study Material Management</h1>
+                <div class="admin-profile flex align-center">
+                    <span>Welcome, <strong>Admin</strong></span>
+                    <i class="fas fa-user-circle" style="margin-left: 15px; font-size: 1.5rem;"></i>
+                </div>
+            </header>
+
+            <div class="admin-body">
+                <div class="filter-bar">
+                    <div class="form-group" style="flex: 1; min-width: 150px;">
+                        <label>Course</label>
+                        <select id="filter-course" onchange="loadNotes()">
+                            <option value="">All Courses</option>
+                            <!-- Loaded via JS -->
+                        </select>
+                    </div>
+                    <div class="form-group" style="flex: 1; min-width: 120px;">
+                        <label>Semester</label>
+                        <select id="filter-semester" onchange="loadNotes()">
+                            <option value="">All Semesters</option>
+                            <option value="1">Semester 1</option>
+                            <option value="2">Semester 2</option>
+                            <option value="3">Semester 3</option>
+                            <option value="4">Semester 4</option>
+                            <option value="5">Semester 5</option>
+                            <option value="6">Semester 6</option>
+                            <option value="7">Semester 7</option>
+                            <option value="8">Semester 8</option>
+                        </select>
+                    </div>
+                    <div class="form-group" style="flex: 2; min-width: 200px;">
+                        <label>Search Subject</label>
+                        <input type="text" id="filter-subject" placeholder="Type subject name..." oninput="loadNotes()">
+                    </div>
+                    <button class="btn btn-primary" onclick="openAddModal()">
+                        <i class="fas fa-file-upload"></i> Upload Note
+                    </button>
+                </div>
+
+                <div class="notes-table-container">
+                    <table class="admin-table">
+                        <thead>
+                            <tr>
+                                <th>Title / Unit</th>
+                                <th>Course & Sem</th>
+                                <th>Subject</th>
+                                <th>Document</th>
+                                <th style="text-align: right;">Actions</th>
+                            </tr>
+                        </thead>
+                        <tbody id="notes-list">
+                            <tr>
+                                <td colspan="5" class="text-center" style="padding: 50px;">
+                                    <i class="fas fa-spinner fa-spin"
+                                        style="font-size: 1.5rem; color: var(--secondary);"></i>
+                                    <p style="margin-top: 10px; color: var(--text-muted);">Syncing notes library...</p>
+                                </td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+
+            <footer class="admin-footer">
+                <p>&copy; 2026 SVES Admin Portal. | <a href="../index.html">Back to Website</a></p>
+            </footer>
         </div>
     </div>
 
-    <div class="main-content">
-        <header class="header-bar">
-            <h1>Manage Study Notes</h1>
-            <div class="admin-profile flex align-center">
-                <span>Welcome, <strong>Admin</strong></span>
-                <i class="fas fa-user-circle" style="margin-left: 15px; font-size: 1.5rem;"></i>
-            </div>
-        </header>
-
-        <div class="admin-body">
-            <div class="alert" id="alert"></div>
-
-            <div class="upload-form">
-                <h3>Upload New Note</h3>
-                <form id="upload-form" enctype="multipart/form-data">
-                    <div class="form-grid" style="margin-top: 20px;">
-                        <div class="form-group">
-                            <label>Note Title</label>
-                            <input type="text" name="title" id="title" required>
-                        </div>
-                        <div class="form-group">
-                            <label>Course</label>
-                            <select name="course" id="course" required>
-                                <option value="1">BCA</option>
-                                <option value="2">BA</option>
-                                <option value="3">B.Com</option>
-                                <option value="4">B.Sc</option>
-                            </select>
-                        </div>
+    <!-- Modal -->
+    <div class="modal" id="note-modal">
+        <div class="modal-content">
+            <h2 id="modal-title" style="margin-bottom: 25px; color: var(--primary);">Upload Study Note</h2>
+            <form id="note-form">
+                <input type="hidden" id="note-id">
+                <div class="form-group">
+                    <label>Title</label>
+                    <input type="text" id="note-title" required placeholder="e.g. Introduction to Data Structures">
+                </div>
+                <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 20px;">
+                    <div class="form-group">
+                        <label>Course</label>
+                        <select id="note-course" required></select>
                     </div>
-                    <div class="form-grid">
-                        <div class="form-group">
-                            <label>Semester</label>
-                            <input type="number" name="semester" id="semester" min="1" max="6" required>
-                        </div>
-                        <div class="form-group">
-                            <label>Subject Name</label>
-                            <input type="text" name="subject" id="subject" required>
-                        </div>
+                    <div class="form-group">
+                        <label>Semester</label>
+                        <select id="note-semester" required>
+                            <option value="1">Semester 1</option>
+                            <option value="2">Semester 2</option>
+                            <option value="3">Semester 3</option>
+                            <option value="4">Semester 4</option>
+                            <option value="5">Semester 5</option>
+                            <option value="6">Semester 6</option>
+                            <option value="7">Semester 7</option>
+                            <option value="8">Semester 8</option>
+                        </select>
                     </div>
-                    <div class="form-grid">
-                        <div class="form-group">
-                            <label>Unit Name/Number</label>
-                            <input type="text" name="unit" id="unit" required>
-                        </div>
-                        <div class="form-group">
-                            <label>Select PDF File</label>
-                            <input type="file" name="pdf_file" id="pdf_file" accept=".pdf" required>
-                        </div>
+                </div>
+                <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 20px;">
+                    <div class="form-group">
+                        <label>Subject</label>
+                        <input type="text" id="note-subject" required placeholder="e.g. Data Structures & Algorithms">
                     </div>
-                    <button type="submit" class="btn btn-primary">Upload Note</button>
-                </form>
-            </div>
-
-            <h3>Existing Notes</h3>
-            <table class="admin-table">
-                <thead>
-                    <tr>
-                        <th>Title</th>
-                        <th>Course</th>
-                        <th>Sem</th>
-                        <th>Subject</th>
-                        <th>Date</th>
-                        <th>Action</th>
-                    </tr>
-                </thead>
-                <tbody id="notes-list">
-                    <tr>
-                        <td colspan="6" style="text-align: center;">Loading...</td>
-                    </tr>
-                </tbody>
-            </table>
+                    <div class="form-group">
+                        <label>Unit / Chapter</label>
+                        <input type="text" id="note-unit" required placeholder="e.g. Unit 1">
+                    </div>
+                </div>
+                <div class="form-group" id="file-input-group">
+                    <label>PDF Attachment</label>
+                    <input type="file" id="note-file" accept=".pdf">
+                    <p style="font-size: 0.75rem; color: var(--text-muted); margin-top: 5px;">Max size: 10MB. Metadata
+                        can be edited later without re-uploading.</p>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-outline" onclick="closeModal()">Cancel</button>
+                    <button type="submit" class="btn btn-primary" id="save-btn">Save Note</button>
+                </div>
+            </form>
         </div>
-
-        <footer class="admin-footer">
-            <p>&copy; 2026 SVES Admin Portal. All Rights Reserved. | <a href="../index.html">Back to Website</a></p>
-        </footer>
     </div>
 
-    <script src="../assets/js/api.js?v=1.1"></script>
+    <script src="../assets/js/api.js"></script>
+    <script src="../assets/js/main.js"></script>
     <script>
         if (!isLoggedIn()) window.location.href = 'login.html';
 
-        // CSP-compliant logout handler
-        document.addEventListener('DOMContentLoaded', function () {
-            var logoutBtn = document.getElementById('logout-btn');
-            if (logoutBtn) {
-                logoutBtn.addEventListener('click', function (e) {
-                    e.preventDefault();
-                    localStorage.clear();
-                    window.location.href = '../index.html';
-                });
-            }
-        });
+        let courses = [];
+        let isEdit = false;
 
-        const alertEl = document.getElementById('alert');
-        const courses = { 1: 'BCA', 2: 'BA', 3: 'B.Com', 4: 'B.Sc' };
+        async function initPage() {
+            try {
+                courses = await apiGet('/courses');
+                const filterCourse = document.getElementById('filter-course');
+                const noteCourse = document.getElementById('note-course');
 
-        function showAlert(msg, err) {
-            alertEl.textContent = msg;
-            alertEl.className = 'alert' + (err ? ' error' : '');
-            alertEl.style.display = 'block';
-            setTimeout(() => alertEl.style.display = 'none', 3000);
+                const options = courses.map(c => `<option value="${c.id}">${c.name}</option>`).join('');
+                filterCourse.innerHTML += options;
+                noteCourse.innerHTML = options;
+
+                loadNotes();
+            } catch (error) { console.error(error); }
         }
 
         async function loadNotes() {
+            const course = document.getElementById('filter-course').value;
+            const semester = document.getElementById('filter-semester').value;
+            const subject = document.getElementById('filter-subject').value;
+            const list = document.getElementById('notes-list');
+
             try {
-                const data = await apiGet('/notes');
-                const list = document.getElementById('notes-list');
-                if (!data.length) { list.innerHTML = '<tr><td colspan="6" style="text-align:center">No notes found.</td></tr>'; return; }
-                list.innerHTML = data.map(n => `
+                const params = new URLSearchParams();
+                if (course) params.append('course', course);
+                if (semester) params.append('semester', semester);
+                if (subject) params.append('subject', subject);
+
+                const notes = await apiGet('/notes?' + params.toString());
+
+                if (notes.length === 0) {
+                    list.innerHTML = '<tr><td colspan="5" class="text-center" style="padding: 50px;">No notes matching your criteria.</td></tr>';
+                    return;
+                }
+
+                list.innerHTML = notes.map(note => `
                     <tr>
-                        <td>${n.title}</td>
-                        <td>${courses[n.course_id] || n.course_id}</td>
-                        <td>${n.semester}</td>
-                        <td>${n.subject}</td>
-                        <td>${formatDate(n.upload_date)}</td>
                         <td>
-                            <a href="${resolvePath(n.file_path)}" target="_blank" style="color: var(--primary);"><i class="fas fa-eye"></i></a>
-                            <a href="#" class="delete-btn" data-id="${n.id}" style="color: #d9534f; margin-left: 15px;"><i class="fas fa-trash"></i></a>
+                            <div style="font-weight: 700; color: var(--primary);">${note.title}</div>
+                            <span class="unit-pill">${note.unit}</span>
+                        </td>
+                        <td>
+                            <div style="font-size: 0.9rem; font-weight: 500;">${courses.find(c => c.id === note.course_id)?.name || 'Course'}</div>
+                            <span class="sem-badge">Sem ${note.semester}</span>
+                        </td>
+                        <td style="font-size: 0.95rem; color: #475569;">${note.subject}</td>
+                        <td>
+                            <a href="${note.file_path}" target="_blank" class="pdf-link">
+                                <i class="fas fa-file-pdf"></i> View PDF
+                            </a>
+                        </td>
+                        <td style="text-align: right;">
+                            <div class="action-btns">
+                                <button title="Edit Metadata" class="btn-icon" onclick='openEditModal(${JSON.stringify(note)})'>
+                                    <i class="fas fa-edit"></i>
+                                </button>
+                                <button title="Delete Note" class="btn-icon delete" onclick="deleteNote(${note.id})">
+                                    <i class="fas fa-trash-alt"></i>
+                                </button>
+                            </div>
                         </td>
                     </tr>
                 `).join('');
-            } catch (e) {
-                console.error('Error loading notes:', e);
-                const list = document.getElementById('notes-list');
-                list.innerHTML = '<tr><td colspan="6" style="text-align:center; color: red;">Failed to load notes. Please try again.</td></tr>';
+            } catch (error) {
+                list.innerHTML = '<tr><td colspan="5" class="text-center" style="color: red; padding: 50px;">Connection error. Failed to load notes.</td></tr>';
             }
         }
 
-        // Event delegation for delete
-        document.getElementById('notes-list').addEventListener('click', function (e) {
-            const btn = e.target.closest('.delete-btn');
-            if (btn) {
-                e.preventDefault();
-                const id = btn.getAttribute('data-id');
-                deleteNote(id);
+        function openAddModal() {
+            isEdit = false;
+            document.getElementById('modal-title').textContent = 'Upload Study Note';
+            document.getElementById('note-form').reset();
+            document.getElementById('note-id').value = '';
+            document.getElementById('file-input-group').style.display = 'block';
+            document.getElementById('note-file').required = true;
+            document.getElementById('note-modal').classList.add('active');
+        }
+
+        function openEditModal(note) {
+            isEdit = true;
+            document.getElementById('modal-title').textContent = 'Edit Note Metadata';
+            document.getElementById('note-id').value = note.id;
+            document.getElementById('note-title').value = note.title;
+            document.getElementById('note-course').value = note.course_id;
+            document.getElementById('note-semester').value = note.semester;
+            document.getElementById('note-subject').value = note.subject;
+            document.getElementById('note-unit').value = note.unit;
+            document.getElementById('file-input-group').style.display = 'none';
+            document.getElementById('note-file').required = false;
+            document.getElementById('note-modal').classList.add('active');
+        }
+
+        function closeModal() { document.getElementById('note-modal').classList.remove('active'); }
+
+        document.getElementById('note-form').addEventListener('submit', async (e) => {
+            e.preventDefault();
+            const btn = document.getElementById('save-btn');
+            btn.disabled = true;
+            btn.textContent = 'Storing...';
+
+            try {
+                if (isEdit) {
+                    const id = document.getElementById('note-id').value;
+                    await apiPut(`/notes/${id}`, {
+                        title: document.getElementById('note-title').value,
+                        course: document.getElementById('note-course').value,
+                        semester: document.getElementById('note-semester').value,
+                        subject: document.getElementById('note-subject').value,
+                        unit: document.getElementById('note-unit').value
+                    });
+                } else {
+                    const formData = new FormData();
+                    formData.append('title', document.getElementById('note-title').value);
+                    formData.append('course', document.getElementById('note-course').value);
+                    formData.append('semester', document.getElementById('note-semester').value);
+                    formData.append('subject', document.getElementById('note-subject').value);
+                    formData.append('unit', document.getElementById('note-unit').value);
+                    formData.append('pdf_file', document.getElementById('note-file').files[0]);
+                    await apiPostFormData('/notes', formData);
+                }
+                closeModal();
+                loadNotes();
+            } catch (error) { alert('Operation failed: ' + error.message); }
+            finally {
+                btn.disabled = false;
+                btn.textContent = 'Save Note';
             }
         });
 
         async function deleteNote(id) {
-            if (!confirm('Are you sure?')) return;
-            try { await apiDelete(`/notes/${id}`); showAlert('Note deleted'); loadNotes(); }
-            catch (e) { showAlert('Failed to delete', true); }
+            if (!confirm('Permanent delete? Archive will be removed from storage.')) return;
+            try {
+                await apiDelete(`/notes/${id}`);
+                loadNotes();
+            } catch (error) { alert('Delete failed'); }
         }
 
-        document.getElementById('upload-form').addEventListener('submit', async (e) => {
-            e.preventDefault();
-            const formData = new FormData();
-            formData.append('title', document.getElementById('title').value);
-            formData.append('course', document.getElementById('course').value);
-            formData.append('semester', document.getElementById('semester').value);
-            formData.append('subject', document.getElementById('subject').value);
-            formData.append('unit', document.getElementById('unit').value);
-            formData.append('pdf_file', document.getElementById('pdf_file').files[0]);
-            try {
-                await apiPost('/notes', formData);
-                showAlert('Note uploaded successfully!');
-                document.getElementById('upload-form').reset();
-                loadNotes();
-            } catch (e) { showAlert('Failed to upload', true); }
-        });
-
-        document.addEventListener('DOMContentLoaded', loadNotes);
+        window.onload = initPage;
     </script>
 </body>
 

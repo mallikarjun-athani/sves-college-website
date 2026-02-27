@@ -25,6 +25,10 @@ const timetableRoutes = require('./routes/timetable');
 const showcaseRoutes = require('./routes/showcase');
 const faqRoutes = require('./routes/faqs');
 const admissionsRoutes = require('./routes/admissions');
+const alumniRoutes = require('./routes/alumni');
+const downloadsRoutes = require('./routes/downloads');
+const storiesRoutes = require('./routes/stories');
+const effectiveManagerRoutes = require('./routes/effective-manager');
 
 const app = express();
 const PORT = process.env.PORT || 3000;
@@ -51,6 +55,7 @@ app.use(helmet({
             ...helmet.contentSecurityPolicy.getDefaultDirectives(),
             "img-src": ["'self'", "data:", "*.supabase.co"],
             "script-src": ["'self'", "'unsafe-inline'", "https://unpkg.com", "https://cdnjs.cloudflare.com"],
+            "script-src-attr": ["'unsafe-inline'"],
             "connect-src": ["'self'", "http://localhost:*", "http://127.0.0.1:*", "https://*.supabase.co", "https://*.vercel.app"],
             "style-src": ["'self'", "'unsafe-inline'", "https://fonts.googleapis.com", "https://cdnjs.cloudflare.com", "https://unpkg.com"],
             "font-src": ["'self'", "https://fonts.gstatic.com", "https://cdnjs.cloudflare.com", "data:"],
@@ -136,6 +141,10 @@ app.use('/api/timetable', timetableRoutes);
 app.use('/api/showcase', showcaseRoutes);
 app.use('/api/faqs', faqRoutes);
 app.use('/api/admissions', admissionsRoutes);
+app.use('/api/alumni', alumniRoutes);
+app.use('/api/downloads', downloadsRoutes);
+app.use('/api/stories', storiesRoutes);
+app.use('/api/effective-manager', effectiveManagerRoutes);
 
 // ============================================
 // HEALTH CHECK
@@ -224,3 +233,4 @@ if (require.main === module) {
 }
 
 module.exports = app;
+

@@ -95,14 +95,14 @@ router.get('/:id', async (req, res) => {
 });
 
 // @route   POST /api/gallery
-// @desc    Upload new gallery image to Supabase Storage
+// @desc    Upload one or more gallery images to Supabase Storage
 // @access  Private (Admin)
-router.post('/', authMiddleware, upload.single('image_file'), async (req, res) => {
+router.post('/', authMiddleware, upload.array('image_files', 10), async (req, res) => {
     try {
         const { caption, category } = req.body;
 
-        if (!req.file) {
-            return res.status(400).json({ error: 'Image file is required' });
+        if (!req.files || req.files.length === 0) {
+            return res.status(400).json({ error: 'At least one image file is required' });
         }
 
         if (!caption) {
@@ -114,49 +114,90 @@ router.post('/', authMiddleware, upload.single('image_file'), async (req, res) =
             return res.status(400).json({ error: 'Invalid category' });
         }
 
-        // Upload to Supabase Storage
-        const filename = Date.now() + '_' + req.file.originalname.replace(/\s+/g, '_');
-        const filePath = `gallery/${filename}`;
+        const uploadedImages = [];
 
-        const { data: uploadData, error: uploadError } = await supabaseAdmin
-            .storage
-            .from('uploads')
-            .upload(filePath, req.file.buffer, {
-                contentType: req.file.mimetype,
-                upsert: false
-            });
+        for (const file of req.files) {
+            // Upload to Supabase Storage
+            const filename = Date.now() + '_' + file.originalname.replace(/\s+/g, '_');
+            const filePath = `gallery/${filename}`;
 
-        if (uploadError) throw uploadError;
+            const { data: uploadData, error: uploadError } = await supabaseAdmin
+                .storage
+                .from('uploads')
+                .upload(filePath, file.buffer, {
+                    contentType: file.mimetype,
+                    upsert: false
+                });
 
-        // Get Public URL
-        const { data: { publicUrl } } = supabaseAdmin
-            .storage
-            .from('uploads')
-            .getPublicUrl(filePath);
+            if (uploadError) {
+                console.error('File upload error:', uploadError);
+                continue; // Skip this file if it fails
+            }
 
-        const { data, error } = await supabaseAdmin
-            .from('gallery')
-            .insert([{
-                image_path: publicUrl,
-                caption,
-                category: category || 'Campus'
-            }])
-            .select()
-            .single();
+            // Get Public URL
+            const { data: { publicUrl } } = supabaseAdmin
+                .storage
+                .from('uploads')
+                .getPublicUrl(filePath);
 
-        if (error) {
-            // Cleanup: Delete uploaded file if DB insert fails
-            await supabaseAdmin.storage.from('uploads').remove([filePath]);
-            throw error;
+            const { data, error } = await supabaseAdmin
+                .from('gallery')
+                .insert([{
+                    image_path: publicUrl,
+                    caption,
+                    category: category || 'Campus'
+                }])
+                .select()
+                .single();
+
+            if (error) {
+                // Cleanup: Delete uploaded file if DB insert fails
+                await supabaseAdmin.storage.from('uploads').remove([filePath]);
+                console.error('DB insert error:', error);
+                continue;
+            }
+
+            uploadedImages.push(data);
         }
 
         res.status(201).json({
-            message: 'Image uploaded successfully',
-            image: data
+            message: `${uploadedImages.length} images uploaded successfully`,
+            images: uploadedImages
         });
     } catch (error) {
         console.error('Upload gallery error:', error);
-        res.status(500).json({ error: 'Failed to upload image' });
+        res.status(500).json({ error: 'Failed to upload images' });
+    }
+});
+
+// @route   PUT /api/gallery/:id
+// @desc    Update gallery image caption/category
+// @access  Private (Admin)
+router.put('/:id', authMiddleware, async (req, res) => {
+    try {
+        const { caption, category } = req.body;
+        const updateData = {};
+
+        if (caption) updateData.caption = caption;
+        if (category) updateData.category = category;
+
+        const { data, error } = await supabaseAdmin
+            .from('gallery')
+            .update(updateData)
+            .eq('id', req.params.id)
+            .select()
+            .single();
+
+        if (error) throw error;
+        if (!data) return res.status(404).json({ error: 'Image not found' });
+
+        res.json({
+            message: 'Gallery item updated successfully',
+            image: data
+        });
+    } catch (error) {
+        console.error('Update gallery error:', error);
+        res.status(500).json({ error: 'Failed to update gallery item' });
     }
 });
 

@@ -1,0 +1,242 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Effective Manager | SVES Admin</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link rel="stylesheet" href="../assets/css/style.css">
+    <link rel="stylesheet" href="../assets/css/admin.css">
+    <style>
+        .em-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(320px, 1fr));
+            gap: 25px;
+            margin-top: 30px;
+        }
+
+        .em-card {
+            background: white;
+            padding: 25px;
+            border-radius: var(--radius-md);
+            box-shadow: var(--shadow-sm);
+            border-left: 5px solid var(--secondary);
+            display: flex;
+            flex-direction: column;
+            transition: var(--transition);
+        }
+
+        .em-card:hover {
+            transform: translateY(-5px);
+            box-shadow: var(--shadow-md);
+        }
+
+        .em-title {
+            font-size: 1.15rem;
+            color: var(--primary);
+            margin-bottom: 10px;
+            font-weight: 700;
+        }
+
+        .em-description {
+            font-size: 0.9rem;
+            color: #64748b;
+            line-height: 1.6;
+            margin-bottom: 15px;
+            flex: 1;
+        }
+
+        .em-footer {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            border-top: 1px solid #f1f5f9;
+            padding-top: 15px;
+            margin-top: 15px;
+        }
+
+        .cat-tag {
+            background: rgba(212, 175, 55, 0.1);
+            color: var(--secondary-dark);
+            padding: 4px 12px;
+            border-radius: 4px;
+            font-size: 0.75rem;
+            font-weight: 700;
+            text-transform: uppercase;
+        }
+
+        .link-icon {
+            color: var(--secondary-dark);
+            font-size: 1rem;
+            transition: 0.2s;
+        }
+
+        .link-icon:hover {
+            transform: scale(1.2);
+        }
+    </style>
+</head>
+
+<body>
+    <div class="admin-layout">
+        <div class="sidebar" id="admin-sidebar"></div>
+
+        <div class="main-content">
+            <header class="header-bar">
+                <h1>Effective Manager Resources</h1>
+                <div class="admin-profile flex align-center">
+                    <span>Welcome, <strong>Admin</strong></span>
+                    <i class="fas fa-user-circle" style="margin-left: 15px; font-size: 1.5rem;"></i>
+                </div>
+            </header>
+
+            <div class="admin-body">
+                <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 30px;">
+                    <div>
+                        <p style="color: var(--text-muted); margin: 0;">Manage professional development articles, tips,
+                            and
+                            workshop links.</p>
+                    </div>
+                    <button class="btn btn-primary" onclick="openAddModal()">
+                        <i class="fas fa-plus"></i> New Resource
+                    </button>
+                </div>
+
+                <div id="em-container" class="em-grid">
+                    <div class="text-center" style="grid-column: 1/-1; padding: 60px;">
+                        <i class="fas fa-spinner fa-spin" style="font-size: 2rem; color: var(--secondary);"></i>
+                    </div>
+                </div>
+            </div>
+
+            <footer class="admin-footer">
+                <p>&copy; 2026 SVES Admin Portal. | <a href="../index.html">Back to Website</a></p>
+            </footer>
+        </div>
+    </div>
+
+    <!-- Modal -->
+    <div class="modal" id="em-modal">
+        <div class="modal-content">
+            <h2 id="modal-title" style="margin-bottom: 25px; color: var(--primary);">Add New Resource</h2>
+            <form id="em-form">
+                <input type="hidden" id="em-id">
+                <div class="form-group">
+                    <label>Resource Title</label>
+                    <input type="text" id="em-title" required placeholder="e.g. Time Management Strategies">
+                </div>
+                <div class="form-group">
+                    <label>Category</label>
+                    <select id="em-category" required>
+                        <option value="Articles">Articles</option>
+                        <option value="Tips">Management Tips</option>
+                        <option value="Workshops">Workshops</option>
+                        <option value="External Tools">External Tools</option>
+                        <option value="General">General</option>
+                    </select>
+                </div>
+                <div class="form-group">
+                    <label>URL / Link</label>
+                    <input type="url" id="em-link" placeholder="https://...">
+                </div>
+                <div class="form-group">
+                    <label>Short Description</label>
+                    <textarea id="em-description" rows="4" required
+                        placeholder="Briefly describe what this resource offers..."></textarea>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-outline" onclick="closeModal()">Cancel</button>
+                    <button type="submit" class="btn btn-primary" id="save-btn">Save Resource</button>
+                </div>
+            </form>
+        </div>
+    </div>
+
+    <script src="../assets/js/api.js"></script>
+    <script src="../assets/js/main.js"></script>
+    <script>
+        if (!isLoggedIn()) window.location.href = 'login.html';
+
+        async function loadResources() {
+            const container = document.getElementById('em-container');
+            try {
+                const items = await apiGet('/effective-manager');
+                if (items.length === 0) {
+                    container.innerHTML = '<div style="grid-column: 1/-1; text-align: center; padding: 60px;">No entries found.</div>';
+                    return;
+                }
+
+                container.innerHTML = items.map(item => `
+                    <div class="em-card">
+                        <div class="em-title">${item.title}</div>
+                        <div class="em-description">${item.description}</div>
+                        <div class="em-footer">
+                            <span class="cat-tag">${item.category}</span>
+                            <div class="action-btns">
+                                ${item.link ? `<a href="${item.link}" target="_blank" class="btn-icon" title="View Source"><i class="fas fa-external-link-alt"></i></a>` : ''}
+                                <button class="btn-icon" title="Edit" onclick='openEditModal(${JSON.stringify(item)})'>
+                                    <i class="fas fa-edit"></i>
+                                </button>
+                                <button class="btn-icon delete" title="Delete" onclick="deleteEntry(${item.id})">
+                                    <i class="fas fa-trash-alt"></i>
+                                </button>
+                            </div>
+                        </div>
+                    </div>
+                `).join('');
+            } catch (error) {
+                container.innerHTML = '<p class="text-center" style="grid-column: 1/-1; color: red;">Failed to load resources.</p>';
+            }
+        }
+
+        function openAddModal() {
+            document.getElementById('modal-title').textContent = 'Add New Resource';
+            document.getElementById('em-form').reset();
+            document.getElementById('em-id').value = '';
+            document.getElementById('em-modal').classList.add('active');
+        }
+
+        function openEditModal(item) {
+            document.getElementById('modal-title').textContent = 'Edit Resource';
+            document.getElementById('em-id').value = item.id;
+            document.getElementById('em-title').value = item.title;
+            document.getElementById('em-category').value = item.category || 'General';
+            document.getElementById('em-link').value = item.link || '';
+            document.getElementById('em-description').value = item.description;
+            document.getElementById('em-modal').classList.add('active');
+        }
+
+        function closeModal() { document.getElementById('em-modal').classList.remove('active'); }
+
+        document.getElementById('em-form').addEventListener('submit', async (e) => {
+            e.preventDefault();
+            const id = document.getElementById('em-id').value;
+            const payload = {
+                title: document.getElementById('em-title').value,
+                category: document.getElementById('em-category').value,
+                link: document.getElementById('em-link').value,
+                description: document.getElementById('em-description').value
+            };
+
+            try {
+                if (id) await apiPut(`/effective-manager/${id}`, payload);
+                else await apiPost('/effective-manager', payload);
+                closeModal();
+                loadResources();
+            } catch (error) { alert('Save failed'); }
+        });
+
+        async function deleteEntry(id) {
+            if (!confirm('Are you sure?')) return;
+            try {
+                await apiDelete(`/effective-manager/${id}`);
+                loadResources();
+            } catch (error) { alert('Delete failed'); }
+        }
+
+        window.onload = loadResources;
+    </script>
+</body>
+
+</html>

@@ -4,111 +4,268 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Alumni Stories Manager | Admin Panel</title>
+    <title>Manage Alumni | SVES Admin</title>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <link rel="stylesheet" href="../assets/css/style.css">
+    <link rel="stylesheet" href="../assets/css/admin.css">
     <style>
-        :root {
-            --sidebar-width: 260px;
+        .alumni-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(320px, 1fr));
+            gap: 25px;
+            margin-top: 30px;
         }
 
-        body {
-            background: #f4f7f6;
-            display: flex;
-            margin: 0;
-        }
-
-        .sidebar {
-            width: var(--sidebar-width);
-            background: var(--primary);
-            color: white;
-            height: 100vh;
-            position: fixed;
-            padding-top: 30px;
-        }
-
-        .main-content {
-            margin-left: var(--sidebar-width);
-            flex: 1;
-            padding: 40px;
-            min-height: 100vh;
-        }
-
-        .sidebar-brand {
-            padding: 0 30px 40px;
-            border-bottom: 1px solid rgba(255, 255, 255, 0.1);
-            margin-bottom: 30px;
-        }
-
-        .sidebar-menu a {
-            display: flex;
-            align-items: center;
-            padding: 15px 30px;
-            color: rgba(255, 255, 255, 0.7);
-            font-weight: 500;
-            text-decoration: none;
-            transition: var(--transition);
-        }
-
-        .sidebar-menu a i {
-            margin-right: 15px;
-            width: 20px;
-        }
-
-        .sidebar-menu a:hover,
-        .sidebar-menu a.active {
-            background: rgba(255, 255, 255, 0.05);
-            color: var(--secondary);
-            border-left: 4px solid var(--secondary);
-        }
-
-        .management-card {
+        .alumni-card {
             background: white;
-            padding: 30px;
             border-radius: var(--radius-md);
+            overflow: hidden;
             box-shadow: var(--shadow-sm);
+            transition: var(--transition);
+            border: 1px solid #eee;
+            display: flex;
+            flex-direction: column;
+        }
+
+        .alumni-card:hover {
+            transform: translateY(-5px);
+            box-shadow: var(--shadow-md);
+        }
+
+        .alumni-header {
+            display: flex;
+            padding: 20px;
+            gap: 15px;
+            align-items: center;
+        }
+
+        .alumni-img {
+            width: 70px;
+            height: 70px;
+            border-radius: 50%;
+            object-fit: cover;
+            border: 3px solid var(--secondary);
+        }
+
+        .alumni-meta h3 {
+            margin: 0;
+            font-size: 1.1rem;
+            color: var(--primary);
+        }
+
+        .alumni-meta span {
+            font-size: 0.8rem;
+            color: var(--text-muted);
+            font-weight: 600;
+        }
+
+        .alumni-story {
+            padding: 0 20px 20px;
+            font-size: 0.9rem;
+            color: #64748b;
+            line-height: 1.6;
+            font-style: italic;
+            position: relative;
+            flex: 1;
+        }
+
+        .alumni-story::before {
+            content: "\f10d";
+            font-family: "Font Awesome 5 Free";
+            font-weight: 900;
+            color: rgba(212, 175, 55, 0.1);
+            font-size: 2rem;
+            position: absolute;
+            top: -10px;
+            left: 10px;
+        }
+
+        .alumni-footer {
+            padding: 15px 20px;
+            background: #f8fafc;
+            border-top: 1px solid #eee;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .designation-pill {
+            background: #e0f2fe;
+            color: #0369a1;
+            padding: 2px 10px;
+            border-radius: 4px;
+            font-size: 0.75rem;
+            font-weight: 700;
         }
     </style>
 </head>
 
 <body>
-    <div class="sidebar">
-        <div class="sidebar-brand">
-            <h2>SVES Admin</h2>
-        </div>
-        <div class="sidebar-menu">
-            <a href="dashboard.html"><i class="fas fa-home"></i> Dashboard</a>
-            <a href="manage-notes.html"><i class="fas fa-file-alt"></i> Manage Notes</a>
-            <a href="manage-gallery.html"><i class="fas fa-images"></i> Manage Gallery</a>
-            <a href="manage-announcements.html"><i class="fas fa-bullhorn"></i> Announcements</a>
-            <a href="manage-faculty.html"><i class="fas fa-user-tie"></i> Faculty</a>
-            <a href="manage-faq.html"><i class="fas fa-question-circle"></i> FAQ Manager</a>
-            <a href="manage-alumni.html" class="active"><i class="fas fa-user-graduate"></i> Alumni Stories</a>
-            <a href="#" id="logout-btn" style="margin-top: 50px; color: #ff6b6b;"><i class="fas fa-sign-out-alt"></i>
-                Logout</a>
+    <div class="admin-layout">
+        <div class="sidebar" id="admin-sidebar"></div>
+
+        <div class="main-content">
+            <header class="header-bar">
+                <h1>Alumni Success Stories</h1>
+                <div class="admin-profile flex align-center">
+                    <span>Welcome, <strong>Admin</strong></span>
+                    <i class="fas fa-user-circle" style="margin-left: 15px; font-size: 1.5rem;"></i>
+                </div>
+            </header>
+
+            <div class="admin-body">
+                <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 30px;">
+                    <p style="color: var(--text-muted); margin: 0;">Inspire current students with achievements of our
+                        graduates.</p>
+                    <button class="btn btn-primary" onclick="openAddModal()">
+                        <i class="fas fa-plus"></i> Add Story
+                    </button>
+                </div>
+
+                <div id="alumni-container" class="alumni-grid">
+                    <div class="text-center" style="grid-column: 1/-1; padding: 50px;">
+                        <i class="fas fa-spinner fa-spin" style="font-size: 2rem; color: var(--secondary);"></i>
+                    </div>
+                </div>
+            </div>
+
+            <footer class="admin-footer">
+                <p>&copy; 2026 SVES Admin Portal. | <a href="../index.html">Back to Website</a></p>
+            </footer>
         </div>
     </div>
 
-    <div class="main-content">
-        <div class="management-card">
-            <h1>Alumni Stories Management</h1>
-            <p style="margin-bottom: 30px; color: var(--text-muted);">Feature is coming soon. You will be able to manage
-                alumni testimonials here.</p>
-            <div style="padding: 50px; text-align: center; border: 2px dashed #eee; border-radius: 10px;">
-                <i class="fas fa-tools" style="font-size: 3rem; color: #ccc; margin-bottom: 20px;"></i>
-                <h3>Module Under Construction</h3>
-                <p>We are currently building the alumni portal database.</p>
-            </div>
+    <!-- Modal -->
+    <div class="modal" id="alumni-modal">
+        <div class="modal-content">
+            <h2 id="modal-title" style="margin-bottom: 25px; color: var(--primary);">Add Alumni Story</h2>
+            <form id="alumni-form">
+                <input type="hidden" id="alumni-id">
+                <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 20px;">
+                    <div class="form-group">
+                        <label>Alumni Name</label>
+                        <input type="text" id="alumni-name" required placeholder="e.g. John Doe">
+                    </div>
+                    <div class="form-group">
+                        <label>Batch / Year</label>
+                        <input type="text" id="alumni-batch" required placeholder="e.g. 2018-2021">
+                    </div>
+                </div>
+                <div class="form-group">
+                    <label>Current Designation / Company</label>
+                    <input type="text" id="alumni-designation" placeholder="e.g. Software Engineer at Google">
+                </div>
+                <div class="form-group">
+                    <label>Success Story / Quote</label>
+                    <textarea id="alumni-story" rows="5" required
+                        placeholder="Share the journey or a message..."></textarea>
+                </div>
+                <div class="form-group">
+                    <label>Profile Photo</label>
+                    <input type="file" id="alumni-image" accept="image/*">
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-outline" onclick="closeModal()">Cancel</button>
+                    <button type="submit" class="btn btn-primary" id="save-btn">Save Story</button>
+                </div>
+            </form>
         </div>
     </div>
 
     <script src="../assets/js/api.js"></script>
+    <script src="../assets/js/main.js"></script>
     <script>
         if (!isLoggedIn()) window.location.href = 'login.html';
-        document.getElementById('logout-btn').addEventListener('click', () => {
-            localStorage.clear();
-            window.location.href = '../index.html';
+
+        async function loadAlumni() {
+            const container = document.getElementById('alumni-container');
+            try {
+                const items = await apiGet('/alumni');
+                if (items.length === 0) {
+                    container.innerHTML = '<div style="grid-column: 1/-1; text-align: center; padding: 60px;">No alumni stories yet.</div>';
+                    return;
+                }
+
+                container.innerHTML = items.map(item => `
+                    <div class="alumni-card">
+                        <div class="alumni-header">
+                            <img src="${item.image_path || '../assets/images/default-avatar.png'}" class="alumni-img" alt="${item.name}">
+                            <div class="alumni-meta">
+                                <h3>${item.name}</h3>
+                                <span>Batch of ${item.batch}</span>
+                            </div>
+                        </div>
+                        <div class="alumni-story">${item.story}</div>
+                        <div class="alumni-footer">
+                            <span class="designation-pill">${item.designation || 'Graduate'}</span>
+                            <div class="action-btns">
+                                <button class="btn-icon" title="Edit Story" onclick='openEditModal(${JSON.stringify(item)})'>
+                                    <i class="fas fa-edit"></i>
+                                </button>
+                                <button class="btn-icon delete" title="Delete Story" onclick="deleteAlumni(${item.id})">
+                                    <i class="fas fa-trash-alt"></i>
+                                </button>
+                            </div>
+                        </div>
+                    </div>
+                `).join('');
+            } catch (error) {
+                container.innerHTML = '<p class="text-center" style="grid-column: 1/-1; color: red;">Failed to load data.</p>';
+            }
+        }
+
+        function openAddModal() {
+            document.getElementById('modal-title').textContent = 'Add Alumni Story';
+            document.getElementById('alumni-form').reset();
+            document.getElementById('alumni-id').value = '';
+            document.getElementById('alumni-modal').classList.add('active');
+        }
+
+        function openEditModal(item) {
+            document.getElementById('modal-title').textContent = 'Edit Alumni Story';
+            document.getElementById('alumni-id').value = item.id;
+            document.getElementById('alumni-name').value = item.name;
+            document.getElementById('alumni-batch').value = item.batch;
+            document.getElementById('alumni-designation').value = item.designation || '';
+            document.getElementById('alumni-story').value = item.story;
+            document.getElementById('alumni-modal').classList.add('active');
+        }
+
+        function closeModal() { document.getElementById('alumni-modal').classList.remove('active'); }
+
+        document.getElementById('alumni-form').addEventListener('submit', async (e) => {
+            e.preventDefault();
+            const id = document.getElementById('alumni-id').value;
+            const saveBtn = document.getElementById('save-btn');
+            saveBtn.disabled = true;
+
+            const formData = new FormData();
+            formData.append('name', document.getElementById('alumni-name').value);
+            formData.append('batch', document.getElementById('alumni-batch').value);
+            formData.append('designation', document.getElementById('alumni-designation').value);
+            formData.append('story', document.getElementById('alumni-story').value);
+
+            const file = document.getElementById('alumni-image').files[0];
+            if (file) formData.append('image', file);
+
+            try {
+                if (id) await apiPutFormData(`/alumni/${id}`, formData);
+                else await apiPostFormData('/alumni', formData);
+                closeModal();
+                loadAlumni();
+            } catch (error) { alert('Action failed'); }
+            finally { saveBtn.disabled = false; }
         });
+
+        async function deleteAlumni(id) {
+            if (!confirm('Delete this story?')) return;
+            try {
+                await apiDelete(`/alumni/${id}`);
+                loadAlumni();
+            } catch (error) { alert('Delete failed'); }
+        }
+
+        window.onload = loadAlumni;
     </script>
 </body>
 

@@ -51,6 +51,8 @@ router.get('/:id', async (req, res) => {
 // @access  Private (Admin)
 router.post('/', authMiddleware, [
     body('title').trim().notEmpty().withMessage('Title is required'),
+    body('description').optional().trim(),
+    body('announcement_date').optional().trim(),
     body('link').optional().trim()
 ], async (req, res) => {
     try {
@@ -59,11 +61,16 @@ router.post('/', authMiddleware, [
             return res.status(400).json({ errors: errors.array() });
         }
 
-        const { title, link } = req.body;
+        const { title, description, announcement_date, link } = req.body;
 
         const { data, error } = await supabaseAdmin
             .from('announcements')
-            .insert([{ title, link: link || null }])
+            .insert([{
+                title,
+                description: description || null,
+                announcement_date: announcement_date || null,
+                link: link || null
+            }])
             .select()
             .single();
 
@@ -84,13 +91,17 @@ router.post('/', authMiddleware, [
 // @access  Private (Admin)
 router.put('/:id', authMiddleware, [
     body('title').optional().trim().notEmpty(),
+    body('description').optional().trim(),
+    body('announcement_date').optional().trim(),
     body('link').optional().trim()
 ], async (req, res) => {
     try {
-        const { title, link } = req.body;
+        const { title, description, announcement_date, link } = req.body;
         const updateData = {};
 
         if (title !== undefined) updateData.title = title;
+        if (description !== undefined) updateData.description = description;
+        if (announcement_date !== undefined) updateData.announcement_date = announcement_date;
         if (link !== undefined) updateData.link = link;
 
         const { data, error } = await supabaseAdmin

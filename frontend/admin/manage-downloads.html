@@ -4,111 +4,239 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Downloads Manager | Admin Panel</title>
+    <title>Manage Downloads | SVES Admin</title>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <link rel="stylesheet" href="../assets/css/style.css">
+    <link rel="stylesheet" href="../assets/css/admin.css">
     <style>
-        :root {
-            --sidebar-width: 260px;
-        }
-
-        body {
-            background: #f4f7f6;
-            display: flex;
-            margin: 0;
-        }
-
-        .sidebar {
-            width: var(--sidebar-width);
-            background: var(--primary);
-            color: white;
-            height: 100vh;
-            position: fixed;
-            padding-top: 30px;
-        }
-
-        .main-content {
-            margin-left: var(--sidebar-width);
-            flex: 1;
-            padding: 40px;
-            min-height: 100vh;
-        }
-
-        .sidebar-brand {
-            padding: 0 30px 40px;
-            border-bottom: 1px solid rgba(255, 255, 255, 0.1);
-            margin-bottom: 30px;
-        }
-
-        .sidebar-menu a {
-            display: flex;
-            align-items: center;
-            padding: 15px 30px;
-            color: rgba(255, 255, 255, 0.7);
-            font-weight: 500;
-            text-decoration: none;
-            transition: var(--transition);
-        }
-
-        .sidebar-menu a i {
-            margin-right: 15px;
-            width: 20px;
-        }
-
-        .sidebar-menu a:hover,
-        .sidebar-menu a.active {
-            background: rgba(255, 255, 255, 0.05);
-            color: var(--secondary);
-            border-left: 4px solid var(--secondary);
-        }
-
-        .management-card {
+        .dl-table-container {
             background: white;
-            padding: 30px;
             border-radius: var(--radius-md);
             box-shadow: var(--shadow-sm);
+            overflow: hidden;
+            margin-top: 30px;
+        }
+
+        .dl-icon {
+            font-size: 1.5rem;
+            color: var(--secondary-dark);
+            width: 40px;
+        }
+
+        .dl-link {
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+            background: #f1f5f9;
+            color: #475569;
+            padding: 5px 12px;
+            border-radius: 6px;
+            font-size: 0.8rem;
+            font-weight: 700;
+            text-decoration: none;
+            transition: 0.2s;
+        }
+
+        .dl-link:hover {
+            background: var(--primary);
+            color: white;
+        }
+
+        .cat-badge {
+            background: #e0f2fe;
+            color: #0369a1;
+            padding: 2px 10px;
+            border-radius: 4px;
+            font-size: 0.75rem;
+            font-weight: 700;
         }
     </style>
 </head>
 
 <body>
-    <div class="sidebar">
-        <div class="sidebar-brand">
-            <h2>SVES Admin</h2>
-        </div>
-        <div class="sidebar-menu">
-            <a href="dashboard.html"><i class="fas fa-home"></i> Dashboard</a>
-            <a href="manage-notes.html"><i class="fas fa-file-alt"></i> Manage Notes</a>
-            <a href="manage-gallery.html"><i class="fas fa-images"></i> Manage Gallery</a>
-            <a href="manage-announcements.html"><i class="fas fa-bullhorn"></i> Announcements</a>
-            <a href="manage-faculty.html"><i class="fas fa-user-tie"></i> Faculty</a>
-            <a href="manage-faq.html"><i class="fas fa-question-circle"></i> FAQ Manager</a>
-            <a href="manage-downloads.html" class="active"><i class="fas fa-download"></i> Downloads</a>
-            <a href="#" id="logout-btn" style="margin-top: 50px; color: #ff6b6b;"><i class="fas fa-sign-out-alt"></i>
-                Logout</a>
+    <div class="admin-layout">
+        <div class="sidebar" id="admin-sidebar"></div>
+
+        <div class="main-content">
+            <header class="header-bar">
+                <h1>Downloads & Documents</h1>
+                <div class="admin-profile flex align-center">
+                    <span>Welcome, <strong>Admin</strong></span>
+                    <i class="fas fa-user-circle" style="margin-left: 15px; font-size: 1.5rem;"></i>
+                </div>
+            </header>
+
+            <div class="admin-body">
+                <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 30px;">
+                    <p style="color: var(--text-muted); margin: 0;">Manage PDF forms, brochures, and public documents.
+                    </p>
+                    <button class="btn btn-primary" onclick="openAddModal()">
+                        <i class="fas fa-file-upload"></i> Upload Document
+                    </button>
+                </div>
+
+                <div class="dl-table-container">
+                    <table class="admin-table">
+                        <thead>
+                            <tr>
+                                <th>Document Info</th>
+                                <th>Category</th>
+                                <th>File</th>
+                                <th>Date Added</th>
+                                <th style="text-align: right;">Actions</th>
+                            </tr>
+                        </thead>
+                        <tbody id="dl-list">
+                            <tr>
+                                <td colspan="5" class="text-center" style="padding: 50px;">
+                                    <i class="fas fa-spinner fa-spin"
+                                        style="font-size: 1.5rem; color: var(--secondary);"></i>
+                                </td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+
+            <footer class="admin-footer">
+                <p>&copy; 2026 SVES Admin Portal. | <a href="../index.html">Back to Website</a></p>
+            </footer>
         </div>
     </div>
 
-    <div class="main-content">
-        <div class="management-card">
-            <h1>Resources & Downloads</h1>
-            <p style="margin-bottom: 30px; color: var(--text-muted);">Manage syllabus, application forms, and other
-                downloadable documents.</p>
-            <div style="padding: 50px; text-align: center; border: 2px dashed #eee; border-radius: 10px;">
-                <i class="fas fa-folder-open" style="font-size: 3rem; color: #ccc; margin-bottom: 20px;"></i>
-                <h3>Module Integration Pending</h3>
-                <p>This section will be integrated with Supabase Storage soon.</p>
-            </div>
+    <!-- Modal -->
+    <div class="modal" id="dl-modal">
+        <div class="modal-content">
+            <h2 id="modal-title" style="margin-bottom: 25px; color: var(--primary);">Upload Document</h2>
+            <form id="dl-form">
+                <input type="hidden" id="dl-id">
+                <div class="form-group">
+                    <label>Document Title</label>
+                    <input type="text" id="dl-title" required placeholder="e.g. Scholarship Application Form">
+                </div>
+                <div class="form-group">
+                    <label>Category</label>
+                    <select id="dl-category" required>
+                        <option value="Admission Forms">Admission Forms</option>
+                        <option value="Syllabus">Syllabus</option>
+                        <option value="Brochures">Brochures</option>
+                        <option value="Examination">Examination</option>
+                        <option value="General">General</option>
+                    </select>
+                </div>
+                <div class="form-group" id="file-input-group">
+                    <label>Select File (PDF/Doc)</label>
+                    <input type="file" id="dl-file" accept=".pdf,.doc,.docx">
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-outline" onclick="closeModal()">Cancel</button>
+                    <button type="submit" class="btn btn-primary" id="save-btn">Save Document</button>
+                </div>
+            </form>
         </div>
     </div>
 
     <script src="../assets/js/api.js"></script>
+    <script src="../assets/js/main.js"></script>
     <script>
         if (!isLoggedIn()) window.location.href = 'login.html';
-        document.getElementById('logout-btn').addEventListener('click', () => {
-            localStorage.clear();
-            window.location.href = '../index.html';
+
+        async function loadDownloads() {
+            const list = document.getElementById('dl-list');
+            try {
+                const items = await apiGet('/downloads');
+                if (items.length === 0) {
+                    list.innerHTML = '<tr><td colspan="5" class="text-center" style="padding: 50px;">No documents found.</td></tr>';
+                    return;
+                }
+
+                list.innerHTML = items.map(item => `
+                    <tr>
+                        <td>
+                            <div style="display: flex; align-items: center;">
+                                <i class="far fa-file-pdf dl-icon"></i>
+                                <div style="font-weight: 700; color: var(--primary);">${item.title}</div>
+                            </div>
+                        </td>
+                        <td><span class="cat-badge">${item.category}</span></td>
+                        <td>
+                            <a href="${item.file_path}" target="_blank" class="dl-link">
+                                <i class="fas fa-download"></i> Download
+                            </a>
+                        </td>
+                        <td style="font-size: 0.85rem; color: #64748b;">${new Date(item.created_at).toLocaleDateString()}</td>
+                        <td style="text-align: right;">
+                            <div class="action-btns">
+                                <button title="Edit" class="btn-icon" onclick='openEditModal(${JSON.stringify(item)})'>
+                                    <i class="fas fa-edit"></i>
+                                </button>
+                                <button title="Delete" class="btn-icon delete" onclick="deleteDownload(${item.id})">
+                                    <i class="fas fa-trash-alt"></i>
+                                </button>
+                            </div>
+                        </td>
+                    </tr>
+                `).join('');
+            } catch (error) {
+                list.innerHTML = '<tr><td colspan="5" class="text-center" style="color: red; padding: 50px;">Failed to load data.</td></tr>';
+            }
+        }
+
+        function openAddModal() {
+            document.getElementById('modal-title').textContent = 'Upload New Document';
+            document.getElementById('dl-form').reset();
+            document.getElementById('dl-id').value = '';
+            document.getElementById('file-input-group').style.display = 'block';
+            document.getElementById('dl-file').required = true;
+            document.getElementById('dl-modal').classList.add('active');
+        }
+
+        function openEditModal(item) {
+            document.getElementById('modal-title').textContent = 'Edit Document Info';
+            document.getElementById('dl-id').value = item.id;
+            document.getElementById('dl-title').value = item.title;
+            document.getElementById('dl-category').value = item.category || 'General';
+            document.getElementById('file-input-group').style.display = 'none';
+            document.getElementById('dl-file').required = false;
+            document.getElementById('dl-modal').classList.add('active');
+        }
+
+        function closeModal() { document.getElementById('dl-modal').classList.remove('active'); }
+
+        document.getElementById('dl-form').addEventListener('submit', async (e) => {
+            e.preventDefault();
+            const id = document.getElementById('dl-id').value;
+            const btn = document.getElementById('save-btn');
+            btn.disabled = true;
+
+            try {
+                if (id) {
+                    await apiPut(`/downloads/${id}`, {
+                        title: document.getElementById('dl-title').value,
+                        category: document.getElementById('dl-category').value
+                    });
+                } else {
+                    const formData = new FormData();
+                    formData.append('title', document.getElementById('dl-title').value);
+                    formData.append('category', document.getElementById('dl-category').value);
+                    formData.append('file', document.getElementById('dl-file').files[0]);
+                    await apiPostFormData('/downloads', formData);
+                }
+                closeModal();
+                loadDownloads();
+            } catch (error) { alert('Operation failed'); }
+            finally { btn.disabled = false; }
         });
+
+        async function deleteDownload(id) {
+            if (!confirm('Permanent delete?')) return;
+            try {
+                await apiDelete(`/downloads/${id}`);
+                loadDownloads();
+            } catch (error) { alert('Delete failed'); }
+        }
+
+        window.onload = loadDownloads;
     </script>
 </body>
 

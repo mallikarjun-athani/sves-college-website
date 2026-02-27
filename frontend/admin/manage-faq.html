@@ -4,202 +4,209 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>FAQ Manager | Admin Panel</title>
+    <title>FAQ Manager | SVES Admin</title>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
-    <link rel="stylesheet" href="../assets/css/style.css">
     <link rel="stylesheet" href="../assets/css/style.css">
     <link rel="stylesheet" href="../assets/css/admin.css">
     <style>
-        .faq-form {
-            background: #fff;
-            padding: 25px;
+        .faq-item-card {
+            background: white;
             border-radius: var(--radius-md);
-            margin-bottom: 40px;
-            border: 1px solid #eee;
+            padding: 25px;
+            margin-bottom: 20px;
             box-shadow: var(--shadow-sm);
+            border-left: 5px solid var(--secondary);
+            transition: var(--transition);
         }
 
-        .faq-table {
-            width: 100%;
-            border-collapse: collapse;
+        .faq-item-card:hover {
+            transform: translateX(5px);
+            box-shadow: var(--shadow-md);
         }
 
-        .faq-table th,
-        .faq-table td {
-            padding: 15px;
-            text-align: left;
-            border-bottom: 1px solid #eee;
-        }
-
-        .faq-table th {
-            background: #f8f9fa;
+        .faq-question {
+            font-size: 1.1rem;
+            font-weight: 700;
             color: var(--primary);
-            font-weight: 600;
+            margin-bottom: 10px;
+            display: flex;
+            justify-content: space-between;
+            align-items: flex-start;
         }
 
-        .btn-delete {
-            background: #ff4757;
-            color: white;
-            border: none;
-            padding: 8px 15px;
+        .faq-answer {
+            color: #64748b;
+            font-size: 0.95rem;
+            line-height: 1.6;
+            margin-bottom: 15px;
+        }
+
+        .faq-footer {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding-top: 15px;
+            border-top: 1px solid #f1f5f9;
+        }
+
+        .priority-badge {
+            background: #f1f5f9;
+            color: #475569;
+            padding: 2px 10px;
             border-radius: 4px;
-            cursor: pointer;
-            transition: 0.3s;
+            font-size: 0.75rem;
+            font-weight: 700;
         }
 
-        .btn-delete:hover {
-            background: #ff6b81;
-        }
-
-        .category-badge {
-            padding: 4px 10px;
-            border-radius: 20px;
-            font-size: 0.8rem;
-            font-weight: 600;
-            background: var(--secondary-light);
-            color: var(--primary);
+        .category-pill {
+            background: rgba(212, 175, 55, 0.1);
+            color: var(--secondary-dark);
+            padding: 2px 10px;
+            border-radius: 4px;
+            font-size: 0.75rem;
+            font-weight: 700;
+            text-transform: uppercase;
         }
     </style>
 </head>
 
 <body>
-    <div class="sidebar">
-        <div class="sidebar-brand">
-            <h2>SVES Admin</h2>
-        </div>
-        <div class="sidebar-menu">
-            <a href="dashboard.html"><i class="fas fa-home"></i> Dashboard</a>
-            <a href="manage-notes.html"><i class="fas fa-file-alt"></i> Manage Notes</a>
-            <a href="manage-gallery.html"><i class="fas fa-images"></i> Manage Gallery</a>
-            <a href="manage-announcements.html"><i class="fas fa-bullhorn"></i> Announcements</a>
-            <a href="manage-faculty.html"><i class="fas fa-user-tie"></i> Faculty</a>
-            <a href="manage-alumni.html"><i class="fas fa-user-graduate"></i> Alumni Stories</a>
-            <a href="manage-faq.html" class="active"><i class="fas fa-question-circle"></i> FAQ Manager</a>
-            <a href="manage-downloads.html"><i class="fas fa-download"></i> Downloads</a>
-            <a href="#" id="logout-btn" style="margin-top: 50px; color: #ff6b6b;"><i class="fas fa-sign-out-alt"></i>
-                Logout</a>
+    <div class="admin-layout">
+        <div class="sidebar" id="admin-sidebar"></div>
+
+        <div class="main-content">
+            <header class="header-bar">
+                <h1>FAQ Management</h1>
+                <div class="admin-profile flex align-center">
+                    <span>Welcome, <strong>Admin</strong></span>
+                    <i class="fas fa-user-circle" style="margin-left: 15px; font-size: 1.5rem;"></i>
+                </div>
+            </header>
+
+            <div class="admin-body">
+                <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 30px;">
+                    <p style="color: var(--text-muted); margin: 0;">Manage frequently asked questions and their display
+                        order.</p>
+                    <button class="btn btn-primary" onclick="openAddModal()">
+                        <i class="fas fa-plus"></i> Add Question
+                    </button>
+                </div>
+
+                <div id="faq-list">
+                    <div class="text-center" style="padding: 50px;">
+                        <i class="fas fa-spinner fa-spin" style="font-size: 2rem; color: var(--secondary);"></i>
+                    </div>
+                </div>
+            </div>
+
+            <footer class="admin-footer">
+                <p>&copy; 2026 SVES Admin Portal. | <a href="../index.html">Back to Website</a></p>
+            </footer>
         </div>
     </div>
 
-    <div class="main-content">
-        <header class="header-bar">
-            <h1>FAQ Management</h1>
-            <div class="admin-profile flex align-center">
-                <span>Welcome, <strong>Admin</strong></span>
-                <i class="fas fa-user-circle" style="margin-left: 15px; font-size: 1.5rem;"></i>
-            </div>
-        </header>
-
-        <div class="admin-body">
-            <div class="management-card">
-                <p style="margin-bottom: 30px; color: var(--text-muted);">Add or remove frequently asked questions for
-                    the
-                    frontend.</p>
-
-                <!-- Add FAQ Form -->
-                <div class="faq-form">
-                    <h3><i class="fas fa-plus-circle"></i> Add New FAQ</h3>
-                    <form id="add-faq-form">
-                        <div style="display: grid; grid-template-columns: 2fr 1fr; gap: 20px;">
-                            <div class="form-group">
-                                <label>Question</label>
-                                <input type="text" id="faq-question" placeholder="Enter the question" required>
-                            </div>
-                            <div class="form-group">
-                                <label>Category</label>
-                                <select id="faq-category">
-                                    <option value="General">General</option>
-                                    <option value="Admissions">Admissions</option>
-                                    <option value="Academic">Academic</option>
-                                    <option value="Facilities">Facilities</option>
-                                </select>
-                            </div>
-                        </div>
-                        <div class="form-group">
-                            <label>Answer</label>
-                            <textarea id="faq-answer" rows="3" placeholder="Enter the answer" required></textarea>
-                        </div>
-                        <div class="form-group">
-                            <label>Priority (Higher shows first)</label>
-                            <input type="number" id="faq-priority" value="0">
-                        </div>
-                        <button type="submit" class="btn btn-primary">Add FAQ</button>
-                    </form>
+    <!-- Modal -->
+    <div class="modal" id="faq-modal">
+        <div class="modal-content">
+            <h2 id="modal-title" style="margin-bottom: 25px; color: var(--primary);">Add New FAQ</h2>
+            <form id="faq-form">
+                <input type="hidden" id="faq-id">
+                <div class="form-group">
+                    <label>Question</label>
+                    <input type="text" id="faq-question" required placeholder="e.g. How do I apply for admission?">
                 </div>
-
-                <!-- FAQ List -->
-                <div id="faq-list-container">
-                    <h3>Existing FAQs</h3>
-                    <table class="faq-table">
-                        <thead>
-                            <tr>
-                                <th>Question</th>
-                                <th>Category</th>
-                                <th>Priority</th>
-                                <th>Actions</th>
-                            </tr>
-                        </thead>
-                        <tbody id="faq-table-body">
-                            <tr>
-                                <td colspan="4" class="text-center">Loading FAQs...</td>
-                            </tr>
-                        </tbody>
-                    </table>
+                <div class="form-group">
+                    <label>Answer</label>
+                    <textarea id="faq-answer" rows="5" required placeholder="Provide a detailed answer..."></textarea>
                 </div>
-            </div>
+                <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 20px;">
+                    <div class="form-group">
+                        <label>Category</label>
+                        <select id="faq-category" required>
+                            <option value="General">General</option>
+                            <option value="Admissions">Admissions</option>
+                            <option value="Academic">Academic</option>
+                            <option value="Hostel">Hostel</option>
+                            <option value="Placement">Placement</option>
+                        </select>
+                    </div>
+                    <div class="form-group">
+                        <label>Priority (Order)</label>
+                        <input type="number" id="faq-priority" value="0" min="0">
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-outline" onclick="closeModal()">Cancel</button>
+                    <button type="submit" class="btn btn-primary" id="save-btn">Save FAQ</button>
+                </div>
+            </form>
         </div>
-
-        <footer class="admin-footer">
-            <p>&copy; 2026 SVES Admin Portal. All Rights Reserved. | <a href="../index.html">Back to Website</a></p>
-        </footer>
     </div>
 
     <script src="../assets/js/api.js"></script>
+    <script src="../assets/js/main.js"></script>
     <script>
-        // Check auth
         if (!isLoggedIn()) window.location.href = 'login.html';
 
-        // Logout
-        document.getElementById('logout-btn').addEventListener('click', () => {
-            localStorage.clear();
-            window.location.href = '../index.html';
-        });
-
-        // Load FAQs
         async function loadFAQs() {
+            const list = document.getElementById('faq-list');
             try {
                 const faqs = await apiGet('/faqs');
-                const tbody = document.getElementById('faq-table-body');
-
                 if (faqs.length === 0) {
-                    tbody.innerHTML = '<tr><td colspan="4" class="text-center">No FAQs found.</td></tr>';
+                    list.innerHTML = '<div style="text-align: center; padding: 60px; background: white; border-radius: 8px;">No FAQs added yet.</div>';
                     return;
                 }
 
-                tbody.innerHTML = faqs.map(f => `
-                    <tr>
-                        <td>
-                            <strong>${f.question}</strong><br>
-                            <small style="color: #888;">${f.answer.substring(0, 50)}...</small>
-                        </td>
-                        <td><span class="category-badge">${f.category}</span></td>
-                        <td>${f.priority}</td>
-                        <td>
-                            <button class="btn-delete" onclick="deleteFAQ(${f.id})">
-                                <i class="fas fa-trash"></i>
-                            </button>
-                        </td>
-                    </tr>
+                list.innerHTML = faqs.map(faq => `
+                    <div class="faq-item-card">
+                        <div class="faq-question">
+                            <span>${faq.question}</span>
+                        </div>
+                        <div class="faq-answer">${faq.answer}</div>
+                        <div class="faq-footer">
+                            <div style="display: flex; gap: 10px;">
+                                <span class="category-pill">${faq.category}</span>
+                                <span class="priority-badge">Priority: ${faq.priority}</span>
+                            </div>
+                            <div class="action-btns">
+                                <button class="btn-icon" title="Edit FAQ" onclick='openEditModal(${JSON.stringify(faq)})'>
+                                    <i class="fas fa-edit"></i>
+                                </button>
+                                <button class="btn-icon delete" title="Delete FAQ" onclick="deleteFAQ(${faq.id})">
+                                    <i class="fas fa-trash-alt"></i>
+                                </button>
+                            </div>
+                        </div>
+                    </div>
                 `).join('');
             } catch (error) {
-                console.error('Load FAQs error:', error);
+                list.innerHTML = '<p class="text-center" style="color: red;">Failed to load FAQs.</p>';
             }
         }
 
-        // Add FAQ
-        document.getElementById('add-faq-form').addEventListener('submit', async (e) => {
+        function openAddModal() {
+            document.getElementById('modal-title').textContent = 'Add New FAQ';
+            document.getElementById('faq-form').reset();
+            document.getElementById('faq-id').value = '';
+            document.getElementById('faq-modal').classList.add('active');
+        }
+
+        function openEditModal(faq) {
+            document.getElementById('modal-title').textContent = 'Edit FAQ';
+            document.getElementById('faq-id').value = faq.id;
+            document.getElementById('faq-question').value = faq.question;
+            document.getElementById('faq-answer').value = faq.answer;
+            document.getElementById('faq-category').value = faq.category || 'General';
+            document.getElementById('faq-priority').value = faq.priority || 0;
+            document.getElementById('faq-modal').classList.add('active');
+        }
+
+        function closeModal() { document.getElementById('faq-modal').classList.remove('active'); }
+
+        document.getElementById('faq-form').addEventListener('submit', async (e) => {
             e.preventDefault();
-            const data = {
+            const id = document.getElementById('faq-id').value;
+            const payload = {
                 question: document.getElementById('faq-question').value,
                 answer: document.getElementById('faq-answer').value,
                 category: document.getElementById('faq-category').value,
@@ -207,27 +214,22 @@
             };
 
             try {
-                await apiPost('/faqs', data);
-                document.getElementById('add-faq-form').reset();
+                if (id) await apiPut(`/faqs/${id}`, payload);
+                else await apiPost('/faqs', payload);
+                closeModal();
                 loadFAQs();
-                alert('FAQ added successfully!');
-            } catch (error) {
-                alert('Failed to add FAQ: ' + error.message);
-            }
+            } catch (error) { alert('Save failed'); }
         });
 
-        // Delete FAQ
         async function deleteFAQ(id) {
-            if (!confirm('Are you sure you want to delete this FAQ?')) return;
+            if (!confirm('Delete this question?')) return;
             try {
                 await apiDelete(`/faqs/${id}`);
                 loadFAQs();
-            } catch (error) {
-                alert('Failed to delete FAQ');
-            }
+            } catch (error) { alert('Delete failed'); }
         }
 
-        document.addEventListener('DOMContentLoaded', loadFAQs);
+        window.onload = loadFAQs;
     </script>
 </body>
 

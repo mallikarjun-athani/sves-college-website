@@ -144,6 +144,40 @@ router.post('/', authMiddleware, upload.single('pdf_file'), async (req, res) => 
     }
 });
 
+// @route   PUT /api/notes/:id
+// @desc    Update note metadata
+// @access  Private (Admin)
+router.put('/:id', authMiddleware, async (req, res) => {
+    try {
+        const { title, course, semester, subject, unit } = req.body;
+        const updateData = {};
+
+        if (title) updateData.title = title;
+        if (course) updateData.course_id = parseInt(course);
+        if (semester) updateData.semester = parseInt(semester);
+        if (subject) updateData.subject = subject;
+        if (unit) updateData.unit = unit;
+
+        const { data, error } = await supabaseAdmin
+            .from('notes')
+            .update(updateData)
+            .eq('id', req.params.id)
+            .select()
+            .single();
+
+        if (error) throw error;
+        if (!data) return res.status(404).json({ error: 'Note not found' });
+
+        res.json({
+            message: 'Note updated successfully',
+            note: data
+        });
+    } catch (error) {
+        console.error('Update note error:', error);
+        res.status(500).json({ error: 'Failed to update note' });
+    }
+});
+
 // @route   DELETE /api/notes/:id
 // @desc    Delete note and its PDF file from Storage
 // @access  Private (Admin)

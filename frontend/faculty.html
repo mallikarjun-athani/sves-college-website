@@ -54,28 +54,45 @@
             overflow: hidden;
             box-shadow: var(--shadow-sm);
             transition: var(--transition);
-            border: 1px solid #f0f0f0;
+            border: 1px solid rgba(0, 0, 0, 0.05);
             position: relative;
+            display: flex;
+            flex-direction: column;
+            height: 100%;
         }
 
         .faculty-card:hover {
             transform: translateY(-10px);
             box-shadow: var(--shadow-lg);
+            border-color: var(--secondary-light);
         }
 
         .faculty-img-box {
-            height: 300px;
+            width: 100%;
+            height: 280px;
             overflow: hidden;
-            background: #f8f9fa;
+            background: linear-gradient(135deg, var(--primary-dark) 0%, var(--primary) 100%);
             display: flex;
             align-items: center;
             justify-content: center;
+            position: relative;
+        }
+
+        .faculty-img-box::after {
+            content: '';
+            position: absolute;
+            bottom: 0;
+            left: 0;
+            width: 100%;
+            height: 50%;
+            background: linear-gradient(to top, rgba(10, 25, 47, 0.4), transparent);
         }
 
         .faculty-img-box img {
             width: 100%;
             height: 100%;
             object-fit: cover;
+            object-position: center top;
             transition: var(--transition);
         }
 
@@ -221,10 +238,13 @@
                     f.status === 'Busy' ? 'status-busy' : 'status-on-leave';
 
                 const interactionText = f.status === 'Available' ?
-                    '<span style="color: #27ae60;"><i class="fas fa-check-circle"></i> Available Now</span>' :
+                    '<span style="color: #27ae60; background: rgba(39, 174, 96, 0.1); padding: 5px 12px; border-radius: 20px; font-size: 0.8rem;"><i class="fas fa-check-circle"></i> Available Now</span>' :
                     f.status === 'Busy' ?
-                        '<span style="color: #f39c12;"><i class="fas fa-clock"></i> In Lecture</span>' :
-                        '<span style="color: #e74c3c;"><i class="fas fa-calendar-times"></i> Not in Campus</span>';
+                        '<span style="color: #f39c12; background: rgba(243, 156, 18, 0.1); padding: 5px 12px; border-radius: 20px; font-size: 0.8rem;"><i class="fas fa-clock"></i> In Lecture</span>' :
+                        '<span style="color: #e74c3c; background: rgba(231, 76, 60, 0.1); padding: 5px 12px; border-radius: 20px; font-size: 0.8rem;"><i class="fas fa-calendar-times"></i> Not in Campus</span>';
+
+                const defaultAvatar = `https://ui-avatars.com/api/?name=${encodeURIComponent(f.name)}&background=002347&color=fff&size=512`;
+                const imagePath = f.image_path ? resolvePath(f.image_path) : defaultAvatar;
 
                 return `
                     <div class="faculty-card" data-aos="fade-up">
@@ -232,12 +252,16 @@
                             <i class="fas fa-circle" style="font-size: 0.5rem;"></i> ${f.status || 'Available'}
                         </div>
                         <div class="faculty-img-box">
-                            <img src="${f.image_path || 'https://ui-avatars.com/api/?name=' + encodeURIComponent(f.name) + '&background=002347&color=fff'}" alt="${f.name}">
+                            <img src="${imagePath}" 
+                                 alt="${f.name}"
+                                 onerror="this.onerror=null; this.src='${defaultAvatar}';">
                         </div>
-                        <div class="faculty-details">
-                            <h3>${f.name}</h3>
-                            <span class="designation">${f.designation}</span>
-                            <span class="dept">Dept of ${f.department}</span>
+                        <div class="faculty-details" style="flex-grow: 1; display: flex; flex-direction: column; justify-content: space-between;">
+                            <div>
+                                <h3>${f.name}</h3>
+                                <span class="designation">${f.designation}</span>
+                                <span class="dept">Dept of ${f.department}</span>
+                            </div>
                             <div class="interaction-info">
                                 ${interactionText}
                             </div>

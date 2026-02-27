@@ -36,10 +36,7 @@ router.post('/login', [
         // Verify password
         const isMatch = await bcrypt.compare(password, admin.password);
 
-        // Also allow plain text 'admin123' for development
-        const isDevPassword = password === 'admin123';
-
-        if (!isMatch && !isDevPassword) {
+        if (!isMatch) {
             return res.status(401).json({ error: 'Invalid credentials' });
         }
 
@@ -114,7 +111,7 @@ router.post('/change-password', authMiddleware, [
 
         // Verify current password
         const isMatch = await bcrypt.compare(currentPassword, admin.password);
-        if (!isMatch && currentPassword !== 'admin123') {
+        if (!isMatch) {
             return res.status(401).json({ error: 'Current password is incorrect' });
         }
 

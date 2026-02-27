@@ -4,15 +4,15 @@
  */
 
 async function loadComponent(elementId, componentPath) {
+    const element = document.getElementById(elementId);
+    if (!element) return false;
+
     try {
         const response = await fetch(componentPath);
         if (!response.ok) throw new Error(`HTTP error! status: ${response.status}`);
         const html = await response.text();
-        const element = document.getElementById(elementId);
-        if (element) {
-            element.innerHTML = html;
-            return true;
-        }
+        element.innerHTML = html;
+        return true;
     } catch (error) {
         console.error(`Failed to load component: ${componentPath}`, error);
     }
@@ -45,7 +45,6 @@ async function initCommonUI() {
         highlightActiveLink();
         setupSearch();
         setupAccessibility();
-        setupMultilingual();
         initNotifications();
         setupVoiceReadout();
         setupOneClickInquiry();
@@ -64,7 +63,70 @@ async function initCommonUI() {
     }
 
     // Feature: Usage Heatmap Placeholder (Admin only)
-    if (isAdmin) initUsageHeatmap();
+    if (isAdmin) {
+        initUsageHeatmap();
+        await loadComponent('admin-sidebar', prefix + 'components/admin-sidebar.html');
+        highlightAdminSidebar();
+        setupAdminLogout();
+        setupAdminMobileMenu();
+    }
+}
+
+function setupAdminMobileMenu() {
+    const header = document.querySelector('.header-bar');
+    const sidebar = document.getElementById('admin-sidebar');
+    if (!header || !sidebar) return;
+
+    // Inject hamburger if not exists
+    if (!document.getElementById('admin-mobile-toggle')) {
+        const toggle = document.createElement('button');
+        toggle.id = 'admin-mobile-toggle';
+        toggle.innerHTML = '<i class="fas fa-bars"></i>';
+        toggle.style.cssText = 'background:none; border:none; color:var(--primary); font-size:1.5rem; cursor:pointer; margin-right:20px; display:none;';
+        header.prepend(toggle);
+
+        // Add CSS for visibility
+        const style = document.createElement('style');
+        style.innerHTML = `
+            @media (max-width: 1024px) {
+                #admin-mobile-toggle { display: block !important; }
+                .header-bar { justify-content: flex-start; gap: 15px; }
+            }
+        `;
+        document.head.appendChild(style);
+
+        toggle.onclick = (e) => {
+            e.stopPropagation();
+            sidebar.classList.toggle('active');
+        };
+
+        // Close when clicking outside
+        document.addEventListener('click', (e) => {
+            if (sidebar.classList.contains('active') && !sidebar.contains(e.target) && e.target !== toggle && !toggle.contains(e.target)) {
+                sidebar.classList.remove('active');
+            }
+        });
+    }
+}
+
+function highlightAdminSidebar() {
+    const page = window.location.pathname.split("/").pop() || 'dashboard.html';
+    document.querySelectorAll('.sidebar-menu a').forEach(link => {
+        if (link.getAttribute('href') === page) {
+            link.classList.add('active');
+        }
+    });
+}
+
+function setupAdminLogout() {
+    const btn = document.getElementById('admin-logout-btn');
+    if (btn) {
+        btn.addEventListener('click', (e) => {
+            e.preventDefault();
+            localStorage.clear();
+            window.location.href = '../index.html';
+        });
+    }
 }
 
 /**
@@ -121,7 +183,7 @@ function setupRealTimeNotices() {
 
     setInterval(() => {
         // In real app, fetch from API
-        console.log('Checking for new notices...');
+        // In real app, fetch from API
         // Simulate a highlight for urgent notice
         const urgent = ticker.querySelector('.urgent-notice');
         if (urgent) urgent.style.opacity = (Math.sin(Date.now() / 500) + 1.5) / 2.5;
@@ -146,7 +208,7 @@ function setupEmergencyBar() {
  * Feature 10: Website Usage Heatmap (Admin Placeholder)
  */
 function initUsageHeatmap() {
-    console.log('Heatmap tracking active (Placeholder)');
+    // Heatmap tracking active (Placeholder)
 }
 
 // Logic for existing features
@@ -204,14 +266,7 @@ function setupAccessibility() {
     };
 }
 
-function setupMultilingual() {
-    const select = document.getElementById('lang-select');
-    if (select) {
-        select.onchange = (e) => {
-            if (e.target.value === 'kn') alert('Kannada language support initialized.');
-        };
-    }
-}
+
 
 function initNotifications() {
     // Already implemented in previous session - keeping for consistency
