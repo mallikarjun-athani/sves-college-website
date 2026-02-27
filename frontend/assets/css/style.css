@@ -389,7 +389,11 @@ header.scrolled .nav-links a {
 .ticker-content {
     white-space: nowrap;
     display: inline-block;
-    animation: ticker 30s linear infinite;
+    animation: ticker 15s linear infinite;
+}
+
+.ticker-wrap:hover .ticker-content {
+    animation-play-state: paused;
 }
 
 @keyframes ticker {
@@ -400,6 +404,18 @@ header.scrolled .nav-links a {
     100% {
         transform: translateX(-100%);
     }
+}
+
+.ticker-content a {
+    color: inherit;
+    text-decoration: none;
+    border-bottom: 1px dashed rgba(255, 255, 255, 0.4);
+    transition: var(--transition);
+}
+
+.ticker-content a:hover {
+    color: var(--secondary) !important;
+    border-bottom-color: var(--secondary) !important;
 }
 
 /* --- Footer --- */

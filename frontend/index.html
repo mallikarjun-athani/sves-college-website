@@ -344,7 +344,7 @@
                 const ticker = document.getElementById('announcements-ticker');
                 if (announcements.length > 0) {
                     ticker.innerHTML = announcements.map(a =>
-                        `<span>📢 ${a.title}${a.link ? ` <a href="${a.link}" target="_blank">[View]</a>` : ''} | </span>`
+                        `<span>📢 ${a.link ? `<a href="${a.link}" target="_blank">${a.title}</a>` : a.title} | </span>`
                     ).join('');
                 } else {
                     ticker.innerHTML = '<span>🔔 Welcome to SVES College Harugeri!</span>';

@@ -70,6 +70,26 @@
             display: flex;
             justify-content: space-between;
             align-items: center;
+            text-decoration: none;
+            color: inherit;
+            transition: var(--transition);
+            cursor: pointer;
+            border: 1px solid transparent;
+        }
+
+        .stat-card:hover {
+            transform: translateY(-5px);
+            box-shadow: var(--shadow-md);
+            border-color: var(--secondary);
+        }
+
+        .stat-card:hover i {
+            color: var(--secondary) !important;
+            transform: scale(1.1);
+        }
+
+        .stat-card i {
+            transition: var(--transition);
         }
 
         .stat-val {
@@ -119,41 +139,41 @@
         </div>
 
         <div class="card-grid" id="stats-container">
-            <div class="stat-card">
+            <a href="manage-notes.html" class="stat-card">
                 <div>
                     <h3>Study Notes</h3>
                     <p class="stat-val" id="stat-notes">-</p>
                 </div>
                 <i class="fas fa-file-pdf" style="font-size: 2.5rem; color: #eee;"></i>
-            </div>
-            <div class="stat-card">
+            </a>
+            <a href="manage-gallery.html" class="stat-card">
                 <div>
                     <h3>Gallery Photos</h3>
                     <p class="stat-val" id="stat-gallery">-</p>
                 </div>
                 <i class="fas fa-camera" style="font-size: 2.5rem; color: #eee;"></i>
-            </div>
-            <div class="stat-card">
+            </a>
+            <a href="manage-announcements.html" class="stat-card">
                 <div>
                     <h3>Announcements</h3>
                     <p class="stat-val" id="stat-announcements">-</p>
                 </div>
                 <i class="fas fa-comment-dots" style="font-size: 2.5rem; color: #eee;"></i>
-            </div>
-            <div class="stat-card">
+            </a>
+            <a href="manage-faculty.html" class="stat-card">
                 <div>
                     <h3>Faculty Members</h3>
                     <p class="stat-val" id="stat-faculty">-</p>
                 </div>
                 <i class="fas fa-user-tie" style="font-size: 2.5rem; color: #eee;"></i>
-            </div>
-            <div class="stat-card">
+            </a>
+            <a href="manage-admissions.html" class="stat-card">
                 <div>
                     <h3>Online Admissions</h3>
                     <p class="stat-val" id="stat-admissions">-</p>
                 </div>
                 <i class="fas fa-user-graduate" style="font-size: 2.5rem; color: #eee;"></i>
-            </div>
+            </a>
         </div>
 
         <div
