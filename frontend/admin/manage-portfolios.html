@@ -1,0 +1,339 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Manage Portfolios | SVES Admin</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link rel="stylesheet" href="../assets/css/style.css">
+    <link rel="stylesheet" href="../assets/css/admin.css">
+    <style>
+        .portfolio-admin-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(320px, 1fr));
+            gap: 25px;
+            margin-top: 30px;
+        }
+
+        .pf-card {
+            background: white;
+            border-radius: 12px;
+            overflow: hidden;
+            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.05);
+            border: 1px solid #eee;
+            transition: transform 0.3s ease;
+            position: relative;
+        }
+
+        .pf-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 8px 25px rgba(0, 0, 0, 0.1);
+        }
+
+        .pf-card img {
+            width: 100%;
+            height: 180px;
+            object-fit: cover;
+            border-bottom: 1px solid #eee;
+        }
+
+        .pf-card-content {
+            padding: 20px;
+        }
+
+        .pf-badge {
+            font-size: 0.72rem;
+            font-weight: 700;
+            text-transform: uppercase;
+            color: var(--primary);
+            background: rgba(255, 193, 7, 0.15);
+            padding: 4px 12px;
+            border-radius: 20px;
+            display: inline-block;
+            margin-bottom: 8px;
+        }
+
+        .pf-title {
+            font-size: 1.05rem;
+            color: var(--primary);
+            font-weight: 700;
+            margin: 0 0 6px;
+        }
+
+        .pf-student {
+            font-size: 0.85rem;
+            color: #888;
+            margin-bottom: 10px;
+        }
+
+        .pf-desc {
+            font-size: 0.85rem;
+            color: #666;
+            display: -webkit-box;
+            -webkit-line-clamp: 2;
+            line-clamp: 2;
+            -webkit-box-orient: vertical;
+            overflow: hidden;
+        }
+
+        .delete-btn-overlay {
+            position: absolute;
+            top: 10px;
+            right: 10px;
+            background: rgba(217, 83, 79, 0.9);
+            color: white;
+            width: 35px;
+            height: 35px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            cursor: pointer;
+            border: none;
+            transition: 0.2s;
+            opacity: 0.8;
+        }
+
+        .delete-btn-overlay:hover {
+            opacity: 1;
+            transform: scale(1.1);
+        }
+
+        .upload-area {
+            background: white;
+            padding: 35px;
+            border-radius: 12px;
+            box-shadow: var(--shadow-sm);
+            margin-bottom: 40px;
+            border: 1px solid #eee;
+        }
+
+        .alert {
+            position: fixed;
+            top: 20px;
+            right: 20px;
+            padding: 15px 25px;
+            border-radius: 8px;
+            color: white;
+            z-index: 2000;
+            display: none;
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.2);
+            font-weight: 500;
+            animation: slideIn 0.3s ease;
+        }
+
+        @keyframes slideIn {
+            from {
+                transform: translateX(100%);
+                opacity: 0;
+            }
+
+            to {
+                transform: translateX(0);
+                opacity: 1;
+            }
+        }
+
+        .alert-success {
+            background: #28a745;
+        }
+
+        .alert-error {
+            background: #dc3545;
+        }
+    </style>
+</head>
+
+<body>
+    <div id="admin-sidebar"></div>
+
+    <div class="main-content">
+        <div class="header-bar">
+            <h1>Manage Student Portfolios</h1>
+            <div class="admin-profile">
+                <i class="fas fa-briefcase"></i> <strong>Showcase Admin</strong>
+            </div>
+        </div>
+
+        <div class="alert" id="custom-alert"></div>
+
+        <div class="upload-area">
+            <div style="border-bottom: 2px solid #f8f9fa; margin-bottom: 25px; padding-bottom: 10px;">
+                <h3 style="margin: 0; display: flex; align-items: center; gap: 12px; color: var(--primary);">
+                    <i class="fas fa-plus-circle" style="color: var(--secondary); font-size: 1.5rem;"></i>
+                    Add Student Project to Showcase
+                </h3>
+            </div>
+
+            <form id="portfolio-form">
+                <div class="form-grid">
+                    <div class="form-group">
+                        <label><i class="fas fa-user"></i> Student Name</label>
+                        <input type="text" id="student_name" placeholder="e.g. Mallikarjun Athani" required>
+                    </div>
+                    <div class="form-group">
+                        <label><i class="fas fa-graduation-cap"></i> Course / Semester</label>
+                        <input type="text" id="student_course" placeholder="e.g. BCA - VI Sem">
+                    </div>
+                </div>
+
+                <div class="form-grid">
+                    <div class="form-group">
+                        <label><i class="fas fa-heading"></i> Project Title</label>
+                        <input type="text" id="title" placeholder="e.g. SVES College Website Pro" required>
+                    </div>
+                    <div class="form-group">
+                        <label><i class="fas fa-tags"></i> Category</label>
+                        <select id="category" required>
+                            <option value="Web Development">Web Development</option>
+                            <option value="Research Papers">Research Papers</option>
+                            <option value="Fine Arts">Fine Arts</option>
+                            <option value="Commerce Projects">Commerce Projects</option>
+                            <option value="Social Work">Social Work</option>
+                            <option value="Science">Science</option>
+                            <option value="Other">Other</option>
+                        </select>
+                    </div>
+                </div>
+
+                <div class="form-group">
+                    <label><i class="fas fa-align-left"></i> Project Description</label>
+                    <textarea id="description" rows="3" placeholder="Brief overview of the project..."
+                        required></textarea>
+                </div>
+
+                <div class="form-grid">
+                    <div class="form-group">
+                        <label><i class="fas fa-link"></i> Project Link (optional)</label>
+                        <input type="text" id="project_link" placeholder="https://...">
+                    </div>
+                    <div class="form-group">
+                        <label><i class="fas fa-image"></i> Project Screenshot (optional)</label>
+                        <input type="file" id="image_file" accept="image/*">
+                    </div>
+                </div>
+
+                <div style="margin-top: 15px;">
+                    <button type="submit" class="btn btn-primary" id="submit-btn"
+                        style="min-width: 200px; height: 48px;">
+                        <i class="fas fa-check-circle" style="margin-right: 8px;"></i> Publish Portfolio
+                    </button>
+                </div>
+            </form>
+        </div>
+
+        <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 20px;">
+            <h3 style="margin: 0;">Published Student Showcases</h3>
+            <button onclick="loadPortfolios()" class="btn btn-outline btn-sm"><i class="fas fa-sync"></i>
+                Reload</button>
+        </div>
+
+        <div id="portfolio-container" class="portfolio-admin-grid">
+            <div style="grid-column: 1/-1; text-align: center; padding: 60px;">
+                <i class="fas fa-spinner fa-spin fa-2x" style="color: var(--secondary);"></i>
+                <p style="margin-top: 15px;">Loading portfolios...</p>
+            </div>
+        </div>
+    </div>
+
+    <script src="../assets/js/api.js"></script>
+    <script>
+        if (!isLoggedIn()) window.location.href = 'login.html';
+
+        const alertEl = document.getElementById('custom-alert');
+
+        function notify(msg, type = 'success') {
+            alertEl.textContent = msg;
+            alertEl.className = `alert alert-${type}`;
+            alertEl.style.display = 'block';
+            setTimeout(() => alertEl.style.display = 'none', 3000);
+        }
+
+        async function loadPortfolios() {
+            const container = document.getElementById('portfolio-container');
+            try {
+                const data = await apiGet('/portfolios');
+
+                if (!data || data.length === 0) {
+                    container.innerHTML = `
+                        <div style="grid-column: 1/-1; text-align: center; padding: 60px; background: #fafafa; border-radius: 12px;">
+                            <i class="fas fa-briefcase fa-4x" style="color: #eee; margin-bottom: 20px;"></i>
+                            <h4 style="color: #999;">No student portfolios yet</h4>
+                            <p style="color: #bbb;">Add the first project above to start the showcase!</p>
+                        </div>
+                    `;
+                    return;
+                }
+
+                container.innerHTML = data.map(p => `
+                    <div class="pf-card">
+                        <img src="${p.image_path ? resolvePath(p.image_path) : '../assets/images/campus-hero.png'}" alt="${p.title}" onerror="this.src='../assets/images/campus-hero.png'">
+                        <button class="delete-btn-overlay" onclick="deletePortfolio(${p.id})" title="Remove project">
+                            <i class="fas fa-trash-alt"></i>
+                        </button>
+                        <div class="pf-card-content">
+                            <span class="pf-badge">${p.category || 'Other'}</span>
+                            <h4 class="pf-title">${p.title}</h4>
+                            <p class="pf-student"><i class="fas fa-user-circle"></i> ${p.student_name} ${p.student_course ? '• ' + p.student_course : ''}</p>
+                            <p class="pf-desc">${p.description}</p>
+                            ${p.project_link ? `<a href="${p.project_link}" target="_blank" style="display: inline-block; margin-top: 10px; font-size: 0.8rem; color: var(--secondary); font-weight: 600;"><i class="fas fa-external-link-alt"></i> View Live</a>` : ''}
+                        </div>
+                    </div>
+                `).join('');
+            } catch (err) {
+                container.innerHTML = '<div style="grid-column:1/-1; text-align:center; color:red; padding: 40px;">Failed to load portfolios. Check if the database table exists.</div>';
+            }
+        }
+
+        document.getElementById('portfolio-form').addEventListener('submit', async (e) => {
+            e.preventDefault();
+            const btn = document.getElementById('submit-btn');
+            const originalText = btn.innerHTML;
+
+            btn.innerHTML = '<i class="fas fa-spinner fa-spin"></i> Uploading...';
+            btn.disabled = true;
+
+            const formData = new FormData();
+            formData.append('student_name', document.getElementById('student_name').value);
+            formData.append('student_course', document.getElementById('student_course').value);
+            formData.append('title', document.getElementById('title').value);
+            formData.append('description', document.getElementById('description').value);
+            formData.append('category', document.getElementById('category').value);
+            formData.append('project_link', document.getElementById('project_link').value);
+
+            const fileInput = document.getElementById('image_file');
+            if (fileInput.files.length > 0) {
+                formData.append('image_file', fileInput.files[0]);
+            }
+
+            try {
+                await apiPost('/portfolios', formData);
+                notify('Student project published to showcase!');
+                document.getElementById('portfolio-form').reset();
+                loadPortfolios();
+            } catch (err) {
+                notify('Failed to add portfolio. Try a smaller image.', 'error');
+            } finally {
+                btn.innerHTML = originalText;
+                btn.disabled = false;
+            }
+        });
+
+        async function deletePortfolio(id) {
+            if (!confirm('Remove this project from the student showcase?')) return;
+            try {
+                await apiDelete(`/portfolios/${id}`);
+                notify('Portfolio entry removed');
+                loadPortfolios();
+            } catch (err) {
+                notify('Delete failed. Please try again.', 'error');
+            }
+        }
+
+        document.addEventListener('DOMContentLoaded', loadPortfolios);
+    </script>
+    <script src="../assets/js/main.js"></script>
+</body>
+
+</html>

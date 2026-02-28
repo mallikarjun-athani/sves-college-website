@@ -22,6 +22,9 @@ const facultyRoutes = require('./routes/faculty');
 const dashboardRoutes = require('./routes/dashboard');
 const coursesRoutes = require('./routes/courses');
 const admissionsRoutes = require('./routes/admissions');
+const timetableRoutes = require('./routes/timetable');
+const achievementsRoutes = require('./routes/achievements');
+const portfoliosRoutes = require('./routes/portfolios');
 
 const app = express();
 const PORT = process.env.PORT || 3000;
@@ -47,10 +50,11 @@ app.use(helmet({
         directives: {
             ...helmet.contentSecurityPolicy.getDefaultDirectives(),
             "img-src": ["'self'", "data:", "*.supabase.co"],
-            "script-src": ["'self'", "'unsafe-inline'", "https://unpkg.com", "https://cdnjs.cloudflare.com"],
-            "connect-src": ["'self'", "https://*.supabase.co", "https://*.vercel.app"],
+            "script-src": ["'self'", "'unsafe-inline'", "https://unpkg.com", "https://cdnjs.cloudflare.com", "https://cdn.jsdelivr.net"],
+            "connect-src": ["'self'", "https://*.supabase.co", "https://*.vercel.app", "https://api.emailjs.com"],
             "style-src": ["'self'", "'unsafe-inline'", "https://fonts.googleapis.com", "https://cdnjs.cloudflare.com", "https://unpkg.com"],
             "font-src": ["'self'", "https://fonts.gstatic.com", "https://cdnjs.cloudflare.com"],
+            "frame-src": ["'self'", "https://www.google.com", "https://maps.google.com"],
         },
     },
 }));
@@ -130,6 +134,9 @@ app.use('/api/faculty', facultyRoutes);
 app.use('/api/dashboard', dashboardRoutes);
 app.use('/api/courses', coursesRoutes);
 app.use('/api/admissions', admissionsRoutes);
+app.use('/api/timetable', timetableRoutes);
+app.use('/api/achievements', achievementsRoutes);
+app.use('/api/portfolios', portfoliosRoutes);
 
 // ============================================
 // HEALTH CHECK

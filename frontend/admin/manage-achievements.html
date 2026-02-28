@@ -1,0 +1,309 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Manage Achievements | SVES Admin</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link rel="stylesheet" href="../assets/css/style.css">
+    <link rel="stylesheet" href="../assets/css/admin.css">
+    <style>
+        .achievement-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(320px, 1fr));
+            gap: 25px;
+            margin-top: 30px;
+        }
+
+        .achievement-card {
+            background: white;
+            border-radius: 12px;
+            overflow: hidden;
+            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.05);
+            border: 1px solid #eee;
+            transition: transform 0.3s ease;
+            position: relative;
+        }
+
+        .achievement-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 8px 25px rgba(0, 0, 0, 0.1);
+        }
+
+        .achievement-card img {
+            width: 100%;
+            height: 180px;
+            object-fit: cover;
+            border-bottom: 1px solid #eee;
+        }
+
+        .achievement-card-content {
+            padding: 20px;
+        }
+
+        .achievement-date-badge {
+            font-size: 0.75rem;
+            font-weight: 700;
+            text-transform: uppercase;
+            color: var(--secondary);
+            background: rgba(0, 35, 71, 0.05);
+            padding: 4px 12px;
+            border-radius: 20px;
+            display: inline-block;
+            margin-bottom: 10px;
+        }
+
+        .achievement-title {
+            font-size: 1.1rem;
+            color: var(--primary);
+            font-weight: 700;
+            margin: 0 0 10px;
+            line-height: 1.4;
+        }
+
+        .achievement-desc {
+            font-size: 0.9rem;
+            color: #666;
+            margin-bottom: 15px;
+            display: -webkit-box;
+            -webkit-line-clamp: 3;
+            line-clamp: 3;
+            -webkit-box-orient: vertical;
+            overflow: hidden;
+            height: 52px;
+        }
+
+        .delete-btn {
+            position: absolute;
+            top: 10px;
+            right: 10px;
+            background: rgba(217, 83, 79, 0.9);
+            color: white;
+            width: 35px;
+            height: 35px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            cursor: pointer;
+            border: none;
+            transition: 0.2s;
+            opacity: 0.8;
+        }
+
+        .delete-btn:hover {
+            opacity: 1;
+            transform: scale(1.1);
+            background: #d9534f;
+        }
+
+        .upload-area {
+            background: white;
+            padding: 35px;
+            border-radius: 12px;
+            box-shadow: var(--shadow-sm);
+            margin-bottom: 40px;
+            border: 1px solid #eee;
+        }
+
+        .alert {
+            position: fixed;
+            top: 20px;
+            right: 20px;
+            padding: 15px 25px;
+            border-radius: 8px;
+            color: white;
+            z-index: 2000;
+            display: none;
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.2);
+            font-weight: 500;
+        }
+
+        .alert-success {
+            background: #28a745;
+        }
+
+        .alert-error {
+            background: #dc3545;
+        }
+
+        .placeholder-box {
+            background: #fafafa;
+            border-radius: 8px;
+            padding: 60px;
+            text-align: center;
+        }
+    </style>
+</head>
+
+<body>
+    <div id="admin-sidebar"></div>
+
+    <div class="main-content">
+        <div class="header-bar">
+            <h1>Manage Achievement Wall</h1>
+            <div class="admin-profile">
+                <i class="fas fa-medal"></i> <strong>Achievement Admin</strong>
+            </div>
+        </div>
+
+        <div class="alert" id="custom-alert"></div>
+
+        <div class="upload-area">
+            <div style="border-bottom: 2px solid #f8f9fa; margin-bottom: 25px; padding-bottom: 10px;">
+                <h3 style="margin: 0; display: flex; align-items: center; gap: 12px; color: var(--primary);">
+                    <i class="fas fa-plus-circle" style="color: var(--secondary); font-size: 1.5rem;"></i>
+                    Add New Achievement entry
+                </h3>
+            </div>
+
+            <form id="achievement-form">
+                <div class="form-grid">
+                    <div class="form-group">
+                        <label><i class="fas fa-heading"></i> Achievement Title</label>
+                        <input type="text" id="title" placeholder="e.g. Gold Medal in Zonal Sports" required>
+                    </div>
+                    <div class="form-group">
+                        <label><i class="fas fa-calendar-day"></i> Achievement Date</label>
+                        <input type="text" id="achievement_date" placeholder="e.g. Feb 2024" required>
+                    </div>
+                </div>
+
+                <div class="form-group">
+                    <label><i class="fas fa-align-left"></i> Description / Details</label>
+                    <textarea id="description" rows="3" placeholder="Brief details about the achievement..."
+                        required></textarea>
+                </div>
+
+                <div class="form-group">
+                    <label><i class="fas fa-image"></i> Cover Photo</label>
+                    <div
+                        style="background: #fdfdfd; border: 2px dashed #eee; padding: 25px; border-radius: 10px; text-align: center;">
+                        <input type="file" id="image_file" accept="image/*" style="cursor: pointer;">
+                        <p style="font-size: 0.82rem; color: #888; margin-top: 10px;">JPG, PNG (Max 5MB). Square or 4:3
+                            ratio best.</p>
+                    </div>
+                </div>
+
+                <div style="margin-top: 20px;">
+                    <button type="submit" class="btn btn-primary" id="submit-btn"
+                        style="min-width: 180px; height: 48px;">
+                        <i class="fas fa-check-circle" style="margin-right: 8px;"></i> Publish Achievement
+                    </button>
+                </div>
+            </form>
+        </div>
+
+        <div class="flex justify-between align-center" style="margin-bottom: 25px;">
+            <h3 style="margin: 0;">Published Wall of Fame</h3>
+            <button onclick="loadAchievements()" class="btn btn-outline btn-sm"><i class="fas fa-sync"></i> Reload
+                List</button>
+        </div>
+
+        <div id="achievement-container" class="achievement-grid">
+            <div style="grid-column: 1/-1; text-align: center; padding: 60px;">
+                <i class="fas fa-spinner fa-spin fa-2x" style="color: var(--secondary);"></i>
+                <p>Synchronizing achievements...</p>
+            </div>
+        </div>
+    </div>
+
+    <script src="../assets/js/api.js"></script>
+    <script>
+        if (!isLoggedIn()) window.location.href = 'login.html';
+
+        const alertContainer = document.getElementById('custom-alert');
+
+        function notify(msg, type = 'success') {
+            alertContainer.textContent = msg;
+            alertContainer.className = `alert alert-${type}`;
+            alertContainer.style.display = 'block';
+            setTimeout(() => alertContainer.style.display = 'none', 3000);
+        }
+
+        async function loadAchievements() {
+            const container = document.getElementById('achievement-container');
+            try {
+                const data = await apiGet('/achievements');
+
+                if (!data || data.length === 0) {
+                    container.innerHTML = `
+                        <div style="grid-column: 1/-1; class="placeholder-box">
+                            <i class="fas fa-trophy fa-4x" style="color: #eee; margin-bottom: 20px;"></i>
+                            <h4 style="color: #999;">No achievements yet</h4>
+                            <p style="color: #bbb;">Use the form above to add honors to the wall.</p>
+                        </div>
+                    `;
+                    return;
+                }
+
+                container.innerHTML = data.map(item => `
+                    <div class="achievement-card">
+                        <img src="${item.image_path ? resolvePath(item.image_path) : '../assets/images/achieve-placeholder.jpg'}" alt="${item.title}" onerror="this.src='../assets/images/achieve-placeholder.jpg'">
+                        <button class="delete-btn" onclick="deleteAchievement(${item.id})" title="Delete entry">
+                            <i class="fas fa-trash-alt"></i>
+                        </button>
+                        <div class="achievement-card-content">
+                            <span class="achievement-date-badge">${item.achievement_date}</span>
+                            <h4 class="achievement-title">${item.title}</h4>
+                            <p class="achievement-desc">${item.description}</p>
+                            <div style="font-size: 0.8rem; color: #999;">
+                                <i class="far fa-clock"></i> Posted ${new Date(item.created_at).toLocaleDateString()}
+                            </div>
+                        </div>
+                    </div>
+                `).join('');
+            } catch (err) {
+                container.innerHTML = '<div style="grid-column: 1/-1; text-align: center; color: red;">Failed to load achievements.</div>';
+            }
+        }
+
+        document.getElementById('achievement-form').addEventListener('submit', async (e) => {
+            e.preventDefault();
+            const btn = document.getElementById('submit-btn');
+            const originalText = btn.innerHTML;
+
+            btn.innerHTML = '<i class="fas fa-spinner fa-spin"></i> Processing...';
+            btn.disabled = true;
+
+            const formData = new FormData();
+            formData.append('title', document.getElementById('title').value);
+            formData.append('description', document.getElementById('description').value);
+            formData.append('achievement_date', document.getElementById('achievement_date').value);
+
+            const fileInput = document.getElementById('image_file');
+            if (fileInput.files.length > 0) {
+                formData.append('image_file', fileInput.files[0]);
+            }
+
+            try {
+                await apiPost('/achievements', formData);
+                notify('New success story successfully added to the wall!');
+                document.getElementById('achievement-form').reset();
+                loadAchievements();
+            } catch (err) {
+                notify('Could not add achievement. Upload might be too large.', 'error');
+            } finally {
+                btn.innerHTML = originalText;
+                btn.disabled = false;
+            }
+        });
+
+        async function deleteAchievement(id) {
+            if (!confirm('Are you sure you want to remove this achievement from the wall of fame?')) return;
+            try {
+                await apiDelete(`/achievements/${id}`);
+                notify('Achievement removed successfully');
+                loadAchievements();
+            } catch (err) {
+                notify('Delete failed. Please try again.', 'error');
+            }
+        }
+
+        document.addEventListener('DOMContentLoaded', loadAchievements);
+    </script>
+    <script src="../assets/js/main.js"></script>
+</body>
+
+</html>

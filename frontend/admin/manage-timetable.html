@@ -1,0 +1,402 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Manage Timetable | Admin Panel</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link rel="stylesheet" href="../assets/css/style.css">
+    <link rel="stylesheet" href="../assets/css/admin.css">
+    <style>
+        .timetable-manager {
+            display: grid;
+            grid-template-columns: 1fr 320px;
+            gap: 25px;
+            align-items: start;
+        }
+
+        .schedule-viewer {
+            background: white;
+            border-radius: 12px;
+            padding: 25px;
+            box-shadow: var(--shadow-sm);
+            border: 1px solid #eee;
+        }
+
+        .entry-editor {
+            background: #fff;
+            padding: 25px;
+            border-radius: 12px;
+            box-shadow: var(--shadow-md);
+            border: 1px solid var(--secondary);
+            position: sticky;
+            top: 20px;
+        }
+
+        .day-section {
+            margin-bottom: 25px;
+        }
+
+        .day-header {
+            background: var(--primary);
+            color: white;
+            padding: 12px 20px;
+            border-radius: 8px 8px 0 0;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .day-header h4 {
+            margin: 0;
+            font-size: 0.95rem;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+        }
+
+        .slot-card {
+            background: #fcfcfc;
+            border: 1px solid #eee;
+            border-top: none;
+            padding: 15px 20px;
+            display: grid;
+            grid-template-columns: 100px 1fr 100px 80px;
+            align-items: center;
+            gap: 15px;
+            transition: background 0.2s;
+        }
+
+        .slot-card:last-child {
+            border-radius: 0 0 8px 8px;
+        }
+
+        .slot-card:hover {
+            background: #f4f7f6;
+        }
+
+        .slot-time {
+            font-weight: 700;
+            color: var(--secondary);
+            font-size: 0.85rem;
+        }
+
+        .slot-subject {
+            font-weight: 600;
+            color: var(--primary);
+        }
+
+        .slot-room {
+            font-size: 0.8rem;
+            color: #777;
+            background: #eee;
+            padding: 2px 8px;
+            border-radius: 4px;
+            text-align: center;
+        }
+
+        .slot-actions {
+            display: flex;
+            gap: 8px;
+            justify-content: flex-end;
+        }
+
+        .action-btn {
+            width: 30px;
+            height: 30px;
+            border-radius: 6px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            cursor: pointer;
+            border: none;
+            font-size: 0.8rem;
+            transition: 0.2s;
+        }
+
+        .btn-edit {
+            background: #e3f2fd;
+            color: #1976d2;
+        }
+
+        .btn-delete {
+            background: #ffebee;
+            color: #d32f2f;
+        }
+
+        .btn-edit:hover {
+            background: #1976d2;
+            color: white;
+        }
+
+        .btn-delete:hover {
+            background: #d32f2f;
+            color: white;
+        }
+
+        .filter-strip {
+            background: var(--primary);
+            color: white;
+            padding: 15px 25px;
+            border-radius: 12px;
+            margin-bottom: 25px;
+            display: flex;
+            gap: 20px;
+            align-items: center;
+        }
+
+        .filter-strip select {
+            background: rgba(255, 255, 255, 0.1);
+            border: 1px solid rgba(255, 255, 255, 0.2);
+            color: white;
+            padding: 5px 15px;
+            border-radius: 6px;
+        }
+
+        .filter-strip select option {
+            color: #333;
+        }
+
+        .alert {
+            position: fixed;
+            top: 20px;
+            right: 20px;
+            padding: 15px 25px;
+            border-radius: 8px;
+            color: white;
+            z-index: 2000;
+            display: none;
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.2);
+        }
+    </style>
+</head>
+
+<body>
+    <div id="admin-sidebar"></div>
+
+    <div class="main-content">
+        <div class="header-bar">
+            <h1>Dynamic Timetable Manager</h1>
+            <div class="admin-profile">
+                <i class="fas fa-user-shield"></i> <strong>Academic Admin</strong>
+            </div>
+        </div>
+
+        <div class="alert" id="alert-box"></div>
+
+        <div class="filter-strip">
+            <div style="font-weight: 600;"><i class="fas fa-filter"></i> VIEWING:</div>
+            <select id="filter-course" onchange="loadTimetable()"></select>
+            <select id="filter-semester" onchange="loadTimetable()">
+                <option value="1">Semester 1</option>
+                <option value="2">Semester 2</option>
+                <option value="3">Semester 3</option>
+                <option value="4">Semester 4</option>
+                <option value="5">Semester 5</option>
+                <option value="6">Semester 6</option>
+            </select>
+            <button onclick="loadTimetable()" class="btn btn-secondary btn-sm" style="margin-left: auto;">
+                <i class="fas fa-sync-alt"></i> Reload
+            </button>
+        </div>
+
+        <div class="timetable-manager">
+            <div class="schedule-viewer" id="schedule-container">
+                <div style="text-align: center; padding: 60px;">
+                    <i class="fas fa-spinner fa-spin fa-3x" style="color: var(--secondary);"></i>
+                    <p style="margin-top: 15px;">Synchronizing with database...</p>
+                </div>
+            </div>
+
+            <div class="entry-editor">
+                <h3 id="editor-title"
+                    style="margin-top: 0; margin-bottom: 20px; font-size: 1.1rem; border-bottom: 1px solid #eee; padding-bottom: 10px;">
+                    <i class="fas fa-plus-circle"></i> New Schedule Card
+                </h3>
+                <form id="entry-form">
+                    <input type="hidden" id="entry-id">
+                    <div class="form-group">
+                        <label>Day</label>
+                        <select id="entry-day" required>
+                            <option value="Monday">Monday</option>
+                            <option value="Tuesday">Tuesday</option>
+                            <option value="Wednesday">Wednesday</option>
+                            <option value="Thursday">Thursday</option>
+                            <option value="Friday">Friday</option>
+                            <option value="Saturday">Saturday</option>
+                        </select>
+                    </div>
+                    <div class="form-group">
+                        <label>Subject</label>
+                        <input type="text" id="entry-subject" placeholder="e.g. Mathematics II" required>
+                    </div>
+                    <div class="form-group">
+                        <label>Start Time</label>
+                        <input type="time" id="entry-start" required>
+                    </div>
+                    <div class="form-group">
+                        <label>End Time</label>
+                        <input type="time" id="entry-end" required>
+                    </div>
+                    <div class="form-group">
+                        <label>Room / Hall</label>
+                        <input type="text" id="entry-room" placeholder="e.g. Room 102">
+                    </div>
+
+                    <div style="margin-top: 25px;">
+                        <button type="submit" id="save-btn" class="btn btn-primary w-full">
+                            <i class="fas fa-save"></i> Save Schedule
+                        </button>
+                        <button type="button" id="cancel-edit" onclick="resetForm()" class="btn btn-outline w-full"
+                            style="display: none; margin-top: 10px;">
+                            Cancel Edit
+                        </button>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+
+    <script src="../assets/js/api.js?v=2.0"></script>
+    <script>
+        if (!isLoggedIn()) window.location.href = 'login.html';
+
+        const alertBox = document.getElementById('alert-box');
+        const days = ['Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturday'];
+
+        function notify(msg, err = false) {
+            alertBox.textContent = msg;
+            alertBox.style.background = err ? '#dc3545' : '#28a745';
+            alertBox.style.display = 'block';
+            setTimeout(() => alertBox.style.display = 'none', 3000);
+        }
+
+        async function init() {
+            try {
+                const courses = await apiGet('/courses');
+                document.getElementById('filter-course').innerHTML = courses.map(c => `<option value="${c.id}">${c.name}</option>`).join('');
+                loadTimetable();
+            } catch (e) { notify('Failed to load initial data', true); }
+        }
+
+        async function loadTimetable() {
+            const courseId = document.getElementById('filter-course').value;
+            const semester = document.getElementById('filter-semester').value;
+            const container = document.getElementById('schedule-container');
+
+            if (!courseId) return;
+
+            try {
+                const data = await apiGet(`/timetable?course_id=${courseId}&semester=${semester}`);
+
+                if (!data || data.length === 0) {
+                    container.innerHTML = `
+                        <div style="text-align: center; padding: 60px; color: #999;">
+                            <i class="far fa-calendar-times fa-4x" style="margin-bottom: 20px; opacity: 0.5;"></i>
+                            <h4>No classes scheduled yet</h4>
+                            <p>Select another filter or add a new entry.</p>
+                        </div>
+                    `;
+                    return;
+                }
+
+                container.innerHTML = days.map(day => {
+                    const slots = data.filter(s => s.day_of_week === day)
+                        .sort((a, b) => a.start_time.localeCompare(b.start_time));
+
+                    if (slots.length === 0) return '';
+
+                    return `
+                        <div class="day-section">
+                            <div class="day-header">
+                                <h4>${day}</h4>
+                                <span style="font-size: 0.75rem; opacity: 0.8;">${slots.length} Classes</span>
+                            </div>
+                            <div class="slots-list">
+                                ${slots.map(s => `
+                                    <div class="slot-card">
+                                        <div class="slot-time">${s.start_time.substring(0, 5)} - ${s.end_time.substring(0, 5)}</div>
+                                        <div class="slot-subject">${s.subject}</div>
+                                        <div class="slot-room">${s.room_no || 'N/A'}</div>
+                                        <div class="slot-actions">
+                                            <button onclick='editEntry(${JSON.stringify(s)})' class="action-btn btn-edit"><i class="fas fa-edit"></i></button>
+                                            <button onclick='deleteEntry(${s.id})' class="action-btn btn-delete"><i class="fas fa-trash-alt"></i></button>
+                                        </div>
+                                    </div>
+                                `).join('')}
+                            </div>
+                        </div>
+                    `;
+                }).join('') || '<p style="text-align:center; padding: 20px;">No entries found for these filters.</p>';
+
+            } catch (e) { notify('Error fetching timetable', true); }
+        }
+
+        function editEntry(s) {
+            document.getElementById('editor-title').innerHTML = '<i class="fas fa-edit"></i> Modify Schedule';
+            document.getElementById('entry-id').value = s.id;
+            document.getElementById('entry-day').value = s.day_of_week;
+            document.getElementById('entry-subject').value = s.subject;
+            document.getElementById('entry-start').value = s.start_time.substring(0, 5);
+            document.getElementById('entry-end').value = s.end_time.substring(0, 5);
+            document.getElementById('entry-room').value = s.room_no || '';
+
+            document.getElementById('save-btn').innerHTML = '<i class="fas fa-check"></i> Update Slot';
+            document.getElementById('cancel-edit').style.display = 'block';
+            window.scrollTo({ top: 0, behavior: 'smooth' });
+        }
+
+        function resetForm() {
+            document.getElementById('editor-title').innerHTML = '<i class="fas fa-plus-circle"></i> New Schedule Card';
+            document.getElementById('entry-id').value = '';
+            document.getElementById('entry-form').reset();
+            document.getElementById('save-btn').innerHTML = '<i class="fas fa-save"></i> Save Schedule';
+            document.getElementById('cancel-edit').style.display = 'none';
+        }
+
+        async function deleteEntry(id) {
+            if (!confirm('Permanently remove this class from schedule?')) return;
+            try {
+                await apiDelete(`/timetable/${id}`);
+                notify('Slot deleted successfully');
+                loadTimetable();
+            } catch (e) { notify('Delete failed', true); }
+        }
+
+        document.getElementById('entry-form').addEventListener('submit', async (e) => {
+            e.preventDefault();
+            const id = document.getElementById('entry-id').value;
+            const data = {
+                course_id: document.getElementById('filter-course').value,
+                semester: document.getElementById('filter-semester').value,
+                day_of_week: document.getElementById('entry-day').value,
+                subject: document.getElementById('entry-subject').value,
+                start_time: document.getElementById('entry-start').value,
+                end_time: document.getElementById('entry-end').value,
+                room_no: document.getElementById('entry-room').value
+            };
+
+            const btn = document.getElementById('save-btn');
+            btn.disabled = true;
+            btn.innerHTML = '<i class="fas fa-spinner fa-spin"></i> Saving...';
+
+            try {
+                if (id) {
+                    await apiPut(`/timetable/${id}`, data);
+                    notify('Schedule updated successfully');
+                } else {
+                    await apiPost('/timetable', data);
+                    notify('New slot added to schedule');
+                }
+                resetForm();
+                loadTimetable();
+            } catch (e) { notify('Operation failed. Check inputs.', true); }
+            finally { btn.disabled = false; btn.innerHTML = '<i class="fas fa-save"></i> Save Schedule'; }
+        });
+
+        document.addEventListener('DOMContentLoaded', init);
+    </script>
+    <script src="../assets/js/main.js"></script>
+</body>
+
+</html>

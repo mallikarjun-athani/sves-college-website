@@ -8,21 +8,38 @@ const authMiddleware = require('../middleware/auth');
 // @access  Private (Admin)
 router.get('/stats', authMiddleware, async (req, res) => {
     try {
-        // Get counts from all tables
-        const [notesResult, galleryResult, announcementsResult, facultyResult, admissionsResult] = await Promise.all([
-            supabaseAdmin.from('notes').select('id', { count: 'exact', head: true }),
-            supabaseAdmin.from('gallery').select('id', { count: 'exact', head: true }),
-            supabaseAdmin.from('announcements').select('id', { count: 'exact', head: true }),
-            supabaseAdmin.from('faculty').select('id', { count: 'exact', head: true }),
-            supabaseAdmin.from('admissions').select('id', { count: 'exact', head: true })
+        // Get counts from all tables with individual handling to avoid complete failure if one table is missing
+        const getCount = async (table) => {
+            try {
+                const { count, error } = await supabaseAdmin.from(table).select('id', { count: 'exact', head: true });
+                if (error) throw error;
+                return count || 0;
+            } catch (err) {
+                console.warn(`Stat error for table ${table}:`, err.message);
+                return 0; // Fallback to 0 if table is missing or query fails
+            }
+        };
+
+        const [notes, gallery, announcements, faculty, admissions, timetable, achievements, portfolios] = await Promise.all([
+            getCount('notes'),
+            getCount('gallery'),
+            getCount('announcements'),
+            getCount('faculty'),
+            getCount('admissions'),
+            getCount('timetable'),
+            getCount('achievements'),
+            getCount('portfolios')
         ]);
 
         res.json({
-            notes: notesResult.count || 0,
-            gallery: galleryResult.count || 0,
-            announcements: announcementsResult.count || 0,
-            faculty: facultyResult.count || 0,
-            admissions: admissionsResult.count || 0
+            notes,
+            gallery,
+            announcements,
+            faculty,
+            admissions,
+            timetable,
+            achievements,
+            portfolios
         });
     } catch (error) {
         console.error('Get dashboard stats error:', error);

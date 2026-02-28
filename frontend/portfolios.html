@@ -1,0 +1,301 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="description"
+        content="Student Showcase Portfolios - Discover innovative projects by SVES College students.">
+    <title>Student Showcase | SVES College</title>
+
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link href="https://unpkg.com/aos@2.3.1/dist/aos.css" rel="stylesheet">
+    <link rel="stylesheet" href="assets/css/style.css">
+    <link rel="icon" type="image/png" href="assets/images/favicon.png">
+
+    <style>
+        .portfolio-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+            gap: 30px;
+            margin-top: 40px;
+        }
+
+        .portfolio-card {
+            background: white;
+            border-radius: var(--radius-md);
+            overflow: hidden;
+            box-shadow: var(--shadow-sm);
+            transition: var(--transition);
+            border: 1px solid #eee;
+        }
+
+        .portfolio-card:hover {
+            transform: translateY(-10px);
+            box-shadow: var(--shadow-lg);
+        }
+
+        .portfolio-img {
+            height: 210px;
+            background-size: cover;
+            background-position: center;
+            position: relative;
+            background-color: #f0f0f0;
+        }
+
+        .portfolio-category {
+            position: absolute;
+            top: 15px;
+            right: 15px;
+            background: var(--secondary);
+            color: var(--primary);
+            padding: 5px 14px;
+            border-radius: 20px;
+            font-size: 0.75rem;
+            font-weight: 700;
+        }
+
+        .portfolio-body {
+            padding: 25px;
+        }
+
+        .student-meta {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            margin-bottom: 15px;
+        }
+
+        .student-avatar {
+            width: 40px;
+            height: 40px;
+            border-radius: 50%;
+            background: linear-gradient(135deg, var(--primary), var(--secondary));
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: white;
+            font-weight: 800;
+            font-size: 1rem;
+        }
+
+        .student-name {
+            font-weight: 700;
+            font-size: 0.95rem;
+            color: var(--primary);
+        }
+
+        .student-course {
+            display: block;
+            font-weight: 400;
+            font-size: 0.75rem;
+            color: #888;
+        }
+
+        .portfolio-title {
+            font-size: 1.15rem;
+            color: var(--primary);
+            margin-bottom: 10px;
+            font-weight: 700;
+        }
+
+        .portfolio-desc {
+            font-size: 0.9rem;
+            color: #666;
+            line-height: 1.6;
+            margin-bottom: 20px;
+            display: -webkit-box;
+            -webkit-line-clamp: 3;
+            line-clamp: 3;
+            -webkit-box-orient: vertical;
+            overflow: hidden;
+        }
+
+        .portfolio-footer {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            border-top: 1px solid #f0f0f0;
+            padding-top: 15px;
+        }
+
+        .view-project {
+            color: var(--secondary);
+            font-weight: 700;
+            font-size: 0.85rem;
+            text-decoration: none;
+            transition: 0.2s;
+        }
+
+        .view-project:hover {
+            color: var(--primary);
+        }
+
+        .filter-bar {
+            display: flex;
+            gap: 10px;
+            overflow-x: auto;
+            padding-bottom: 10px;
+            margin-bottom: 30px;
+            scrollbar-width: none;
+        }
+
+        .filter-bar::-webkit-scrollbar {
+            display: none;
+        }
+
+        .filter-btn {
+            padding: 10px 20px;
+            background: white;
+            border: 1px solid #ddd;
+            border-radius: 25px;
+            white-space: nowrap;
+            cursor: pointer;
+            transition: var(--transition);
+            font-weight: 500;
+            font-size: 0.9rem;
+        }
+
+        .filter-btn:hover {
+            border-color: var(--secondary);
+        }
+
+        .filter-btn.active {
+            background: var(--primary);
+            color: white;
+            border-color: var(--primary);
+        }
+
+        .cta-submit {
+            text-align: center;
+            margin-top: 70px;
+            padding: 50px;
+            background: white;
+            border-radius: var(--radius-md);
+            box-shadow: var(--shadow-sm);
+        }
+    </style>
+</head>
+
+<body>
+    <header id="main-header"></header>
+
+    <section class="inner-page-header"
+        style="background: linear-gradient(rgba(0, 35, 71, 0.85), rgba(0, 35, 71, 0.85)), url('assets/images/campus-hero.png'); background-size: cover; background-position: center; padding: 130px 0 70px; color: white; text-align: center;">
+        <div class="container" data-aos="fade-down">
+            <h1 style="font-size: 2.8rem; margin-bottom: 15px;">Student Showcase</h1>
+            <p style="font-size: 1.15rem; opacity: 0.9; max-width: 650px; margin: 0 auto;">Discover the innovative
+                projects, research, and creative works by our talented students.</p>
+        </div>
+    </section>
+
+    <section class="section-padding" style="background: #f9fbfd;">
+        <div class="container">
+
+            <div class="filter-bar" data-aos="fade-up" id="filter-bar">
+                <button class="filter-btn active" data-category="All">All Projects</button>
+                <button class="filter-btn" data-category="Web Development">Web Development</button>
+                <button class="filter-btn" data-category="Research Papers">Research Papers</button>
+                <button class="filter-btn" data-category="Fine Arts">Fine Arts</button>
+                <button class="filter-btn" data-category="Commerce Projects">Commerce Projects</button>
+                <button class="filter-btn" data-category="Social Work">Social Work</button>
+                <button class="filter-btn" data-category="Science">Science</button>
+            </div>
+
+            <div class="portfolio-grid" id="portfolio-container">
+                <div style="grid-column: 1/-1; text-align: center; padding: 60px;">
+                    <i class="fas fa-spinner fa-spin fa-3x" style="color: var(--secondary);"></i>
+                    <p style="margin-top: 20px; color: #777;">Loading student portfolios...</p>
+                </div>
+            </div>
+
+            <div class="cta-submit" data-aos="fade-up">
+                <i class="fas fa-rocket fa-2x" style="color: var(--secondary); margin-bottom: 15px;"></i>
+                <h3>Want to showcase your project here?</h3>
+                <p style="color: #888; margin-top: 10px;">Contact your department coordinator to submit your project for
+                    the showcase.</p>
+                <a href="contact.html" class="btn btn-primary" style="margin-top: 20px;">Contact Us</a>
+            </div>
+        </div>
+    </section>
+
+    <footer id="main-site-footer"></footer>
+
+    <script src="https://unpkg.com/aos@2.3.1/dist/aos.js"></script>
+    <script src="assets/js/api.js"></script>
+    <script src="assets/js/main.js"></script>
+    <script>
+        const container = document.getElementById('portfolio-container');
+
+        async function loadPortfolios(category = 'All') {
+            container.innerHTML = `<div style="grid-column: 1/-1; text-align: center; padding: 60px;"><i class="fas fa-spinner fa-spin fa-3x" style="color: var(--secondary);"></i></div>`;
+
+            try {
+                const url = category === 'All' ? '/portfolios' : `/portfolios?category=${encodeURIComponent(category)}`;
+                const data = await apiGet(url);
+
+                if (!data || data.length === 0) {
+                    container.innerHTML = `
+                        <div style="grid-column: 1/-1; text-align: center; padding: 60px; background: white; border-radius: 12px;">
+                            <i class="fas fa-folder-open fa-4x" style="color: #eee; margin-bottom: 15px;"></i>
+                            <h3 style="color: #999;">No portfolios found</h3>
+                            <p style="color: #bbb;">Check back later as students submit their work.</p>
+                        </div>
+                    `;
+                    return;
+                }
+
+                container.innerHTML = data.map((p, i) => {
+                    const initials = p.student_name ? p.student_name.split(' ').map(w => w[0]).join('').substring(0, 2).toUpperCase() : '?';
+                    const imgStyle = p.image_path ? `background-image: url('${resolvePath(p.image_path)}');` : '';
+                    const linkHtml = p.project_link
+                        ? `<a href="${p.project_link}" target="_blank" class="view-project">VIEW PROJECT <i class="fas fa-arrow-right"></i></a>`
+                        : `<span class="view-project" style="opacity:0.4; cursor:default;">NO LINK</span>`;
+
+                    return `
+                        <div class="portfolio-card" data-aos="fade-up" data-aos-delay="${i * 80}">
+                            <div class="portfolio-img" style="${imgStyle}">
+                                <span class="portfolio-category">${p.category || 'Other'}</span>
+                            </div>
+                            <div class="portfolio-body">
+                                <div class="student-meta">
+                                    <div class="student-avatar">${initials}</div>
+                                    <div class="student-name">${p.student_name}
+                                        <span class="student-course">${p.student_course || ''}</span>
+                                    </div>
+                                </div>
+                                <h3 class="portfolio-title">${p.title}</h3>
+                                <p class="portfolio-desc">${p.description}</p>
+                                <div class="portfolio-footer">
+                                    ${linkHtml}
+                                    <span style="font-size: 0.75rem; color: #bbb;"><i class="far fa-calendar-alt"></i> ${new Date(p.created_at).toLocaleDateString()}</span>
+                                </div>
+                            </div>
+                        </div>
+                    `;
+                }).join('');
+
+                // Re-init AOS for new elements
+                if (typeof AOS !== 'undefined') AOS.refresh();
+
+            } catch (err) {
+                container.innerHTML = '<div style="grid-column:1/-1; text-align:center; color:red; padding:40px;">Failed to load student portfolios.</div>';
+            }
+        }
+
+        // Filter button clicks
+        document.getElementById('filter-bar').addEventListener('click', (e) => {
+            const btn = e.target.closest('.filter-btn');
+            if (!btn) return;
+
+            document.querySelectorAll('.filter-btn').forEach(b => b.classList.remove('active'));
+            btn.classList.add('active');
+
+            loadPortfolios(btn.dataset.category);
+        });
+
+        document.addEventListener('DOMContentLoaded', () => loadPortfolios());
+    </script>
+</body>
+
+</html>

@@ -491,43 +491,357 @@ footer {
 }
 
 /* --- Responsive --- */
+
+/* Tablet & Small Laptop */
+@media (max-width: 1024px) {
+    .nav-links {
+        display: none !important;
+    }
+
+    .mobile-menu-toggle {
+        display: block !important;
+    }
+
+    .section-padding {
+        padding: 70px 0;
+    }
+
+    .container {
+        padding: 0 20px;
+    }
+
+    .card-grid {
+        grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+        gap: 20px;
+    }
+
+    .contact-grid {
+        grid-template-columns: 1fr;
+        gap: 30px;
+    }
+
+    .why-container {
+        flex-direction: column;
+    }
+
+    .why-image {
+        margin-left: 0;
+        margin-top: 30px;
+    }
+
+    .footer-grid {
+        grid-template-columns: repeat(2, 1fr);
+        gap: 30px;
+    }
+
+    .stats-grid {
+        grid-template-columns: repeat(2, 1fr);
+    }
+
+    .recruiter-grid {
+        grid-template-columns: repeat(auto-fill, minmax(120px, 1fr));
+        gap: 25px;
+    }
+}
+
+/* Mobile */
 @media (max-width: 768px) {
     .hero {
         height: auto;
         min-height: 80vh;
         padding: 120px 0 80px;
         background-attachment: scroll;
-        /* Better performance on mobile */
     }
 
     .hero-content h1 {
         line-height: 1.1;
+        font-size: 2rem;
+    }
+
+    .hero-content p {
+        font-size: 0.95rem;
+        margin-bottom: 25px;
     }
 
     .hero-btns {
         flex-direction: column;
         align-items: center;
-        gap: 15px;
+        gap: 12px;
     }
 
     .hero-btns .btn {
         width: 100%;
         max-width: 300px;
         margin-left: 0 !important;
-        /* Remove the 20px margin-left from inline style */
-    }
-
-    .nav-links {
-        display: none;
     }
 
     .section-padding {
-        padding: 60px 0;
+        padding: 50px 0;
     }
 
-    .why-image {
-        margin-left: 0;
+    .section-title h2 {
+        font-size: 1.8rem;
+    }
+
+    .section-title {
+        margin-bottom: 30px;
+    }
+
+    .card {
+        padding: 25px;
+    }
+
+    .card-icon {
+        font-size: 2.2rem;
+    }
+
+    .card-grid {
+        grid-template-columns: 1fr;
+    }
+
+    h1 {
+        font-size: 1.8rem;
+    }
+
+    h2 {
+        font-size: 1.5rem;
+    }
+
+    h3 {
+        font-size: 1.2rem;
+    }
+
+    .footer-grid {
+        grid-template-columns: 1fr;
+        gap: 30px;
+    }
+
+    footer {
+        padding: 50px 0 20px;
+    }
+
+    .footer-bottom {
+        font-size: 0.8rem;
+    }
+
+    .contact-grid {
+        grid-template-columns: 1fr;
+        gap: 30px;
+    }
+
+    .contact-form {
+        padding: 25px;
+    }
+
+    .map-container {
+        height: 280px;
         margin-top: 30px;
+    }
+
+    .stats-grid {
+        grid-template-columns: 1fr 1fr;
+        gap: 15px;
+        margin-top: -30px;
+    }
+
+    .stat-card h2 {
+        font-size: 1.8rem;
+    }
+
+    .ticker-container {
+        font-size: 0.85rem;
+    }
+
+    .latest-badge {
+        font-size: 0.75rem;
+        padding: 4px 10px;
+    }
+
+    /* Portfolio Grid */
+    .portfolio-grid {
+        grid-template-columns: 1fr;
+        gap: 20px;
+    }
+
+    /* Achievement Timeline */
+    .achievement-timeline::after {
+        left: 31px;
+    }
+
+    .timeline-item {
+        width: 100%;
+        padding-left: 70px;
+        padding-right: 20px;
+    }
+
+    .timeline-item::after {
+        left: 19px;
+    }
+
+    .timeline-item.right {
+        left: 0;
+    }
+
+    .timeline-content h3 {
+        font-size: 1.15rem;
+    }
+
+    .inner-page-header {
+        padding: 100px 0 40px !important;
+    }
+
+    .inner-page-header h1 {
+        font-size: 2rem !important;
+    }
+
+    .inner-page-header p {
+        font-size: 1rem !important;
+    }
+
+    /* Filter bar scroll on mobile */
+    .filter-bar {
+        padding-bottom: 8px;
+    }
+
+    .filter-btn {
+        padding: 8px 16px;
+        font-size: 0.85rem;
+    }
+
+    /* Placements */
+    .placements-header {
+        padding: 120px 0 60px;
+    }
+
+    .recruiter-grid {
+        grid-template-columns: repeat(2, 1fr);
+        gap: 20px;
+    }
+
+    .recruiter-logo {
+        font-size: 0.9rem;
+    }
+
+    /* About Page */
+    .about-hero {
+        padding: 120px 0 60px;
+    }
+}
+
+/* Small Mobile */
+@media (max-width: 480px) {
+    .container {
+        padding: 0 15px;
+    }
+
+    .hero {
+        min-height: 70vh;
+        padding: 100px 0 60px;
+    }
+
+    .hero-content h1 {
+        font-size: 1.6rem;
+    }
+
+    .section-padding {
+        padding: 40px 0;
+    }
+
+    .section-title h2 {
+        font-size: 1.5rem;
+    }
+
+    .btn {
+        padding: 10px 20px;
+        font-size: 0.9rem;
+    }
+
+    .card {
+        padding: 20px;
+    }
+
+    .stats-grid {
+        grid-template-columns: 1fr;
+    }
+
+    .stat-card h2 {
+        font-size: 1.5rem;
+    }
+
+    .contact-form {
+        padding: 20px;
+    }
+
+    .form-group input,
+    .form-group textarea,
+    .form-group select {
+        padding: 10px;
+        font-size: 0.9rem;
+    }
+
+    .map-container {
+        height: 220px;
+    }
+
+    footer {
+        padding: 40px 0 15px;
+    }
+
+    .footer-grid {
+        gap: 25px;
+    }
+
+    .mobile-nav {
+        width: 85%;
+    }
+
+    .header-inner {
+        height: 65px;
+    }
+
+    .logo img {
+        height: 40px;
+    }
+
+    .logo-title {
+        font-size: 1.2rem;
+    }
+
+    .logo-subtitle {
+        font-size: 0.6rem;
+    }
+
+    .inner-page-header {
+        padding: 90px 0 30px !important;
+    }
+
+    .inner-page-header h1 {
+        font-size: 1.6rem !important;
+    }
+
+    .portfolio-grid {
+        grid-template-columns: 1fr;
+    }
+
+    .achievement-timeline {
+        padding: 10px 0;
+    }
+
+    .timeline-item {
+        padding-left: 55px;
+        padding-right: 15px;
+    }
+
+    .timeline-content {
+        padding: 18px;
+    }
+
+    .cta-submit {
+        padding: 30px 20px;
+    }
+
+    .ticker-wrap {
+        font-size: 0.8rem;
     }
 }
 

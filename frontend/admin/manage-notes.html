@@ -7,50 +7,21 @@
     <title>Manage Notes | Admin Panel</title>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <link rel="stylesheet" href="../assets/css/style.css">
+    <link rel="stylesheet" href="../assets/css/admin.css">
     <style>
-        :root {
-            --sidebar-width: 260px;
-        }
+        
 
-        body {
-            background: #f4f7f6;
-            display: flex;
-            margin: 0;
-        }
+        
 
-        .sidebar {
-            width: var(--sidebar-width);
-            background: var(--primary);
-            color: white;
-            height: 100vh;
-            position: fixed;
-            padding-top: 30px;
-        }
+        
 
-        .main-content {
-            margin-left: var(--sidebar-width);
-            flex: 1;
-            padding: 40px;
-        }
+        
 
-        .sidebar-menu a {
-            display: flex;
-            align-items: center;
-            padding: 15px 30px;
-            color: rgba(255, 255, 255, 0.7);
-            text-decoration: none;
-        }
+        
 
-        .sidebar-menu a i {
-            margin-right: 15px;
-        }
+        
 
-        .sidebar-menu a:hover,
-        .sidebar-menu a.active {
-            background: rgba(255, 255, 255, 0.05);
-            color: var(--secondary);
-            border-left: 4px solid var(--secondary);
-        }
+        
 
         .admin-table {
             width: 100%;
@@ -124,20 +95,7 @@
 </head>
 
 <body>
-    <div class="sidebar">
-        <div class="sidebar-brand" style="padding: 0 30px 40px;">
-            <h2 style="color:white">SVES Admin</h2>
-        </div>
-        <div class="sidebar-menu">
-            <a href="dashboard.html"><i class="fas fa-home"></i> Dashboard</a>
-            <a href="manage-notes.html" class="active"><i class="fas fa-file-alt"></i> Manage Notes</a>
-            <a href="manage-gallery.html"><i class="fas fa-images"></i> Manage Gallery</a>
-            <a href="manage-announcements.html"><i class="fas fa-bullhorn"></i> Announcements</a>
-            <a href="manage-faculty.html"><i class="fas fa-user-tie"></i> Faculty</a>
-            <a href="#" id="logout-btn" style="margin-top: 50px; color: #ff6b6b;"><i class="fas fa-sign-out-alt"></i>
-                Logout</a>
-        </div>
-    </div>
+    <div id="admin-sidebar"></div>
 
     <div class="main-content">
         <h1>Manage Study Notes</h1>
@@ -209,18 +167,6 @@
     <script>
         if (!isLoggedIn()) window.location.href = 'login.html';
 
-        // CSP-compliant logout handler
-        document.addEventListener('DOMContentLoaded', function () {
-            var logoutBtn = document.getElementById('logout-btn');
-            if (logoutBtn) {
-                logoutBtn.addEventListener('click', function (e) {
-                    e.preventDefault();
-                    localStorage.clear();
-                    window.location.href = '../index.html';
-                });
-            }
-        });
-
         const alertEl = document.getElementById('alert');
         const courses = { 1: 'BCA', 2: 'BA', 3: 'B.Com', 4: 'B.Sc' };
 
@@ -267,13 +213,23 @@
         });
 
         async function deleteNote(id) {
-            if (!confirm('Are you sure?')) return;
-            try { await apiDelete(`/notes/${id}`); showAlert('Note deleted'); loadNotes(); }
-            catch (e) { showAlert('Failed to delete', true); }
+            if (!confirm('Are you sure you want to delete this note?')) return;
+            try { 
+                await apiDelete(`/notes/${id}`); 
+                showAlert('Note deleted successfully', false); 
+                loadNotes(); 
+            }
+            catch (e) { showAlert('Failed to delete note', true); }
         }
 
         document.getElementById('upload-form').addEventListener('submit', async (e) => {
             e.preventDefault();
+            const btn = e.target.querySelector('button[type="submit"]');
+            const originalText = btn.innerHTML;
+            
+            btn.innerHTML = '<i class="fas fa-spinner fa-spin"></i> Uploading...';
+            btn.disabled = true;
+
             const formData = new FormData();
             formData.append('title', document.getElementById('title').value);
             formData.append('course', document.getElementById('course').value);
@@ -281,16 +237,25 @@
             formData.append('subject', document.getElementById('subject').value);
             formData.append('unit', document.getElementById('unit').value);
             formData.append('pdf_file', document.getElementById('pdf_file').files[0]);
+            
             try {
                 await apiPost('/notes', formData);
-                showAlert('Note uploaded successfully!');
+                showAlert('Note uploaded successfully!', false);
                 document.getElementById('upload-form').reset();
                 loadNotes();
-            } catch (e) { showAlert('Failed to upload', true); }
+            } catch (e) { 
+                showAlert('Failed to upload note', true); 
+            } finally {
+                btn.innerHTML = originalText;
+                btn.disabled = false;
+            }
         });
 
         document.addEventListener('DOMContentLoaded', loadNotes);
     </script>
-</body>
+    <script src="../assets/js/main.js"></script></body>
 
 </html>
+
+
+

@@ -26,9 +26,11 @@ async function initCommonUI() {
 
     const headerPath = prefix + 'components/header.html';
     const footerPath = prefix + 'components/footer.html';
+    const sidebarPath = 'components/sidebar.html'; // Admin sidebar is already in admin/
 
     const headerContainer = document.getElementById('main-header');
     const footerContainer = document.getElementById('main-site-footer');
+    const sidebarContainer = document.getElementById('admin-sidebar');
 
     // Add immediate feedback if containers exist
     if (headerContainer) headerContainer.innerHTML = '<div style="height: 80px; background: rgba(0,35,71,0.5);"></div>';
@@ -37,6 +39,16 @@ async function initCommonUI() {
     // Load Header and Footer
     const headerLoaded = await loadComponent('main-header', headerPath);
     const footerLoaded = await loadComponent('main-site-footer', footerPath);
+
+    // Load Admin Sidebar if container exists
+    if (sidebarContainer) {
+        const sidebarLoaded = await loadComponent('admin-sidebar', sidebarPath);
+        if (sidebarLoaded) {
+            setupAdminLogout();
+            highlightActiveLink('.sidebar-menu a');
+            setupAdminMobileSidebar();
+        }
+    }
 
     if (headerLoaded) {
         // If we are in admin, we need to fix relative links in the header
@@ -53,7 +65,7 @@ async function initCommonUI() {
         }
         setupMobileMenu();
         setupNavbarScroll();
-        highlightActiveLink();
+        highlightActiveLink('.nav-links a');
     }
 
     // Initialize AOS if available
@@ -105,18 +117,70 @@ function setupNavbarScroll() {
     });
 }
 
-function highlightActiveLink() {
+function highlightActiveLink(selector = '.nav-links a') {
     const path = window.location.pathname;
     const page = path.split("/").pop() || 'index.html';
 
-    const navLinks = document.querySelectorAll('.nav-links a');
-    navLinks.forEach(link => {
+    const links = document.querySelectorAll(selector);
+    links.forEach(link => {
         const href = link.getAttribute('href');
-        if (href === page) {
+        if (href === page || (page === '' && href === 'index.html')) {
             link.classList.add('active');
         } else {
             link.classList.remove('active');
         }
+    });
+}
+
+function setupAdminLogout() {
+    const logoutBtn = document.getElementById('logout-btn');
+    if (logoutBtn) {
+        logoutBtn.addEventListener('click', function (e) {
+            e.preventDefault();
+            if (typeof logout === 'function') {
+                logout();
+            } else {
+                localStorage.clear();
+                window.location.href = '../index.html';
+            }
+        });
+    }
+}
+
+function setupAdminMobileSidebar() {
+    const sidebar = document.getElementById('admin-sidebar');
+    if (!sidebar) return;
+
+    // Only activate on mobile
+    if (window.innerWidth > 768) return;
+
+    // Create toggle button
+    const toggleBtn = document.createElement('button');
+    toggleBtn.className = 'admin-sidebar-toggle';
+    toggleBtn.innerHTML = '<i class="fas fa-bars"></i>';
+    document.body.appendChild(toggleBtn);
+
+    // Create overlay
+    const overlay = document.createElement('div');
+    overlay.className = 'admin-sidebar-overlay';
+    document.body.appendChild(overlay);
+
+    toggleBtn.addEventListener('click', function () {
+        sidebar.classList.toggle('open');
+        overlay.classList.toggle('active');
+    });
+
+    overlay.addEventListener('click', function () {
+        sidebar.classList.remove('open');
+        overlay.classList.remove('active');
+    });
+
+    // Close sidebar when a link is clicked
+    sidebar.querySelectorAll('a').forEach(link => {
+        link.addEventListener('click', () => {
+            sidebar.classList.remove('open');
+            overlay.classList.remove('active');
+        });
     });
 }
 

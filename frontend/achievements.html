@@ -1,0 +1,199 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="description" content="Our Wall of Excellence - SVES College Harugeri Achievements">
+    <title>Achievements | SVES College</title>
+
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link href="https://unpkg.com/aos@2.3.1/dist/aos.css" rel="stylesheet">
+    <link rel="stylesheet" href="assets/css/style.css">
+    <link rel="icon" type="image/png" href="assets/images/favicon.png">
+
+    <style>
+        .achievement-timeline {
+            position: relative;
+            max-width: 1000px;
+            margin: 40px auto;
+            padding: 20px 0;
+        }
+
+        .achievement-timeline::after {
+            content: '';
+            position: absolute;
+            width: 4px;
+            background: linear-gradient(to bottom, var(--primary), var(--secondary));
+            top: 0;
+            bottom: 0;
+            left: 50%;
+            margin-left: -2px;
+            border-radius: 2px;
+        }
+
+        .timeline-item {
+            padding: 15px 40px;
+            position: relative;
+            width: 50%;
+            box-sizing: border-box;
+        }
+
+        .timeline-item::after {
+            content: '';
+            position: absolute;
+            width: 24px;
+            height: 24px;
+            right: -12px;
+            background: white;
+            border: 4px solid var(--secondary);
+            top: 20px;
+            border-radius: 50%;
+            z-index: 1;
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+        }
+
+        .left {
+            left: 0;
+        }
+
+        .right {
+            left: 50%;
+        }
+
+        .right::after {
+            left: -12px;
+        }
+
+        .timeline-content {
+            padding: 25px;
+            background: white;
+            border-radius: var(--radius-md);
+            box-shadow: var(--shadow-md);
+            border-top: 5px solid var(--primary);
+            transition: transform 0.3s ease;
+        }
+
+        .timeline-content:hover {
+            transform: translateY(-5px);
+        }
+
+        .timeline-date {
+            color: var(--secondary);
+            font-weight: 800;
+            font-size: 0.9rem;
+            margin-bottom: 12px;
+            display: block;
+            text-transform: uppercase;
+        }
+
+        .timeline-content h3 {
+            color: var(--primary);
+            margin-bottom: 15px;
+            font-size: 1.4rem;
+        }
+
+        .achievement-img {
+            width: 100%;
+            height: 220px;
+            object-fit: cover;
+            border-radius: var(--radius-sm);
+            margin-bottom: 15px;
+            border: 1px solid #eee;
+        }
+
+        @media screen and (max-width: 768px) {
+            .achievement-timeline::after {
+                left: 31px;
+            }
+
+            .timeline-item {
+                width: 100%;
+                padding-left: 70px;
+                padding-right: 25px;
+            }
+
+            .timeline-item::after {
+                left: 19px;
+            }
+
+            .right {
+                left: 0%;
+            }
+        }
+    </style>
+</head>
+
+<body>
+    <header id="main-header"></header>
+
+    <section class="inner-page-header"
+        style="background: linear-gradient(rgba(0, 35, 71, 0.8), rgba(0, 35, 71, 0.8)), url('assets/images/achievements-bg.jpg'); background-size: cover; padding: 120px 0 60px; color: white; text-align: center;">
+        <div class="container" data-aos="fade-down">
+            <h1 style="font-size: 3rem; margin-bottom: 15px;">Wall of Excellence</h1>
+            <p style="font-size: 1.2rem; opacity: 0.9; max-width: 700px; margin: 0 auto;">Celebrating our milestones,
+                victories, and the remarkable journey of SVES College.</p>
+        </div>
+    </section>
+
+    <section class="section-padding" style="background: #f9fbfd;">
+        <div class="container">
+            <div id="achievements-container" class="achievement-timeline">
+                <div style="text-align: center; padding: 50px;">
+                    <i class="fas fa-spinner fa-spin fa-3x" style="color: var(--secondary);"></i>
+                    <p style="margin-top: 20px; color: #777;">Loading achievements...</p>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <footer id="main-site-footer"></footer>
+
+    <script src="https://unpkg.com/aos@2.3.1/dist/aos.js"></script>
+    <script src="assets/js/api.js"></script>
+    <script src="assets/js/main.js"></script>
+    <script>
+        async function loadAchievements() {
+            const container = document.getElementById('achievements-container');
+            try {
+                const data = await apiGet('/achievements');
+
+                if (!data || data.length === 0) {
+                    container.innerHTML = `
+                        <div style="text-align: center; padding: 60px; background: white; border-radius: 12px; box-shadow: var(--shadow-sm);">
+                            <i class="fas fa-trophy fa-4x" style="color: #eee; margin-bottom: 20px;"></i>
+                            <h3 style="color: #999;">The Wall is currently being updated</h3>
+                            <p style="color: #bbb;">Check back soon to see our latest achievements.</p>
+                        </div>
+                    `;
+                    container.style.after = 'display: none'; // Hide timeline line
+                    return;
+                }
+
+                container.innerHTML = data.map((item, index) => {
+                    const side = index % 2 === 0 ? 'left' : 'right';
+                    const anim = side === 'left' ? 'fade-right' : 'fade-left';
+                    const imgPlaceholder = 'assets/images/achieve-placeholder.jpg';
+                    const imgSrc = item.image_path ? resolvePath(item.image_path) : imgPlaceholder;
+
+                    return `
+                        <div class="timeline-item ${side}" data-aos="${anim}">
+                            <div class="timeline-content">
+                                <span class="timeline-date">${item.achievement_date}</span>
+                                <img src="${imgSrc}" class="achievement-img" alt="${item.title}" onerror="this.src='${imgPlaceholder}'">
+                                <h3>${item.title}</h3>
+                                <p style="color: #555; line-height: 1.6;">${item.description}</p>
+                            </div>
+                        </div>
+                    `;
+                }).join('');
+            } catch (err) {
+                container.innerHTML = '<p style="text-align:center; color: red;">Failed to load achievements wall.</p>';
+            }
+        }
+
+        document.addEventListener('DOMContentLoaded', loadAchievements);
+    </script>
+</body>
+
+</html>

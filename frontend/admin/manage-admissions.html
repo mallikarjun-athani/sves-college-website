@@ -7,32 +7,15 @@
     <title>Manage Admissions | Admin Panel</title>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <link rel="stylesheet" href="../assets/css/style.css">
+    <link rel="stylesheet" href="../assets/css/admin.css">
     <style>
-        :root {
-            --sidebar-width: 260px;
-        }
+        
 
-        body {
-            background: #f4f7f6;
-            display: flex;
-            margin: 0;
-        }
+        
 
-        .sidebar {
-            width: var(--sidebar-width);
-            background: var(--primary);
-            color: white;
-            height: 100vh;
-            position: fixed;
-            padding-top: 30px;
-        }
+        
 
-        .main-content {
-            margin-left: var(--sidebar-width);
-            flex: 1;
-            padding: 40px;
-            min-height: 100vh;
-        }
+        
 
         .sidebar-brand {
             padding: 0 30px 40px;
@@ -40,27 +23,11 @@
             margin-bottom: 30px;
         }
 
-        .sidebar-menu a {
-            display: flex;
-            align-items: center;
-            padding: 15px 30px;
-            color: rgba(255, 255, 255, 0.7);
-            font-weight: 500;
-            text-decoration: none;
-            transition: var(--transition);
-        }
+        
 
-        .sidebar-menu a i {
-            margin-right: 15px;
-            width: 20px;
-        }
+        
 
-        .sidebar-menu a:hover,
-        .sidebar-menu a.active {
-            background: rgba(255, 255, 255, 0.05);
-            color: var(--secondary);
-            border-left: 4px solid var(--secondary);
-        }
+        
 
         .header-bar {
             display: flex;
@@ -176,21 +143,7 @@
 </head>
 
 <body>
-    <div class="sidebar">
-        <div class="sidebar-brand">
-            <h2>SVES Admin</h2>
-        </div>
-        <div class="sidebar-menu">
-            <a href="dashboard.html"><i class="fas fa-home"></i> Dashboard</a>
-            <a href="manage-notes.html"><i class="fas fa-file-alt"></i> Manage Notes</a>
-            <a href="manage-gallery.html"><i class="fas fa-images"></i> Manage Gallery</a>
-            <a href="manage-announcements.html"><i class="fas fa-bullhorn"></i> Announcements</a>
-            <a href="manage-faculty.html"><i class="fas fa-user-tie"></i> Faculty</a>
-            <a href="manage-admissions.html" class="active"><i class="fas fa-user-graduate"></i> Admissions</a>
-            <a href="#" id="logout-btn" style="margin-top: 50px; color: #ff6b6b;"><i class="fas fa-sign-out-alt"></i>
-                Logout</a>
-        </div>
-    </div>
+    <div id="admin-sidebar"></div>
 
     <div class="main-content">
         <div class="header-bar">
@@ -290,23 +243,30 @@
             if (!currentId) return;
             try {
                 await apiPatch(`/admissions/${currentId}/status`, { status });
-                alert('Status updated!');
+                // Replace standard alert with something better if needed, but for now keeping it safe
+                alert('Success: Status updated to ' + status);
                 closeModal();
                 loadAdmissions();
             } catch (error) {
                 console.error('Update failed:', error);
-                alert('Failed to update status.');
+                alert('Error: Failed to update status.');
             }
         }
 
-        document.getElementById('logout-btn').addEventListener('click', (e) => {
-            e.preventDefault();
-            localStorage.clear();
-            window.location.href = '../index.html';
-        });
+        const logoutBtn = document.getElementById('logout-btn');
+        if (logoutBtn) {
+            logoutBtn.addEventListener('click', (e) => {
+                e.preventDefault();
+                localStorage.clear();
+                window.location.href = '../index.html';
+            });
+        }
 
         document.addEventListener('DOMContentLoaded', loadAdmissions);
     </script>
-</body>
+    <script src="../assets/js/main.js"></script></body>
 
 </html>
+
+
+
