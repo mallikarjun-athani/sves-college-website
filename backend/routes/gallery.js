@@ -3,16 +3,29 @@ const router = express.Router();
 const multer = require('multer');
 const path = require('path');
 const fs = require('fs');
-const { body, validationResult } = require('express-validator');
-const { supabaseAdmin, supabasePublic } = require('../config/supabase');
+const db = require('../config/database');
 const authMiddleware = require('../middleware/auth');
 
-// Configure multer for RAM storage (to upload to Supabase)
-const storage = multer.memoryStorage();
+// Ensure uploads directory exists
+const uploadsDir = path.join(__dirname, '../../frontend/uploads/gallery');
+if (!fs.existsSync(uploadsDir)) {
+    fs.mkdirSync(uploadsDir, { recursive: true });
+}
+
+// Configure multer for local disk storage
+const storage = multer.diskStorage({
+    destination: (req, file, cb) => {
+        cb(null, uploadsDir);
+    },
+    filename: (req, file, cb) => {
+        const filename = Date.now() + '_' + file.originalname.replace(/\s+/g, '_');
+        cb(null, filename);
+    }
+});
 
 const upload = multer({
     storage,
-    limits: { fileSize: 5 * 1024 * 1024 }, // 5MB limit
+    limits: { fileSize: 15 * 1024 * 1024 }, // 15MB limit
     fileFilter: (req, file, cb) => {
         const allowedTypes = ['image/jpeg', 'image/jpg', 'image/png', 'image/gif', 'image/webp'];
         if (allowedTypes.includes(file.mimetype)) {
@@ -30,18 +43,17 @@ router.get('/', async (req, res) => {
     try {
         const { category } = req.query;
 
-        let query = supabasePublic
-            .from('gallery')
-            .select('*')
-            .order('id', { ascending: false });
+        let sql = 'SELECT * FROM gallery';
+        const values = [];
 
         if (category) {
-            query = query.eq('category', category);
+            sql += ' WHERE category = ?';
+            values.push(category);
         }
 
-        const { data, error } = await query;
+        sql += ' ORDER BY id DESC';
 
-        if (error) throw error;
+        const [data] = await db.query(sql, values);
 
         res.json(data);
     } catch (error) {
@@ -55,14 +67,9 @@ router.get('/', async (req, res) => {
 // @access  Public
 router.get('/banners', async (req, res) => {
     try {
-        const { data, error } = await supabasePublic
-            .from('gallery')
-            .select('*')
-            .eq('category', 'Banner')
-            .order('id', { ascending: false })
-            .limit(5);
-
-        if (error) throw error;
+        const [data] = await db.query(
+            "SELECT * FROM gallery WHERE category = 'Banner' ORDER BY id DESC LIMIT 5"
+        );
 
         res.json(data);
     } catch (error) {
@@ -76,18 +83,16 @@ router.get('/banners', async (req, res) => {
 // @access  Public
 router.get('/:id', async (req, res) => {
     try {
-        const { data, error } = await supabasePublic
-            .from('gallery')
-            .select('*')
-            .eq('id', req.params.id)
-            .single();
+        const [rows] = await db.query(
+            'SELECT * FROM gallery WHERE id = ?',
+            [req.params.id]
+        );
 
-        if (error) throw error;
-        if (!data) {
+        if (rows.length === 0) {
             return res.status(404).json({ error: 'Image not found' });
         }
 
-        res.json(data);
+        res.json(rows[0]);
     } catch (error) {
         console.error('Get gallery image error:', error);
         res.status(500).json({ error: 'Failed to fetch image' });
@@ -95,7 +100,7 @@ router.get('/:id', async (req, res) => {
 });
 
 // @route   POST /api/gallery
-// @desc    Upload new gallery image to Supabase Storage
+// @desc    Upload new gallery image to local storage
 // @access  Private (Admin)
 router.post('/', authMiddleware, upload.single('image_file'), async (req, res) => {
     try {
@@ -114,89 +119,59 @@ router.post('/', authMiddleware, upload.single('image_file'), async (req, res) =
             return res.status(400).json({ error: 'Invalid category' });
         }
 
-        // Upload to Supabase Storage
-        const filename = Date.now() + '_' + req.file.originalname.replace(/\s+/g, '_');
-        const filePath = `gallery/${filename}`;
+        const filePath = `uploads/gallery/${req.file.filename}`;
 
-        const { data: uploadData, error: uploadError } = await supabaseAdmin
-            .storage
-            .from('uploads')
-            .upload(filePath, req.file.buffer, {
-                contentType: req.file.mimetype,
-                upsert: false
-            });
+        const [result] = await db.query(
+            'INSERT INTO gallery (image_path, caption, category) VALUES (?, ?, ?)',
+            [filePath, caption, category || 'Campus']
+        );
 
-        if (uploadError) throw uploadError;
-
-        // Get Public URL
-        const { data: { publicUrl } } = supabaseAdmin
-            .storage
-            .from('uploads')
-            .getPublicUrl(filePath);
-
-        const { data, error } = await supabaseAdmin
-            .from('gallery')
-            .insert([{
-                image_path: publicUrl,
-                caption,
-                category: category || 'Campus'
-            }])
-            .select()
-            .single();
-
-        if (error) {
-            // Cleanup: Delete uploaded file if DB insert fails
-            await supabaseAdmin.storage.from('uploads').remove([filePath]);
-            throw error;
-        }
+        const [rows] = await db.query(
+            'SELECT * FROM gallery WHERE id = ?',
+            [result.insertId]
+        );
 
         res.status(201).json({
             message: 'Image uploaded successfully',
-            image: data
+            image: rows[0]
         });
     } catch (error) {
         console.error('Upload gallery error:', error);
+        // Cleanup uploaded file on error
+        if (req.file) {
+            const fullPath = path.join(uploadsDir, req.file.filename);
+            if (fs.existsSync(fullPath)) fs.unlinkSync(fullPath);
+        }
         res.status(500).json({ error: 'Failed to upload image' });
     }
 });
 
 // @route   DELETE /api/gallery/:id
-// @desc    Delete gallery image from Storage and DB
+// @desc    Delete gallery image from storage and DB
 // @access  Private (Admin)
 router.delete('/:id', authMiddleware, async (req, res) => {
     try {
         // First get the image to find the file path
-        const { data: image, error: fetchError } = await supabaseAdmin
-            .from('gallery')
-            .select('image_path')
-            .eq('id', req.params.id)
-            .single();
+        const [rows] = await db.query(
+            'SELECT image_path FROM gallery WHERE id = ?',
+            [req.params.id]
+        );
 
-        if (fetchError) throw fetchError;
+        const image = rows[0];
 
         if (image && image.image_path) {
-            // Extract the relative path from the public URL
-            const parts = image.image_path.split('/uploads/');
-            if (parts.length > 1) {
-                const storagePath = parts[1];
-
-                // Delete from Storage
-                const { error: storageError } = await supabaseAdmin
-                    .storage
-                    .from('uploads')
-                    .remove([storagePath]);
-
-                if (storageError) console.error('Error deleting file from storage:', storageError);
+            // Delete local file
+            const fullPath = path.join(__dirname, '../../frontend', image.image_path);
+            if (fs.existsSync(fullPath)) {
+                fs.unlinkSync(fullPath);
             }
         }
 
         // Delete from database
-        const { error: deleteError } = await supabaseAdmin
-            .from('gallery')
-            .delete()
-            .eq('id', req.params.id);
-
-        if (deleteError) throw deleteError;
+        await db.query(
+            'DELETE FROM gallery WHERE id = ?',
+            [req.params.id]
+        );
 
         res.json({ message: 'Image deleted successfully' });
     } catch (error) {

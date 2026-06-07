@@ -450,7 +450,7 @@
                 <div class="faculty-card" data-aos="fade-up">
                     <div class="faculty-img-container">
                         ${f.image_path ?
-                    `<img src="${resolvePath(f.image_path)}" alt="${f.name}" class="faculty-img">` :
+                    `<img src="${resolvePath(f.image_path)}" alt="${f.name}" class="faculty-img lightbox-img" style="cursor: pointer;">` :
                     '<i class="fas fa-user-circle fa-7x" style="color:#ddd;"></i>'}
                     </div>
                     <div class="faculty-info">

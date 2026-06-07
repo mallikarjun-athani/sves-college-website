@@ -73,7 +73,10 @@
 
 <body>
     <div class="login-card">
-        <h2>Admin Portal</h2>
+        <div style="text-align: center; margin-bottom: 15px;">
+            <img src="../assets/images/logo.png" alt="SVES Logo" style="height: 80px;">
+        </div>
+        <h2 style="margin-top: 0;">Admin Portal</h2>
 
         <div class="error-msg" id="error-msg"></div>
 
@@ -96,10 +99,8 @@
 
     <script src="../assets/js/api.js"></script>
     <script>
-        // Check if already logged in
-        if (isLoggedIn()) {
-            window.location.href = 'dashboard.html';
-        }
+        // Force the user to log in again if they visit the login page
+        removeToken();
 
         const loginForm = document.getElementById('login-form');
         const errorMsg = document.getElementById('error-msg');

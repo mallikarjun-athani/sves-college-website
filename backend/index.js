@@ -2,7 +2,7 @@
  * SVES College Website - Node.js Backend Server
  * 
  * This Express server provides RESTful API endpoints for the college website,
- * replacing the previous PHP backend with Supabase as the database.
+ * using MySQL (XAMPP) as the database.
  */
 
 require('dotenv').config();
@@ -22,6 +22,9 @@ const facultyRoutes = require('./routes/faculty');
 const dashboardRoutes = require('./routes/dashboard');
 const coursesRoutes = require('./routes/courses');
 const admissionsRoutes = require('./routes/admissions');
+const timetableRoutes = require('./routes/timetable');
+const achievementsRoutes = require('./routes/achievements');
+const portfoliosRoutes = require('./routes/portfolios');
 
 const app = express();
 const PORT = process.env.PORT || 3000;
@@ -29,7 +32,7 @@ const PORT = process.env.PORT || 3000;
 // ============================================
 // ENVIRONMENT VALIDATION
 // ============================================
-const requiredEnv = ['JWT_SECRET', 'SUPABASE_URL', 'SUPABASE_SERVICE_KEY', 'SUPABASE_ANON_KEY'];
+const requiredEnv = ['JWT_SECRET'];
 const missingEnv = requiredEnv.filter(env => !process.env[env]);
 
 if (missingEnv.length > 0) {
@@ -46,11 +49,13 @@ app.use(helmet({
     contentSecurityPolicy: {
         directives: {
             ...helmet.contentSecurityPolicy.getDefaultDirectives(),
-            "img-src": ["'self'", "data:", "*.supabase.co"],
-            "script-src": ["'self'", "'unsafe-inline'", "https://unpkg.com", "https://cdnjs.cloudflare.com"],
-            "connect-src": ["'self'", "https://*.supabase.co", "https://*.vercel.app"],
+            "upgrade-insecure-requests": null,
+            "img-src": ["'self'", "data:"],
+            "script-src": ["'self'", "'unsafe-inline'", "https://unpkg.com", "https://cdnjs.cloudflare.com", "https://cdn.jsdelivr.net"],
+            "connect-src": ["'self'", "https://*.vercel.app", "https://api.emailjs.com"],
             "style-src": ["'self'", "'unsafe-inline'", "https://fonts.googleapis.com", "https://cdnjs.cloudflare.com", "https://unpkg.com"],
             "font-src": ["'self'", "https://fonts.gstatic.com", "https://cdnjs.cloudflare.com"],
+            "frame-src": ["'self'", "https://www.google.com", "https://maps.google.com"],
         },
     },
 }));
@@ -130,6 +135,9 @@ app.use('/api/faculty', facultyRoutes);
 app.use('/api/dashboard', dashboardRoutes);
 app.use('/api/courses', coursesRoutes);
 app.use('/api/admissions', admissionsRoutes);
+app.use('/api/timetable', timetableRoutes);
+app.use('/api/achievements', achievementsRoutes);
+app.use('/api/portfolios', portfoliosRoutes);
 
 // ============================================
 // HEALTH CHECK

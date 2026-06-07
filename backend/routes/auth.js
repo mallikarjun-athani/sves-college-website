@@ -3,7 +3,7 @@ const router = express.Router();
 const bcrypt = require('bcryptjs');
 const jwt = require('jsonwebtoken');
 const { body, validationResult } = require('express-validator');
-const { supabaseAdmin } = require('../config/supabase');
+const db = require('../config/database');
 const authMiddleware = require('../middleware/auth');
 
 // @route   POST /api/auth/login
@@ -23,13 +23,14 @@ router.post('/login', [
         const { username, password } = req.body;
 
         // Get admin from database
-        const { data: admin, error } = await supabaseAdmin
-            .from('admin')
-            .select('*')
-            .eq('username', username)
-            .single();
+        const [rows] = await db.query(
+            'SELECT * FROM admin WHERE username = ?',
+            [username]
+        );
 
-        if (error || !admin) {
+        const admin = rows[0];
+
+        if (!admin) {
             return res.status(401).json({ error: 'Invalid credentials' });
         }
 
@@ -102,13 +103,14 @@ router.post('/change-password', authMiddleware, [
         const adminId = req.admin.id;
 
         // Get current admin
-        const { data: admin, error: fetchError } = await supabaseAdmin
-            .from('admin')
-            .select('password')
-            .eq('id', adminId)
-            .single();
+        const [rows] = await db.query(
+            'SELECT password FROM admin WHERE id = ?',
+            [adminId]
+        );
 
-        if (fetchError || !admin) {
+        const admin = rows[0];
+
+        if (!admin) {
             return res.status(404).json({ error: 'Admin not found' });
         }
 
@@ -122,14 +124,10 @@ router.post('/change-password', authMiddleware, [
         const hashedPassword = await bcrypt.hash(newPassword, 10);
 
         // Update password
-        const { error: updateError } = await supabaseAdmin
-            .from('admin')
-            .update({ password: hashedPassword })
-            .eq('id', adminId);
-
-        if (updateError) {
-            throw updateError;
-        }
+        await db.query(
+            'UPDATE admin SET password = ? WHERE id = ?',
+            [hashedPassword, adminId]
+        );
 
         res.json({ message: 'Password changed successfully' });
     } catch (error) {

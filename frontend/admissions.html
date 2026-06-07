@@ -237,17 +237,45 @@
 
         .modal-close {
             position: absolute;
-            top: 20px;
-            right: 20px;
-            font-size: 1.5rem;
+            top: 15px;
+            right: 15px;
+            width: 32px;
+            height: 32px;
+            background: #f1f5f9;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 1.1rem;
             color: var(--primary);
             cursor: pointer;
             transition: var(--transition);
+            z-index: 10;
         }
 
         .modal-close:hover {
-            color: var(--secondary);
+            background: #e2e8f0;
+            color: var(--primary);
             transform: rotate(90deg);
+        }
+
+        .modal-header-custom {
+            text-align: center;
+            margin-bottom: 25px;
+            padding-bottom: 15px;
+            border-bottom: 2px solid #f1f5f9;
+        }
+
+        .modal-header-custom h2 {
+            color: var(--primary);
+            font-size: 1.6rem;
+            margin-bottom: 5px;
+        }
+
+        .modal-header-custom p {
+            color: var(--text-light);
+            font-size: 0.95rem;
+            margin: 0;
         }
 
         /* Form Styles */
@@ -432,28 +460,7 @@
                 <p>Choose your preferred program from our BA, B.Com, B.Sc, and BCA offerings.</p>
             </div>
 
-            <!-- 5. Status Tracking -->
-            <div class="feature-card" data-aos="fade-up">
-                <div class="feature-icon"><i class="fas fa-tasks"></i></div>
-                <h3>Status Tracking</h3>
-                <p>Check your admission progress anytime through your personalized applicant dashboard.</p>
-            </div>
-
-            <!-- 6. Instant Confirmation -->
-            <div class="feature-card" data-aos="fade-up" data-aos-delay="100">
-                <div class="feature-icon"><i class="fas fa-check-double"></i></div>
-                <h3>Instant Confirmation</h3>
-                <p>Get immediate digital acknowledgement and receipt right after successful submission.</p>
-            </div>
-
-            <!-- 7. Apply Now (Action Card) -->
-            <div class="feature-card" data-aos="fade-up" data-aos-delay="200"
-                style="background: var(--secondary); display: flex; flex-direction: column; justify-content: center; align-items: center; border-bottom: none; text-align: center;">
-                <h3 style="color: var(--primary); margin-bottom: 20px;">Ready to Start?</h3>
-                <button class="btn btn-primary apply-now-trigger"
-                    style="width: 100%; border: none; cursor: pointer;">Apply Now</button>
-                <p style="color: var(--primary); font-weight: 500; margin-top: 15px;">Start your admission today</p>
-            </div>
+            <!-- Removed extra 3 cards as requested -->
         </div>
 
         <div class="apply-now-hero" data-aos="zoom-in">
@@ -563,8 +570,9 @@
     <div class="modal-overlay" id="admissionModal">
         <div class="modal-content">
             <i class="fas fa-times modal-close" id="closeAdmissionModal"></i>
-            <div class="section-title" style="margin-bottom: 30px;">
-                <h2 style="font-size: 1.8rem; left: 0; transform: none; text-align: center;">Admission Form 2026-27</h2>
+            <div class="modal-header-custom">
+                <h2>Admission Form 2026-27</h2>
+                <p>Please fill out the details below to apply</p>
             </div>
 
             <form id="admissionForm" class="admission-form">

@@ -1,7 +1,7 @@
 const express = require('express');
 const router = express.Router();
 const { body, validationResult } = require('express-validator');
-const { supabaseAdmin, supabasePublic } = require('../config/supabase');
+const db = require('../config/database');
 const authMiddleware = require('../middleware/auth');
 
 // @route   GET /api/announcements
@@ -9,12 +9,9 @@ const authMiddleware = require('../middleware/auth');
 // @access  Public
 router.get('/', async (req, res) => {
     try {
-        const { data, error } = await supabasePublic
-            .from('announcements')
-            .select('*')
-            .order('created_at', { ascending: false });
-
-        if (error) throw error;
+        const [data] = await db.query(
+            'SELECT * FROM announcements ORDER BY created_at DESC'
+        );
 
         res.json(data);
     } catch (error) {
@@ -28,18 +25,16 @@ router.get('/', async (req, res) => {
 // @access  Public
 router.get('/:id', async (req, res) => {
     try {
-        const { data, error } = await supabasePublic
-            .from('announcements')
-            .select('*')
-            .eq('id', req.params.id)
-            .single();
+        const [rows] = await db.query(
+            'SELECT * FROM announcements WHERE id = ?',
+            [req.params.id]
+        );
 
-        if (error) throw error;
-        if (!data) {
+        if (rows.length === 0) {
             return res.status(404).json({ error: 'Announcement not found' });
         }
 
-        res.json(data);
+        res.json(rows[0]);
     } catch (error) {
         console.error('Get announcement error:', error);
         res.status(500).json({ error: 'Failed to fetch announcement' });
@@ -61,17 +56,20 @@ router.post('/', authMiddleware, [
 
         const { title, link } = req.body;
 
-        const { data, error } = await supabaseAdmin
-            .from('announcements')
-            .insert([{ title, link: link || null }])
-            .select()
-            .single();
+        const [result] = await db.query(
+            'INSERT INTO announcements (title, link) VALUES (?, ?)',
+            [title, link || null]
+        );
 
-        if (error) throw error;
+        // Fetch the inserted row to return it
+        const [rows] = await db.query(
+            'SELECT * FROM announcements WHERE id = ?',
+            [result.insertId]
+        );
 
         res.status(201).json({
             message: 'Announcement added successfully',
-            announcement: data
+            announcement: rows[0]
         });
     } catch (error) {
         console.error('Create announcement error:', error);
@@ -88,26 +86,41 @@ router.put('/:id', authMiddleware, [
 ], async (req, res) => {
     try {
         const { title, link } = req.body;
-        const updateData = {};
+        const updates = [];
+        const values = [];
 
-        if (title !== undefined) updateData.title = title;
-        if (link !== undefined) updateData.link = link;
+        if (title !== undefined) {
+            updates.push('title = ?');
+            values.push(title);
+        }
+        if (link !== undefined) {
+            updates.push('link = ?');
+            values.push(link);
+        }
 
-        const { data, error } = await supabaseAdmin
-            .from('announcements')
-            .update(updateData)
-            .eq('id', req.params.id)
-            .select()
-            .single();
+        if (updates.length === 0) {
+            return res.status(400).json({ error: 'No fields to update' });
+        }
 
-        if (error) throw error;
-        if (!data) {
+        values.push(req.params.id);
+
+        await db.query(
+            `UPDATE announcements SET ${updates.join(', ')} WHERE id = ?`,
+            values
+        );
+
+        const [rows] = await db.query(
+            'SELECT * FROM announcements WHERE id = ?',
+            [req.params.id]
+        );
+
+        if (rows.length === 0) {
             return res.status(404).json({ error: 'Announcement not found' });
         }
 
         res.json({
             message: 'Announcement updated successfully',
-            announcement: data
+            announcement: rows[0]
         });
     } catch (error) {
         console.error('Update announcement error:', error);
@@ -120,12 +133,10 @@ router.put('/:id', authMiddleware, [
 // @access  Private (Admin)
 router.delete('/:id', authMiddleware, async (req, res) => {
     try {
-        const { error } = await supabaseAdmin
-            .from('announcements')
-            .delete()
-            .eq('id', req.params.id);
-
-        if (error) throw error;
+        await db.query(
+            'DELETE FROM announcements WHERE id = ?',
+            [req.params.id]
+        );
 
         res.json({ message: 'Announcement deleted successfully' });
     } catch (error) {

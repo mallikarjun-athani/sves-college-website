@@ -3,16 +3,29 @@ const router = express.Router();
 const multer = require('multer');
 const path = require('path');
 const fs = require('fs');
-const { body, validationResult } = require('express-validator');
-const { supabaseAdmin, supabasePublic } = require('../config/supabase');
+const db = require('../config/database');
 const authMiddleware = require('../middleware/auth');
 
-// Configure multer for RAM storage (to upload to Supabase)
-const storage = multer.memoryStorage();
+// Ensure uploads directory exists
+const uploadsDir = path.join(__dirname, '../../frontend/uploads/notes');
+if (!fs.existsSync(uploadsDir)) {
+    fs.mkdirSync(uploadsDir, { recursive: true });
+}
+
+// Configure multer for local disk storage
+const storage = multer.diskStorage({
+    destination: (req, file, cb) => {
+        cb(null, uploadsDir);
+    },
+    filename: (req, file, cb) => {
+        const filename = Date.now() + '_' + file.originalname.replace(/\s+/g, '_');
+        cb(null, filename);
+    }
+});
 
 const upload = multer({
     storage,
-    limits: { fileSize: 10 * 1024 * 1024 }, // 10MB limit
+    limits: { fileSize: 25 * 1024 * 1024 }, // 25MB limit
     fileFilter: (req, file, cb) => {
         if (file.mimetype === 'application/pdf') {
             cb(null, true);
@@ -29,24 +42,30 @@ router.get('/', async (req, res) => {
     try {
         const { course, semester, subject } = req.query;
 
-        let query = supabasePublic
-            .from('notes')
-            .select('*')
-            .order('upload_date', { ascending: false });
+        let sql = 'SELECT * FROM notes';
+        const conditions = [];
+        const values = [];
 
         if (course) {
-            query = query.eq('course_id', parseInt(course));
+            conditions.push('course_id = ?');
+            values.push(parseInt(course));
         }
         if (semester) {
-            query = query.eq('semester', parseInt(semester));
+            conditions.push('semester = ?');
+            values.push(parseInt(semester));
         }
         if (subject) {
-            query = query.ilike('subject', `%${subject}%`);
+            conditions.push('subject LIKE ?');
+            values.push(`%${subject}%`);
         }
 
-        const { data, error } = await query;
+        if (conditions.length > 0) {
+            sql += ' WHERE ' + conditions.join(' AND ');
+        }
 
-        if (error) throw error;
+        sql += ' ORDER BY upload_date DESC';
+
+        const [data] = await db.query(sql, values);
 
         res.json(data);
     } catch (error) {
@@ -60,18 +79,16 @@ router.get('/', async (req, res) => {
 // @access  Public
 router.get('/:id', async (req, res) => {
     try {
-        const { data, error } = await supabasePublic
-            .from('notes')
-            .select('*')
-            .eq('id', req.params.id)
-            .single();
+        const [rows] = await db.query(
+            'SELECT * FROM notes WHERE id = ?',
+            [req.params.id]
+        );
 
-        if (error) throw error;
-        if (!data) {
+        if (rows.length === 0) {
             return res.status(404).json({ error: 'Note not found' });
         }
 
-        res.json(data);
+        res.json(rows[0]);
     } catch (error) {
         console.error('Get note error:', error);
         res.status(500).json({ error: 'Failed to fetch note' });
@@ -79,7 +96,7 @@ router.get('/:id', async (req, res) => {
 });
 
 // @route   POST /api/notes
-// @desc    Upload new note with PDF to Supabase Storage
+// @desc    Upload new note with PDF to local storage
 // @access  Private (Admin)
 router.post('/', authMiddleware, upload.single('pdf_file'), async (req, res) => {
     try {
@@ -94,95 +111,61 @@ router.post('/', authMiddleware, upload.single('pdf_file'), async (req, res) => 
             return res.status(400).json({ error: 'PDF file is required' });
         }
 
-        // Upload to Supabase Storage
-        const filename = Date.now() + '_' + req.file.originalname.replace(/\s+/g, '_');
-        const filePath = `notes/${filename}`;
-
-        const { data: uploadData, error: uploadError } = await supabaseAdmin
-            .storage
-            .from('uploads')
-            .upload(filePath, req.file.buffer, {
-                contentType: 'application/pdf',
-                upsert: false
-            });
-
-        if (uploadError) throw uploadError;
-
-        // Get Public URL
-        const { data: { publicUrl } } = supabaseAdmin
-            .storage
-            .from('uploads')
-            .getPublicUrl(filePath);
+        // Store relative path for serving via express static
+        const filePath = `uploads/notes/${req.file.filename}`;
 
         // Save metadata to Database
-        const { data, error } = await supabaseAdmin
-            .from('notes')
-            .insert([{
-                title,
-                course_id: parseInt(course),
-                semester: parseInt(semester),
-                subject,
-                unit,
-                file_path: publicUrl // Store the full public URL
-            }])
-            .select()
-            .single();
+        const [result] = await db.query(
+            'INSERT INTO notes (title, course_id, semester, subject, unit, file_path) VALUES (?, ?, ?, ?, ?, ?)',
+            [title, parseInt(course), parseInt(semester), subject, unit, filePath]
+        );
 
-        if (error) {
-            // Cleanup: Delete uploaded file if DB insert fails
-            await supabaseAdmin.storage.from('uploads').remove([filePath]);
-            throw error;
-        }
+        const [rows] = await db.query(
+            'SELECT * FROM notes WHERE id = ?',
+            [result.insertId]
+        );
 
         res.status(201).json({
             message: 'Note uploaded successfully',
-            note: data
+            note: rows[0]
         });
     } catch (error) {
         console.error('Upload note error:', error);
+        // Cleanup: Delete uploaded file if DB insert fails
+        if (req.file) {
+            const fullPath = path.join(uploadsDir, req.file.filename);
+            if (fs.existsSync(fullPath)) fs.unlinkSync(fullPath);
+        }
         res.status(500).json({ error: 'Failed to upload note' });
     }
 });
 
 // @route   DELETE /api/notes/:id
-// @desc    Delete note and its PDF file from Storage
+// @desc    Delete note and its PDF file from storage
 // @access  Private (Admin)
 router.delete('/:id', authMiddleware, async (req, res) => {
     try {
         // First get the note to find the file path
-        const { data: note, error: fetchError } = await supabaseAdmin
-            .from('notes')
-            .select('file_path')
-            .eq('id', req.params.id)
-            .single();
+        const [rows] = await db.query(
+            'SELECT file_path FROM notes WHERE id = ?',
+            [req.params.id]
+        );
 
-        if (fetchError) throw fetchError;
+        const note = rows[0];
 
         if (note && note.file_path) {
-            // Extract the relative path from the public URL
-            // URL format: https://.../storage/v1/object/public/uploads/notes/filename.pdf
-            // We need: notes/filename.pdf
-            const parts = note.file_path.split('/uploads/');
-            if (parts.length > 1) {
-                const storagePath = parts[1]; // content after .../uploads/
-
-                // Delete from Storage
-                const { error: storageError } = await supabaseAdmin
-                    .storage
-                    .from('uploads')
-                    .remove([storagePath]);
-
-                if (storageError) console.error('Error deleting file from storage:', storageError);
+            // Delete local file
+            const fullPath = path.join(__dirname, '../../frontend', note.file_path);
+            if (fs.existsSync(fullPath)) {
+                fs.unlinkSync(fullPath);
             }
         }
 
         // Delete from database
-        const { error: deleteError } = await supabaseAdmin
-            .from('notes')
-            .delete()
-            .eq('id', req.params.id);
-
-        if (deleteError) throw deleteError;
+        await db.query(
+            'DELETE FROM notes WHERE id = ?',
+            [req.params.id]
+        );
 
         res.json({ message: 'Note deleted successfully' });
     } catch (error) {

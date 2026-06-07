@@ -1,18 +1,15 @@
 const express = require('express');
 const router = express.Router();
-const { supabasePublic } = require('../config/supabase');
+const db = require('../config/database');
 
 // @route   GET /api/courses
 // @desc    Get all courses
 // @access  Public
 router.get('/', async (req, res) => {
     try {
-        const { data, error } = await supabasePublic
-            .from('courses')
-            .select('*')
-            .order('id');
-
-        if (error) throw error;
+        const [data] = await db.query(
+            'SELECT * FROM courses ORDER BY id'
+        );
 
         res.json(data);
     } catch (error) {
@@ -26,18 +23,16 @@ router.get('/', async (req, res) => {
 // @access  Public
 router.get('/:id', async (req, res) => {
     try {
-        const { data, error } = await supabasePublic
-            .from('courses')
-            .select('*')
-            .eq('id', req.params.id)
-            .single();
+        const [rows] = await db.query(
+            'SELECT * FROM courses WHERE id = ?',
+            [req.params.id]
+        );
 
-        if (error) throw error;
-        if (!data) {
+        if (rows.length === 0) {
             return res.status(404).json({ error: 'Course not found' });
         }
 
-        res.json(data);
+        res.json(rows[0]);
     } catch (error) {
         console.error('Get course error:', error);
         res.status(500).json({ error: 'Failed to fetch course' });

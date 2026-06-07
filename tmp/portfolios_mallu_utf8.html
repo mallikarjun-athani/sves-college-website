@@ -1,0 +1,260 @@
+﻿<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Student Showcase Portfolios - SVES College Harugeri</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link href="https://unpkg.com/aos@2.3.1/dist/aos.css" rel="stylesheet">
+    <link rel="stylesheet" href="assets/css/style.css">
+    <style>
+        .portfolio-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+            gap: 25px;
+            margin-top: 40px;
+        }
+
+        .portfolio-card {
+            background: white;
+            border-radius: var(--radius-md);
+            overflow: hidden;
+            box-shadow: var(--shadow-sm);
+            transition: var(--transition);
+            border: 1px solid #eee;
+        }
+
+        .portfolio-card:hover {
+            transform: translateY(-10px);
+            box-shadow: var(--shadow-lg);
+        }
+
+        .portfolio-img {
+            height: 200px;
+            background-size: cover;
+            background-position: center;
+            position: relative;
+        }
+
+        .portfolio-category {
+            position: absolute;
+            top: 15px;
+            right: 15px;
+            background: var(--secondary);
+            color: var(--primary);
+            padding: 5px 12px;
+            border-radius: 20px;
+            font-size: 0.75rem;
+            font-weight: 700;
+        }
+
+        .portfolio-body {
+            padding: 20px;
+        }
+
+        .student-meta {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            margin-bottom: 15px;
+        }
+
+        .student-avatar {
+            width: 35px;
+            height: 35px;
+            border-radius: 50%;
+            background: #eee;
+        }
+
+        .student-name {
+            font-weight: 600;
+            font-size: 0.9rem;
+        }
+
+        .portfolio-title {
+            font-size: 1.1rem;
+            color: var(--primary);
+            margin-bottom: 10px;
+        }
+
+        .portfolio-desc {
+            font-size: 0.9rem;
+            color: #666;
+            line-height: 1.5;
+            margin-bottom: 20px;
+        }
+
+        .portfolio-footer {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            border-top: 1px solid #f0f0f0;
+            padding-top: 15px;
+        }
+
+        .view-project {
+            color: var(--secondary);
+            font-weight: 700;
+            font-size: 0.85rem;
+            text-decoration: none;
+        }
+
+        .portfolio-stats {
+            display: flex;
+            gap: 10px;
+            font-size: 0.8rem;
+            color: #999;
+        }
+
+        .filter-bar {
+            display: flex;
+            gap: 10px;
+            overflow-x: auto;
+            padding-bottom: 10px;
+            margin-bottom: 30px;
+            scrollbar-width: none;
+        }
+
+        .filter-bar::-webkit-scrollbar {
+            display: none;
+        }
+
+        .filter-btn {
+            padding: 8px 18px;
+            background: white;
+            border: 1px solid #ddd;
+            border-radius: 20px;
+            white-space: nowrap;
+            cursor: pointer;
+            transition: var(--transition);
+        }
+
+        .filter-btn.active {
+            background: var(--primary);
+            color: white;
+            border-color: var(--primary);
+        }
+    </style>
+</head>
+
+<body>
+    <header id="main-header"></header>
+
+    <section class="inner-page-header">
+        <div class="container" data-aos="fade-down">
+            <h1>Student Showcase</h1>
+            <p>Discover the innovative projects, research, and creative works by our talented students.</p>
+        </div>
+    </section>
+
+    <section class="section-padding">
+        <div class="container">
+
+            <div class="filter-bar" data-aos="fade-up">
+                <button class="filter-btn active">All Projects</button>
+                <button class="filter-btn">Web Development</button>
+                <button class="filter-btn">Research Papers</button>
+                <button class="filter-btn">Fine Arts</button>
+                <button class="filter-btn">Commerce Projects</button>
+                <button class="filter-btn">Social Work</button>
+            </div>
+
+            <div class="portfolio-grid">
+                <!-- Project 1 -->
+                <div class="portfolio-card" data-aos="fade-up">
+                    <div class="portfolio-img" style="background-image: url('assets/images/project1.jpg');">
+                        <span class="portfolio-category">Web Dev</span>
+                    </div>
+                    <div class="portfolio-body">
+                        <div class="student-meta">
+                            <div class="student-avatar"
+                                style="background-image: url('assets/images/student1.jpg'); background-size: cover;">
+                            </div>
+                            <div class="student-name">Mallikarjun Athani <span
+                                    style="display: block; font-weight: 400; font-size: 0.75rem; color: #888;">BCA - VI
+                                    Sem</span></div>
+                        </div>
+                        <h3 class="portfolio-title">SVES College Website Pro</h3>
+                        <p class="portfolio-desc">A full-stack responsive web application built using modern frameworks
+                            to digitize college operations.</p>
+                        <div class="portfolio-footer">
+                            <a href="#" class="view-project">VIEW PROJECT <i class="fas fa-arrow-right"></i></a>
+                            <div class="portfolio-stats">
+                                <span><i class="far fa-eye"></i> 1.2k</span>
+                                <span><i class="far fa-heart"></i> 45</span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Project 2 -->
+                <div class="portfolio-card" data-aos="fade-up" data-aos-delay="100">
+                    <div class="portfolio-img" style="background-image: url('assets/images/project2.jpg');">
+                        <span class="portfolio-category">Research</span>
+                    </div>
+                    <div class="portfolio-body">
+                        <div class="student-meta">
+                            <div class="student-avatar"
+                                style="background-image: url('assets/images/student2.jpg'); background-size: cover;">
+                            </div>
+                            <div class="student-name">Sahana Patil <span
+                                    style="display: block; font-weight: 400; font-size: 0.75rem; color: #888;">B.Sc - IV
+                                    Sem</span></div>
+                        </div>
+                        <h3 class="portfolio-title">Water Quality Analysis</h3>
+                        <p class="portfolio-desc">Computational study on local water bodies in Harugeri region and
+                            impact of agriculture runoff.</p>
+                        <div class="portfolio-footer">
+                            <a href="#" class="view-project">READ PAPER <i class="fas fa-arrow-right"></i></a>
+                            <div class="portfolio-stats">
+                                <span><i class="far fa-eye"></i> 850</span>
+                                <span><i class="far fa-heart"></i> 12</span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Project 3 -->
+                <div class="portfolio-card" data-aos="fade-up" data-aos-delay="200">
+                    <div class="portfolio-img" style="background-image: url('assets/images/project3.jpg');">
+                        <span class="portfolio-category">Arts</span>
+                    </div>
+                    <div class="portfolio-body">
+                        <div class="student-meta">
+                            <div class="student-avatar"
+                                style="background-image: url('assets/images/student3.jpg'); background-size: cover;">
+                            </div>
+                            <div class="student-name">Rohan Nayak <span
+                                    style="display: block; font-weight: 400; font-size: 0.75rem; color: #888;">BA - VI
+                                    Sem</span></div>
+                        </div>
+                        <h3 class="portfolio-title">Rural Karnataka Landscapes</h3>
+                        <p class="portfolio-desc">A collection of oil paintings showcasing the serene beauty of the
+                            Krishna river basin life.</p>
+                        <div class="portfolio-footer">
+                            <a href="#" class="view-project">VIEW GALLERY <i class="fas fa-arrow-right"></i></a>
+                            <div class="portfolio-stats">
+                                <span><i class="far fa-eye"></i> 2.1k</span>
+                                <span><i class="far fa-heart"></i> 156</span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="text-center" style="margin-top: 60px;">
+                <p>Want to showcase your project here?</p>
+                <a href="admin/login.html" class="btn btn-primary" style="margin-top: 15px;">Submit Your Portfolio</a>
+            </div>
+        </div>
+    </section>
+
+    <footer id="main-site-footer"></footer>
+
+    <script src="https://unpkg.com/aos@2.3.1/dist/aos.js"></script>
+    <script src="assets/js/main.js"></script>
+</body>
+
+</html>
+
