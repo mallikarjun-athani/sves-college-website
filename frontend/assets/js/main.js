@@ -211,3 +211,98 @@ document.addEventListener('click', function (e) {
         handleApplyNow(e);
     }
 });
+
+// Lightbox feature for images
+document.addEventListener('click', function(e) {
+    const img = e.target.closest('.lightbox-img');
+    if (img) {
+        e.preventDefault();
+        
+        // Create overlay
+        const overlay = document.createElement('div');
+        overlay.id = 'custom-lightbox-overlay';
+        Object.assign(overlay.style, {
+            position: 'fixed',
+            top: '0',
+            left: '0',
+            width: '100vw',
+            height: '100vh',
+            backgroundColor: 'rgba(0, 0, 0, 0.9)',
+            zIndex: '99999',
+            display: 'flex',
+            justifyContent: 'center',
+            alignItems: 'center',
+            cursor: 'zoom-out',
+            opacity: '0',
+            transition: 'opacity 0.3s ease'
+        });
+        
+        // Create full size image
+        const fullImg = document.createElement('img');
+        
+        let src = img.src;
+        if (!src && img.tagName !== 'IMG') {
+            const innerImg = img.querySelector('img');
+            if (innerImg) {
+                src = innerImg.src;
+            } else {
+                const bgImage = window.getComputedStyle(img).backgroundImage;
+                if (bgImage && bgImage !== 'none') {
+                    src = bgImage.replace(/^url\(['"]?/, '').replace(/['"]?\)$/, '');
+                }
+            }
+        }
+        
+        fullImg.src = src;
+        
+        // If wrapped in an anchor, try to use the anchor's href which might be a higher res version
+        const anchor = img.closest('a');
+        if (anchor && anchor.href) {
+            fullImg.src = anchor.href;
+        }
+        
+        Object.assign(fullImg.style, {
+            maxWidth: '90%',
+            maxHeight: '90%',
+            objectFit: 'contain',
+            borderRadius: '8px',
+            boxShadow: '0 5px 25px rgba(0,0,0,0.5)',
+            transform: 'scale(0.95)',
+            transition: 'transform 0.3s ease'
+        });
+        
+        // Close button
+        const closeBtn = document.createElement('div');
+        closeBtn.innerHTML = '<i class="fas fa-times"></i>';
+        Object.assign(closeBtn.style, {
+            position: 'absolute',
+            top: '20px',
+            right: '20px',
+            color: 'white',
+            fontSize: '30px',
+            cursor: 'pointer',
+            padding: '10px'
+        });
+        
+        overlay.appendChild(fullImg);
+        overlay.appendChild(closeBtn);
+        document.body.appendChild(overlay);
+        
+        // Trigger animations
+        setTimeout(() => {
+            overlay.style.opacity = '1';
+            fullImg.style.transform = 'scale(1)';
+        }, 10);
+        
+        // Close on click anywhere
+        overlay.addEventListener('click', function() {
+            overlay.style.opacity = '0';
+            fullImg.style.transform = 'scale(0.95)';
+            setTimeout(() => {
+                if (document.body.contains(overlay)) {
+                    document.body.removeChild(overlay);
+                }
+            }, 300);
+        });
+    }
+});

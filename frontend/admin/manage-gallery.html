@@ -241,7 +241,9 @@
 
                 container.innerHTML = data.map(img => `
                     <div class="gallery-card">
-                        <img src="${resolvePath(img.image_path)}" alt="${img.caption}" onerror="this.src='../assets/images/placeholder.jpg'">
+                        <a href="${resolvePath(img.image_path)}" target="_blank" title="Click to view full size">
+                            <img src="${resolvePath(img.image_path)}" alt="${img.caption}" onerror="this.src='../assets/images/placeholder.jpg'" class="lightbox-img" style="cursor: pointer;">
+                        </a>
                         <button class="delete-overlay delete-btn" data-id="${img.id}" title="Delete this image">
                             <i class="fas fa-trash-alt"></i>
                         </button>

@@ -185,7 +185,7 @@
                 if (!data.length) { list.innerHTML = '<tr><td colspan="5" style="text-align:center">No faculty members found.</td></tr>'; return; }
                 list.innerHTML = data.map(f => `
                     <tr>
-                        <td>${f.image_path ? `<img src="${resolvePath(f.image_path)}" class="faculty-img">` : '<i class="fas fa-user-circle fa-2x" style="color:#ddd;"></i>'}</td>
+                        <td>${f.image_path ? `<a href="${resolvePath(f.image_path)}" target="_blank" title="Click to view full size"><img src="${resolvePath(f.image_path)}" class="faculty-img lightbox-img" style="cursor: pointer;"></a>` : '<i class="fas fa-user-circle fa-2x" style="color:#ddd;"></i>'}</td>
                         <td>${f.name}</td>
                         <td>${f.designation}</td>
                         <td>${f.department}</td>

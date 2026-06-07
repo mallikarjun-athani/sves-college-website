@@ -49,6 +49,7 @@
                     <a href="student-corner.html">Student Corner</a>
                     <a href="notes.html">Notes & Resources</a>
                     <a href="gallery.html">Gallery</a>
+                    <a href="virtual-tour.html">Virtual Tour</a>
                     <a href="admin/login.html">Admin Login</a>
                     <a href="admissions.html" class="btn btn-secondary"
                         style="padding: 8px 20px; color: var(--primary) !important;">Apply Now</a>
@@ -75,6 +76,7 @@
                 <a href="student-corner.html">Student Corner</a>
                 <a href="notes.html">Notes & Resources</a>
                 <a href="gallery.html">Gallery</a>
+                <a href="virtual-tour.html">Virtual Tour</a>
                 <a href="placements.html">Placements</a>
                 <a href="admin/login.html">Admin Login</a>
                 <a href="admissions.html" class="btn btn-secondary" style="margin-top: 20px; text-align: center;">Apply
@@ -343,9 +345,12 @@
 
                 const ticker = document.getElementById('announcements-ticker');
                 if (announcements.length > 0) {
-                    ticker.innerHTML = announcements.map(a =>
-                        `<span>📢 ${a.title}${a.link ? ` <a href="${a.link}" target="_blank">[View]</a>` : ''} | </span>`
-                    ).join('');
+                    ticker.innerHTML = announcements.map(a => {
+                        const content = a.link
+                            ? `<a href="${a.link}" target="_blank" style="color:var(--white); text-decoration:none; padding-bottom:2px; border-bottom:1px dotted var(--secondary);">${a.title}</a>`
+                            : a.title;
+                        return `<span style="margin:0 20px;">📢 ${content}</span>`;
+                    }).join('<span style="color:var(--secondary);">|</span>');
                 } else {
                     ticker.innerHTML = '<span>🔔 Welcome to SVES College Harugeri!</span>';
                 }

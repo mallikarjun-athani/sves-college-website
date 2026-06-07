@@ -240,7 +240,9 @@
 
                 container.innerHTML = data.map(item => `
                     <div class="achievement-card">
-                        <img src="${item.image_path ? resolvePath(item.image_path) : '../assets/images/achieve-placeholder.jpg'}" alt="${item.title}" onerror="this.src='../assets/images/achieve-placeholder.jpg'">
+                        <a href="${item.image_path ? resolvePath(item.image_path) : '../assets/images/achieve-placeholder.jpg'}" target="_blank" title="Click to view full size">
+                            <img src="${item.image_path ? resolvePath(item.image_path) : '../assets/images/achieve-placeholder.jpg'}" alt="${item.title}" onerror="this.src='../assets/images/achieve-placeholder.jpg'" class="lightbox-img" style="cursor: pointer;">
+                        </a>
                         <button class="delete-btn" onclick="deleteAchievement(${item.id})" title="Delete entry">
                             <i class="fas fa-trash-alt"></i>
                         </button>

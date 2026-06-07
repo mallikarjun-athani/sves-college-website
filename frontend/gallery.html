@@ -402,9 +402,9 @@
             }
 
             galleryContainer.innerHTML = data.map(img => `
-                <div class="gallery-item" data-aos="zoom-in" onclick="viewImage('${resolvePath(img.image_path)}')">
-                    <img src="${resolvePath(img.image_path)}" alt="${img.caption}">
-                    <div class="gallery-overlay">
+                <div class="gallery-item" data-aos="zoom-in">
+                    <img src="${resolvePath(img.image_path)}" alt="${img.caption}" class="lightbox-img" style="cursor: pointer;">
+                    <div class="gallery-overlay" style="pointer-events: none;">
                         <span>${img.category}</span>
                         <h4>${img.caption}</h4>
                         <i class="fas fa-search-plus" style="margin-top: 10px;"></i>

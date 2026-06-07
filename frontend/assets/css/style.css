@@ -389,12 +389,16 @@ header.scrolled .nav-links a {
 .ticker-content {
     white-space: nowrap;
     display: inline-block;
-    animation: ticker 30s linear infinite;
+    animation: ticker 40s linear infinite;
+}
+
+.ticker-content:hover {
+    animation-play-state: paused;
 }
 
 @keyframes ticker {
     0% {
-        transform: translateX(100%);
+        transform: translateX(100vw);
     }
 
     100% {

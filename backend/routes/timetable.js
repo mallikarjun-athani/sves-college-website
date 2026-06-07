@@ -1,39 +1,31 @@
 const express = require('express');
 const router = express.Router();
-const { supabasePublic, supabaseAdmin } = require('../config/supabase');
+const db = require('../config/database');
 const auth = require('../middleware/auth');
 
-// @route   GET /api/timetable
-// @desc    Get timetable based on filters
-// @access  Public
 router.get('/', async (req, res) => {
     try {
         const { course_id, semester, day } = req.query;
         console.log('GET /timetable filters:', { course_id, semester, day });
 
-        let query = supabasePublic
-            .from('timetable')
-            .select('*');
+        let sql = 'SELECT * FROM timetable';
+        const conditions = [];
+        const values = [];
 
         if (course_id) {
             const cid = parseInt(course_id);
-            if (!isNaN(cid)) query = query.eq('course_id', cid);
+            if (!isNaN(cid)) { conditions.push('course_id = ?'); values.push(cid); }
         }
-
         if (semester) {
             const sem = parseInt(semester);
-            if (!isNaN(sem)) query = query.eq('semester', sem);
+            if (!isNaN(sem)) { conditions.push('semester = ?'); values.push(sem); }
         }
+        if (day) { conditions.push('day_of_week = ?'); values.push(day); }
 
-        if (day) query = query.eq('day_of_week', day);
+        if (conditions.length > 0) sql += ' WHERE ' + conditions.join(' AND ');
+        sql += ' ORDER BY start_time';
 
-        const { data, error } = await query.order('start_time');
-
-        if (error) {
-            console.error('Supabase query error:', error);
-            throw error;
-        }
-
+        const [data] = await db.query(sql, values);
         console.log(`GET /timetable result: ${data.length} entries`);
         res.json(data);
     } catch (error) {
@@ -42,104 +34,49 @@ router.get('/', async (req, res) => {
     }
 });
 
-// @route   POST /api/timetable
-// @desc    Add new timetable entry
-// @access  Admin
 router.post('/', auth, async (req, res) => {
     try {
         const { course_id, semester, day_of_week, subject, start_time, end_time, room_no } = req.body;
         console.log('POST /timetable payload:', req.body);
 
-        // Ensure course_id and semester are numbers if they are being passed as strings
-        const courseIdInt = parseInt(course_id);
-        const semesterInt = parseInt(semester);
+        const [result] = await db.query(
+            'INSERT INTO timetable (course_id, semester, day_of_week, subject, start_time, end_time, room_no) VALUES (?, ?, ?, ?, ?, ?, ?)',
+            [parseInt(course_id), parseInt(semester), day_of_week, subject, start_time, end_time, room_no || null]
+        );
 
-        const { data, error } = await supabaseAdmin
-            .from('timetable')
-            .insert([{
-                course_id: courseIdInt,
-                semester: semesterInt,
-                day_of_week,
-                subject,
-                start_time,
-                end_time,
-                room_no
-            }])
-            .select();
-
-        if (error) {
-            console.error('Supabase insert error:', error);
-            throw error;
-        }
-
-        console.log('POST /timetable success:', data[0]);
-        res.status(201).json(data[0]);
+        const [rows] = await db.query('SELECT * FROM timetable WHERE id = ?', [result.insertId]);
+        console.log('POST /timetable success:', rows[0]);
+        res.status(201).json(rows[0]);
     } catch (error) {
         console.error('Post timetable error:', error);
-        res.status(500).json({
-            error: error.message || 'Failed to add timetable entry',
-            details: error
-        });
+        res.status(500).json({ error: error.message || 'Failed to add timetable entry', details: error });
     }
 });
 
-// @route   PUT /api/timetable/:id
-// @desc    Update timetable entry
-// @access  Admin
 router.put('/:id', auth, async (req, res) => {
     try {
         const { course_id, semester, day_of_week, subject, start_time, end_time, room_no } = req.body;
 
-        const { data, error } = await supabaseAdmin
-            .from('timetable')
-            .update({
-                course_id: parseInt(course_id),
-                semester: parseInt(semester),
-                day_of_week,
-                subject,
-                start_time,
-                end_time,
-                room_no
-            })
-            .eq('id', req.params.id)
-            .select();
+        await db.query(
+            'UPDATE timetable SET course_id = ?, semester = ?, day_of_week = ?, subject = ?, start_time = ?, end_time = ?, room_no = ? WHERE id = ?',
+            [parseInt(course_id), parseInt(semester), day_of_week, subject, start_time, end_time, room_no || null, req.params.id]
+        );
 
-        if (error) {
-            console.error('Supabase update error:', error);
-            throw error;
-        }
-
-        res.json(data[0]);
+        const [rows] = await db.query('SELECT * FROM timetable WHERE id = ?', [req.params.id]);
+        res.json(rows[0]);
     } catch (error) {
         console.error('Update timetable error:', error);
-        res.status(500).json({
-            error: error.message || 'Failed to update entry',
-            details: error
-        });
+        res.status(500).json({ error: error.message || 'Failed to update entry', details: error });
     }
 });
 
-// @route   DELETE /api/timetable/:id
-// @desc    Delete timetable entry
-// @access  Admin
 router.delete('/:id', auth, async (req, res) => {
     try {
-        const { error } = await supabaseAdmin
-            .from('timetable')
-            .delete()
-            .eq('id', req.params.id);
-
-        if (error) {
-            console.error('Supabase delete error:', error);
-            throw error;
-        }
+        await db.query('DELETE FROM timetable WHERE id = ?', [req.params.id]);
         res.json({ message: 'Entry deleted successfully' });
     } catch (error) {
         console.error('Delete timetable error:', error);
-        res.status(500).json({
-            error: error.message || 'Failed to delete entry',
-            details: error
-        });
+        res.status(500).json({ error: error.message || 'Failed to delete entry', details: error });
     }
 });
 

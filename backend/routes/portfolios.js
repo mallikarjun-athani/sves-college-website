@@ -1,42 +1,42 @@
 const express = require('express');
 const router = express.Router();
 const multer = require('multer');
-const { supabaseAdmin, supabasePublic } = require('../config/supabase');
+const path = require('path');
+const fs = require('fs');
+const db = require('../config/database');
 const authMiddleware = require('../middleware/auth');
 
-// Configure multer for RAM storage
-const storage = multer.memoryStorage();
+const uploadsDir = path.join(__dirname, '../../frontend/uploads/portfolios');
+if (!fs.existsSync(uploadsDir)) {
+    fs.mkdirSync(uploadsDir, { recursive: true });
+}
+
+const storage = multer.diskStorage({
+    destination: (req, file, cb) => cb(null, uploadsDir),
+    filename: (req, file, cb) => cb(null, `portfolio_${Date.now()}_${file.originalname.replace(/\s+/g, '_')}`)
+});
+
 const upload = multer({
     storage,
-    limits: { fileSize: 5 * 1024 * 1024 },
+    limits: { fileSize: 10 * 1024 * 1024 },
     fileFilter: (req, file, cb) => {
         const allowedTypes = ['image/jpeg', 'image/jpg', 'image/png', 'image/gif', 'image/webp'];
-        if (allowedTypes.includes(file.mimetype)) {
-            cb(null, true);
-        } else {
-            cb(new Error('Only image files are allowed'), false);
-        }
+        if (allowedTypes.includes(file.mimetype)) cb(null, true);
+        else cb(new Error('Only image files are allowed'), false);
     }
 });
 
-// @route   GET /api/portfolios
-// @desc    Get all student portfolios (optionally filter by category)
-// @access  Public
 router.get('/', async (req, res) => {
     try {
         const { category } = req.query;
-
-        let query = supabasePublic
-            .from('portfolios')
-            .select('*')
-            .order('created_at', { ascending: false });
-
+        let sql = 'SELECT * FROM portfolios';
+        const values = [];
         if (category && category !== 'All') {
-            query = query.eq('category', category);
+            sql += ' WHERE category = ?';
+            values.push(category);
         }
-
-        const { data, error } = await query;
-        if (error) throw error;
+        sql += ' ORDER BY created_at DESC';
+        const [data] = await db.query(sql, values);
         res.json(data);
     } catch (error) {
         console.error('Get portfolios error:', error);
@@ -44,97 +44,43 @@ router.get('/', async (req, res) => {
     }
 });
 
-// @route   POST /api/portfolios
-// @desc    Add new student portfolio
-// @access  Private (Admin)
 router.post('/', authMiddleware, upload.single('image_file'), async (req, res) => {
     try {
         const { student_name, student_course, title, description, category, project_link } = req.body;
-
         if (!student_name || !title || !description) {
             return res.status(400).json({ error: 'Student name, title and description are required' });
         }
 
-        let publicUrl = null;
-
-        if (req.file) {
-            const filename = `portfolio_${Date.now()}_${req.file.originalname.replace(/\s+/g, '_')}`;
-            const filePath = `portfolios/${filename}`;
-
-            const { error: uploadError } = await supabaseAdmin
-                .storage
-                .from('uploads')
-                .upload(filePath, req.file.buffer, {
-                    contentType: req.file.mimetype,
-                    upsert: false
-                });
-
-            if (uploadError) throw uploadError;
-
-            const { data: { publicUrl: url } } = supabaseAdmin
-                .storage
-                .from('uploads')
-                .getPublicUrl(filePath);
-
-            publicUrl = url;
-        }
+        const filePath = req.file ? `uploads/portfolios/${req.file.filename}` : null;
 
         const validCategories = ['Web Development', 'Research Papers', 'Fine Arts', 'Commerce Projects', 'Social Work', 'Science', 'Other'];
         const safeCategory = validCategories.includes(category) ? category : 'Other';
 
-        const { data, error } = await supabaseAdmin
-            .from('portfolios')
-            .insert([{
-                student_name,
-                student_course: student_course || '',
-                title,
-                description,
-                category: safeCategory,
-                project_link: project_link || null,
-                image_path: publicUrl
-            }])
-            .select()
-            .single();
+        const [result] = await db.query(
+            'INSERT INTO portfolios (student_name, student_course, title, description, category, project_link, image_path) VALUES (?, ?, ?, ?, ?, ?, ?)',
+            [student_name, student_course || '', title, description, safeCategory, project_link || null, filePath]
+        );
 
-        if (error) throw error;
-
-        res.status(201).json({
-            message: 'Portfolio added successfully',
-            portfolio: data
-        });
+        const [rows] = await db.query('SELECT * FROM portfolios WHERE id = ?', [result.insertId]);
+        res.status(201).json({ message: 'Portfolio added successfully', portfolio: rows[0] });
     } catch (error) {
         console.error('Post portfolio error:', error);
+        if (req.file) {
+            const fp = path.join(uploadsDir, req.file.filename);
+            if (fs.existsSync(fp)) fs.unlinkSync(fp);
+        }
         res.status(500).json({ error: 'Failed to add portfolio' });
     }
 });
 
-// @route   DELETE /api/portfolios/:id
-// @desc    Delete a portfolio entry
-// @access  Private (Admin)
 router.delete('/:id', authMiddleware, async (req, res) => {
     try {
-        const { data: portfolio, error: fetchError } = await supabaseAdmin
-            .from('portfolios')
-            .select('image_path')
-            .eq('id', req.params.id)
-            .single();
-
-        if (fetchError) throw fetchError;
-
-        if (portfolio && portfolio.image_path) {
-            const parts = portfolio.image_path.split('/uploads/');
-            if (parts.length > 1) {
-                await supabaseAdmin.storage.from('uploads').remove([parts[1]]);
-            }
+        const [rows] = await db.query('SELECT image_path FROM portfolios WHERE id = ?', [req.params.id]);
+        if (rows[0] && rows[0].image_path) {
+            const fp = path.join(__dirname, '../../frontend', rows[0].image_path);
+            if (fs.existsSync(fp)) fs.unlinkSync(fp);
         }
-
-        const { error: deleteError } = await supabaseAdmin
-            .from('portfolios')
-            .delete()
-            .eq('id', req.params.id);
-
-        if (deleteError) throw deleteError;
-
+        await db.query('DELETE FROM portfolios WHERE id = ?', [req.params.id]);
         res.json({ message: 'Portfolio deleted successfully' });
     } catch (error) {
         console.error('Delete portfolio error:', error);

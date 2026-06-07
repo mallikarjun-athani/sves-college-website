@@ -3,46 +3,40 @@ const router = express.Router();
 const multer = require('multer');
 const path = require('path');
 const fs = require('fs');
-const { body, validationResult } = require('express-validator');
-const { supabaseAdmin, supabasePublic } = require('../config/supabase');
+const db = require('../config/database');
 const authMiddleware = require('../middleware/auth');
 
-// Configure multer for RAM storage
-const storage = multer.memoryStorage();
+const uploadsDir = path.join(__dirname, '../../frontend/uploads/faculty');
+if (!fs.existsSync(uploadsDir)) {
+    fs.mkdirSync(uploadsDir, { recursive: true });
+}
+
+const storage = multer.diskStorage({
+    destination: (req, file, cb) => cb(null, uploadsDir),
+    filename: (req, file, cb) => cb(null, Date.now() + '_' + file.originalname.replace(/\s+/g, '_'))
+});
 
 const upload = multer({
     storage,
-    limits: { fileSize: 5 * 1024 * 1024 }, // 5MB limit
+    limits: { fileSize: 10 * 1024 * 1024 },
     fileFilter: (req, file, cb) => {
         const allowedTypes = ['image/jpeg', 'image/jpg', 'image/png', 'image/webp'];
-        if (allowedTypes.includes(file.mimetype)) {
-            cb(null, true);
-        } else {
-            cb(new Error('Only image files are allowed'), false);
-        }
+        if (allowedTypes.includes(file.mimetype)) cb(null, true);
+        else cb(new Error('Only image files are allowed'), false);
     }
 });
 
-// @route   GET /api/faculty
-// @desc    Get all faculty members with optional department filter
-// @access  Public
 router.get('/', async (req, res) => {
     try {
         const { department } = req.query;
-
-        let query = supabasePublic
-            .from('faculty')
-            .select('*')
-            .order('created_at', { ascending: false });
-
+        let sql = 'SELECT * FROM faculty';
+        const values = [];
         if (department) {
-            query = query.eq('department', department);
+            sql += ' WHERE department = ?';
+            values.push(department);
         }
-
-        const { data, error } = await query;
-
-        if (error) throw error;
-
+        sql += ' ORDER BY created_at DESC';
+        const [data] = await db.query(sql, values);
         res.json(data);
     } catch (error) {
         console.error('Get faculty error:', error);
@@ -50,207 +44,88 @@ router.get('/', async (req, res) => {
     }
 });
 
-// @route   GET /api/faculty/:id
-// @desc    Get single faculty member
-// @access  Public
 router.get('/:id', async (req, res) => {
     try {
-        const { data, error } = await supabasePublic
-            .from('faculty')
-            .select('*')
-            .eq('id', req.params.id)
-            .single();
-
-        if (error) throw error;
-        if (!data) {
-            return res.status(404).json({ error: 'Faculty member not found' });
-        }
-
-        res.json(data);
+        const [rows] = await db.query('SELECT * FROM faculty WHERE id = ?', [req.params.id]);
+        if (rows.length === 0) return res.status(404).json({ error: 'Faculty member not found' });
+        res.json(rows[0]);
     } catch (error) {
         console.error('Get faculty member error:', error);
         res.status(500).json({ error: 'Failed to fetch faculty member' });
     }
 });
 
-// @route   POST /api/faculty
-// @desc    Add new faculty member with image to Supabase Storage
-// @access  Private (Admin)
 router.post('/', authMiddleware, upload.single('image'), async (req, res) => {
     try {
         const { name, designation, department } = req.body;
-
-        // Validate required fields
         if (!name || !designation || !department) {
             return res.status(400).json({ error: 'Name, designation, and department are required' });
         }
 
-        let publicUrl = null;
-        if (req.file) {
-            // Upload to Supabase Storage
-            const filename = Date.now() + '_' + req.file.originalname.replace(/\s+/g, '_');
-            const filePath = `faculty/${filename}`;
+        const filePath = req.file ? `uploads/faculty/${req.file.filename}` : null;
 
-            const { data: uploadData, error: uploadError } = await supabaseAdmin
-                .storage
-                .from('uploads')
-                .upload(filePath, req.file.buffer, {
-                    contentType: req.file.mimetype,
-                    upsert: false
-                });
+        const [result] = await db.query(
+            'INSERT INTO faculty (name, designation, department, image_path) VALUES (?, ?, ?, ?)',
+            [name, designation, department, filePath]
+        );
 
-            if (uploadError) throw uploadError;
+        const [rows] = await db.query('SELECT * FROM faculty WHERE id = ?', [result.insertId]);
 
-            // Get Public URL
-            const { data: urlData } = supabaseAdmin
-                .storage
-                .from('uploads')
-                .getPublicUrl(filePath);
-
-            publicUrl = urlData.publicUrl;
-        }
-
-        const { data, error } = await supabaseAdmin
-            .from('faculty')
-            .insert([{
-                name,
-                designation,
-                department,
-                image_path: publicUrl
-            }])
-            .select()
-            .single();
-
-        if (error) {
-            // Cleanup: Delete uploaded file if DB insert fails
-            if (publicUrl) {
-                const parts = publicUrl.split('/uploads/');
-                if (parts.length > 1) {
-                    await supabaseAdmin.storage.from('uploads').remove([parts[1]]);
-                }
-            }
-            throw error;
-        }
-
-        res.status(201).json({
-            message: 'Faculty member added successfully',
-            faculty: data
-        });
+        res.status(201).json({ message: 'Faculty member added successfully', faculty: rows[0] });
     } catch (error) {
         console.error('Add faculty error:', error);
+        if (req.file) {
+            const fp = path.join(uploadsDir, req.file.filename);
+            if (fs.existsSync(fp)) fs.unlinkSync(fp);
+        }
         res.status(500).json({ error: 'Failed to add faculty member' });
     }
 });
 
-// @route   PUT /api/faculty/:id
-// @desc    Update faculty member and optionally replace image
-// @access  Private (Admin)
 router.put('/:id', authMiddleware, upload.single('image'), async (req, res) => {
     try {
         const { name, designation, department } = req.body;
-        const updateData = {};
+        const updates = [];
+        const values = [];
 
-        if (name) updateData.name = name;
-        if (designation) updateData.designation = designation;
-        if (department) updateData.department = department;
+        if (name) { updates.push('name = ?'); values.push(name); }
+        if (designation) { updates.push('designation = ?'); values.push(designation); }
+        if (department) { updates.push('department = ?'); values.push(department); }
 
-        // Handle new image upload
         if (req.file) {
-            // 1. Get old image path to delete later
-            const { data: oldFaculty } = await supabaseAdmin
-                .from('faculty')
-                .select('image_path')
-                .eq('id', req.params.id)
-                .single();
-
-            // 2. Upload new image
-            const filename = Date.now() + '_' + req.file.originalname.replace(/\s+/g, '_');
-            const filePath = `faculty/${filename}`;
-
-            const { error: uploadError } = await supabaseAdmin
-                .storage
-                .from('uploads')
-                .upload(filePath, req.file.buffer, {
-                    contentType: req.file.mimetype,
-                    upsert: false
-                });
-
-            if (uploadError) throw uploadError;
-
-            const { data: urlData } = supabaseAdmin
-                .storage
-                .from('uploads')
-                .getPublicUrl(filePath);
-
-            updateData.image_path = urlData.publicUrl;
-
-            // 3. Delete old image if it exists
-            if (oldFaculty && oldFaculty.image_path) {
-                const parts = oldFaculty.image_path.split('/uploads/');
-                if (parts.length > 1) {
-                    await supabaseAdmin.storage.from('uploads').remove([parts[1]]);
-                }
+            // Get old image path to delete
+            const [oldRows] = await db.query('SELECT image_path FROM faculty WHERE id = ?', [req.params.id]);
+            if (oldRows[0] && oldRows[0].image_path) {
+                const oldPath = path.join(__dirname, '../../frontend', oldRows[0].image_path);
+                if (fs.existsSync(oldPath)) fs.unlinkSync(oldPath);
             }
+            updates.push('image_path = ?');
+            values.push(`uploads/faculty/${req.file.filename}`);
         }
 
-        const { data, error } = await supabaseAdmin
-            .from('faculty')
-            .update(updateData)
-            .eq('id', req.params.id)
-            .select()
-            .single();
+        if (updates.length === 0) return res.status(400).json({ error: 'No fields to update' });
 
-        if (error) throw error;
-        if (!data) {
-            return res.status(404).json({ error: 'Faculty member not found' });
-        }
+        values.push(req.params.id);
+        await db.query(`UPDATE faculty SET ${updates.join(', ')} WHERE id = ?`, values);
 
-        res.json({
-            message: 'Faculty member updated successfully',
-            faculty: data
-        });
+        const [rows] = await db.query('SELECT * FROM faculty WHERE id = ?', [req.params.id]);
+        if (rows.length === 0) return res.status(404).json({ error: 'Faculty member not found' });
+
+        res.json({ message: 'Faculty member updated successfully', faculty: rows[0] });
     } catch (error) {
         console.error('Update faculty error:', error);
         res.status(500).json({ error: 'Failed to update faculty member' });
     }
 });
 
-// @route   DELETE /api/faculty/:id
-// @desc    Delete faculty member and their image
-// @access  Private (Admin)
 router.delete('/:id', authMiddleware, async (req, res) => {
     try {
-        // First get the faculty to find the image path
-        const { data: faculty, error: fetchError } = await supabaseAdmin
-            .from('faculty')
-            .select('image_path')
-            .eq('id', req.params.id)
-            .single();
-
-        if (fetchError) throw fetchError;
-
-        if (faculty && faculty.image_path) {
-            // Delete the file from Storage
-            const parts = faculty.image_path.split('/uploads/');
-            if (parts.length > 1) {
-                const storagePath = parts[1];
-                const { error: storageError } = await supabaseAdmin
-                    .storage
-                    .from('uploads')
-                    .remove([storagePath]);
-
-                if (storageError) console.error('Error deleting file from storage:', storageError);
-            }
+        const [rows] = await db.query('SELECT image_path FROM faculty WHERE id = ?', [req.params.id]);
+        if (rows[0] && rows[0].image_path) {
+            const fp = path.join(__dirname, '../../frontend', rows[0].image_path);
+            if (fs.existsSync(fp)) fs.unlinkSync(fp);
         }
-
-        // Delete from database
-        const { error: deleteError } = await supabaseAdmin
-            .from('faculty')
-            .delete()
-            .eq('id', req.params.id);
-
-        if (deleteError) throw deleteError;
-
+        await db.query('DELETE FROM faculty WHERE id = ?', [req.params.id]);
         res.json({ message: 'Faculty member deleted successfully' });
     } catch (error) {
         console.error('Delete faculty error:', error);

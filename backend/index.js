@@ -2,7 +2,7 @@
  * SVES College Website - Node.js Backend Server
  * 
  * This Express server provides RESTful API endpoints for the college website,
- * replacing the previous PHP backend with Supabase as the database.
+ * using MySQL (XAMPP) as the database.
  */
 
 require('dotenv').config();
@@ -32,7 +32,7 @@ const PORT = process.env.PORT || 3000;
 // ============================================
 // ENVIRONMENT VALIDATION
 // ============================================
-const requiredEnv = ['JWT_SECRET', 'SUPABASE_URL', 'SUPABASE_SERVICE_KEY', 'SUPABASE_ANON_KEY'];
+const requiredEnv = ['JWT_SECRET'];
 const missingEnv = requiredEnv.filter(env => !process.env[env]);
 
 if (missingEnv.length > 0) {
@@ -49,9 +49,10 @@ app.use(helmet({
     contentSecurityPolicy: {
         directives: {
             ...helmet.contentSecurityPolicy.getDefaultDirectives(),
-            "img-src": ["'self'", "data:", "*.supabase.co"],
+            "upgrade-insecure-requests": null,
+            "img-src": ["'self'", "data:"],
             "script-src": ["'self'", "'unsafe-inline'", "https://unpkg.com", "https://cdnjs.cloudflare.com", "https://cdn.jsdelivr.net"],
-            "connect-src": ["'self'", "https://*.supabase.co", "https://*.vercel.app", "https://api.emailjs.com"],
+            "connect-src": ["'self'", "https://*.vercel.app", "https://api.emailjs.com"],
             "style-src": ["'self'", "'unsafe-inline'", "https://fonts.googleapis.com", "https://cdnjs.cloudflare.com", "https://unpkg.com"],
             "font-src": ["'self'", "https://fonts.gstatic.com", "https://cdnjs.cloudflare.com"],
             "frame-src": ["'self'", "https://www.google.com", "https://maps.google.com"],

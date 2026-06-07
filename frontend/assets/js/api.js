@@ -3,9 +3,13 @@
  * This file provides the base URL and helper functions for API calls
  */
 
-// API Base URL - Uses Railway in production and localhost in development
-const API_BASE_URL = window.location.hostname === 'localhost' || window.location.hostname === '127.0.0.1'
-    ? 'http://localhost:3000/api'
+const isLocal = window.location.hostname === 'localhost' || 
+                window.location.hostname === '127.0.0.1' || 
+                window.location.hostname.startsWith('192.168.') || 
+                window.location.hostname.startsWith('10.');
+
+const API_BASE_URL = isLocal
+    ? `http://${window.location.hostname}:3000/api`
     : 'https://sves-college-harugeri.up.railway.app/api';
 
 // Auth token management
@@ -68,6 +72,17 @@ async function apiCall(endpoint, options = {}) {
         throw new Error('Unauthorized');
     }
 
+    if (!response.ok) {
+        let errMsg = `HTTP Error ${response.status}`;
+        try {
+            const errData = await response.json();
+            errMsg = errData.error || errData.message || errMsg;
+        } catch (e) {
+            // Ignore json parse error for HTML responses
+        }
+        throw new Error(errMsg);
+    }
+
     return response;
 }
 
@@ -108,7 +123,7 @@ function formatDate(dateString) {
     return new Date(dateString).toLocaleDateString('en-IN', options);
 }
 
-// Helper to resolve paths (handles absolute URLs from Supabase and relative paths)
+// Helper to resolve paths (handles absolute URLs and relative local paths)
 function resolvePath(path) {
     if (!path) return '';
     if (path.startsWith('http')) return path;

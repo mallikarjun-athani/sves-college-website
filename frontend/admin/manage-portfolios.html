@@ -268,7 +268,9 @@
 
                 container.innerHTML = data.map(p => `
                     <div class="pf-card">
-                        <img src="${p.image_path ? resolvePath(p.image_path) : '../assets/images/campus-hero.png'}" alt="${p.title}" onerror="this.src='../assets/images/campus-hero.png'">
+                        <a href="${p.image_path ? resolvePath(p.image_path) : '../assets/images/campus-hero.png'}" target="_blank" title="Click to view full size">
+                            <img src="${p.image_path ? resolvePath(p.image_path) : '../assets/images/campus-hero.png'}" alt="${p.title}" onerror="this.src='../assets/images/campus-hero.png'" class="lightbox-img" style="cursor: pointer;">
+                        </a>
                         <button class="delete-btn-overlay" onclick="deletePortfolio(${p.id})" title="Remove project">
                             <i class="fas fa-trash-alt"></i>
                         </button>
